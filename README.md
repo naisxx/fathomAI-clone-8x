@@ -13,7 +13,7 @@ This matters more than any feature, so it is the first thing in the README.
 
 | | |
 |---|---|
-| **One meeting is real.** "Impromptu Google Meet Meeting" is a genuine 44-second Fathom recording made by the author. The audio is real. The transcript is the author's transcription of that call — comparing it against Fathom's own rendered transcript (observed later, in [`SHARE-FLOW-OBSERVED.md`](docs/research/SHARE-FLOW-OBSERVED.md)) shows the shipped text corrects several speech-recognition errors, so it is what was **said**, not literally what Fathom **emitted**. | Badged **Real recording** |
+| **One meeting is real.** "Impromptu Google Meet Meeting" is a genuine 44-second Fathom recording made by the author. The audio is real, and the transcript is **Fathom's own machine transcription, shipped unedited — including its mistakes**: it heard *Fathom drone* for "Fathom clone" and *8x0* for "8x Assignment". An earlier version shipped the author's corrected text; it was replaced once Fathom's actual output was captured ([`SHARE-FLOW-OBSERVED.md`](docs/research/SHARE-FLOW-OBSERVED.md)), because a transcript you can click into and check against the audio is worth more precisely when transcripts are sometimes wrong. | Badged **Real recording** |
 | **Everything else is seeded.** The 62-minute eight-speaker "Q3 Platform Review" and three supporting meetings are written, not recorded. There is no audio; a simulated clock drives playback so seeking, transcript sync and timestamp links behave exactly as they do with real media. | Badged **Seeded demo data** |
 
 Specifically **not** claimed:
@@ -24,10 +24,11 @@ Specifically **not** claimed:
   scope and is not stubbed to look otherwise.
 - **Fathom was not fully explored before coding began.** The brief asks for every
   flow end to end, first. Three of the eleven named flows were completed; the
-  rest — highlights, clip sharing, template switching, cross-meeting search,
-  calendar connection, and an hour-long eight-person call — were not exercised.
-  Much of the product research is drawn from Fathom's **published OpenAPI schema
-  and help centre**, and some of it happened *after* the build had started.
+  rest — mid-call highlights, template switching, cross-meeting search, calendar
+  connection, and an hour-long eight-person call — were not exercised. Fathom's
+  **share** flow was observed only *after* the build had started: the dialog and
+  the logged-out view, not a clip. Much of the product research is drawn from
+  Fathom's **published OpenAPI schema and help centre**.
   [`docs/ASSIGNMENT.md`](docs/ASSIGNMENT.md) scores this flow by flow.
 - **The real meeting has no summary and no action items**, because Fathom
   produced neither — it reported "Meeting too short to generate a summary" and
@@ -99,10 +100,26 @@ npm run dev
 
 ---
 
+## Built beyond the minimum
+
+Cross-meeting search and a ⌘K command palette · within-meeting transcript search ·
+highlights, seeded and user-created · a timeline ribbon showing who spoke when
+across the whole meeting · read-only share links with a branded 404 · **bounded
+clip sharing**, which Fathom's own free-plan share dialog does not offer — the
+recipient gets one time-window, with the rest of the transcript, the summary,
+attendee emails and action items stripped **on the server**, not hidden in the
+page.
+
+Two honest adaptations, both stated in the app: Fathom makes highlights *during*
+a call, and there is no live call here, so these are made while reviewing; and
+the Ask answers are pre-written rather than generated at request time.
+
+---
+
 ## Not built
 
-Highlights · playlists · alerts · deals · team calls · CRM matching · multi-team
-permissions · template switching · transcript editing · speaker renaming ·
-trimming · exports · a real recording bot · real auth · a real database.
+Playlists · alerts · deals · team calls · CRM matching · multi-team permissions ·
+template switching · transcript editing · speaker renaming · trimming · exports ·
+a real recording bot · real auth · a real database.
 
 These are absent, not stubbed to look present.

@@ -85,12 +85,14 @@ because the gap shaped what got built.
 | Pull the action items | **No** | Fathom detected none in 44 seconds |
 | Highlight a moment mid-call | **No** | Never exercised. The brief names it explicitly |
 | Search across meetings | **No** | Search box observed, never used |
-| Share a clip with a non-attendee | **No** | Never exercised — the single largest evidence gap |
+| Share a clip with a non-attendee | **Partly** | Done *after* the build started, not before. The **Share Recording** dialog and the resulting link opened in a real incognito window were both observed — [`SHARE-FLOW-OBSERVED.md`](research/SHARE-FLOW-OBSERVED.md). No **clip** was shared: the free-plan dialog offered link scope only, with no time-range control |
 | Eight-person call running an hour | **No** | Never attempted. The brief calls this "the case that actually matters" |
 
 **Why:** the call was cut short for time, and the follow-up checks (a 5–6 minute
 call with spoken commitments, and a share link opened in a private window) were
-planned, scoped, and then skipped under deadline pressure.
+planned, scoped, and then skipped under deadline pressure. The share check was
+later carried out — but after the build had started, which is the thing the brief
+asked not to do, so it is scored as *Partly* rather than promoted to *Yes*.
 
 **Consequence:** the build leaned on Fathom's **published OpenAPI schema** and
 help centre instead of on observed behaviour. That turned out to be a strong

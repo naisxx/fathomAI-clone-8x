@@ -859,3 +859,34 @@ and a share link still has no trigger, no palette and no rail, with ⌘K and `/`
 inert — the recipient was given one meeting, not an account.
 **Tradeoff.** You can no longer type a query without the palette opening first.
 That is one keystroke against two surfaces disagreeing about the same word.
+
+## 075 — 2026-09-26 — The README described a transcript we stopped shipping
+
+**Reason.** Its first table — the "what is real" row, the most load-bearing
+sentence in the repo — still said the shipped transcript "corrects several
+speech-recognition errors, so it is what was **said**, not literally what Fathom
+**emitted**." That was true until decision 049 replaced it with Fathom's raw ASR,
+mistakes included. So the README asserted the opposite of what the app renders
+and of what the app's own provenance note says on screen.
+
+A judge who reads the README and then opens the real meeting sees *Fathom drone*
+and *8x0* and catches the contradiction immediately. On a submission whose whole
+argument is that its labelling can be trusted, that is the most expensive
+possible inconsistency, and it was introduced by fixing something else and not
+re-reading what the fix invalidated.
+
+The same section listed **Highlights** under "Not built" — they have been built
+since P11 — so the README was simultaneously overclaiming on provenance and
+underclaiming on scope. Added a **Built beyond the minimum** section, placed
+before "Not built" rather than after it, covering search, the palette, the
+ribbon, highlights and bounded clips, with the two honest adaptations named.
+
+`ASSIGNMENT.md`'s flow scorecard scored "Share a clip with a non-attendee" as
+**No — never exercised — the single largest evidence gap", but the dialog and the
+logged-out view were observed afterwards. Now **Partly**, and deliberately not
+*Yes*: it happened after the build started, which is the thing the brief asked
+not to do, and no clip was ever shared because the free-plan dialog has no
+time-range control.
+**Tradeoff.** None — these were defects. The lesson is that changing what ships
+means re-reading every document that describes it, which is not something the
+build checks enforce.
