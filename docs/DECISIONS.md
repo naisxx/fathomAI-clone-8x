@@ -826,3 +826,36 @@ had none of R1–R3 while the branch had all of it.
 Also fixed while reading the Q3 summary on camera-equivalent screens: a seeded
 figure read "against a forecast 19% overrun of 12%", an editing slip. The
 transcript and the Ask answer both say 12%; the summary now agrees.
+
+## 074 — 2026-09-26 — The header field becomes a button; one query, one surface
+
+**Reason.** R2 introduced the palette to collapse two competing search boxes, and
+then left one of them in the header. The field submitted to `/search`; ⌘K opened
+the palette; the same word gave different results depending on which you reached
+for. The field even rendered a ⌘K hint it did not honour — the clearest possible
+statement that the two were the same thing, made by a control where they were not.
+
+It keeps the shape of a search field, because that shape is what tells someone
+they can search here, but it is a button. A `<span>` in a header is not
+discoverable as a place to type, and removing the affordance entirely would have
+traded one problem for a worse one.
+
+`/search` is still the escape hatch. The palette caps its list at forty and only
+carries hits that have a timestamp, so a word appearing only in a summary is
+findable there but has no row — the last row is now **Search all meetings for
+“x”**, which hands the query to the full page. Without it the trigger would no
+longer reach `/search` at all and a query with more than forty moments would
+silently lose the rest.
+
+Opening from outside goes through a five-line module (`paletteBus`) rather than a
+context provider for one boolean, or lifting state through the layout. The
+palette stays the owner of its own open state, focus restore and shortcut.
+
+Verified: click opens it and moves focus into the input; Escape closes it and
+returns focus to the trigger; `/` and ⌘K both open it; the action row lands on
+`/search?q=export` showing `16 results in 4 meetings` with the input prefilled;
+at 375px the shortcut hint hides, the dialog is 341px wide and nothing overflows;
+and a share link still has no trigger, no palette and no rail, with ⌘K and `/`
+inert — the recipient was given one meeting, not an account.
+**Tradeoff.** You can no longer type a query without the palette opening first.
+That is one keystroke against two surfaces disagreeing about the same word.

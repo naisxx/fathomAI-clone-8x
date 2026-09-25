@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "./Container";
-import { SearchBox } from "./SearchBox";
+import { PaletteTrigger } from "./PaletteTrigger";
 import { CommandPalette } from "./CommandPalette";
 
 /**
@@ -53,7 +53,7 @@ export function SiteHeader() {
           </span>
         ) : (
           <>
-            <SearchBox />
+            <PaletteTrigger />
             <CommandPalette />
             <div className="shrink-0">
               <span

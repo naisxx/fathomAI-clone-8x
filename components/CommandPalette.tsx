@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { meetings } from "@/data";
 import { search as searchAll } from "@/lib/search";
 import { formatDuration, formatTimestamp } from "@/lib/types";
+import { onOpenPalette } from "./paletteBus";
 
 /**
  * One surface for finding anything.
@@ -63,6 +64,16 @@ export function CommandPalette() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, close]);
 
+  // The header trigger and the "/" shortcut open it from outside.
+  useEffect(
+    () =>
+      onOpenPalette(() => {
+        restoreTo.current = document.activeElement as HTMLElement;
+        setOpen(true);
+      }),
+    []
+  );
+
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
@@ -107,7 +118,26 @@ export function CommandPalette() {
       }
     }
 
-    return out.slice(0, 40);
+    const capped = out.slice(0, 40);
+
+    /*
+      The full page is the escape hatch. The palette caps its list so it stays
+      scannable, and it only carries hits that have a timestamp — so a word that
+      appears in a summary or an action item is findable here but not shown as a
+      row. Without this the header trigger no longer reaches /search at all, and
+      a query with more than forty moments would silently lose the rest.
+    */
+    if (term.length >= 2) {
+      capped.push({
+        id: "a-search-all",
+        kind: "action",
+        label: `Search all meetings for “${term}”`,
+        hint: "Transcripts, summaries, action items and titles",
+        run: () => router.push(`/search?q=${encodeURIComponent(term)}`),
+      });
+    }
+
+    return capped;
   }, [q, router]);
 
   useEffect(() => setActive(0), [q]);
