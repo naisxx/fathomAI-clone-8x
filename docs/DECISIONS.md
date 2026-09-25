@@ -605,3 +605,34 @@ it reads as the headline action it is and as something that opens.
 **Tradeoff.** More visual weight in the rail. Correct: sharing is one of the two
 things this product is for, and "a user could not find it" is the only usability
 evidence that matters.
+
+## 060 — 2026-09-26 — Palette verified by computation before a line of CSS
+
+**Reason.** The first proposed warm palette had **five pairs below AA** (4.18 to
+4.48) — all of which would have looked fine. A solver found the minimum
+adjustment that cleared every constraint, and the result is checked in as
+`scripts/check-contrast.mjs`: **36 pairs, both themes, all ≥4.5**, runnable
+before any future palette change.
+**Tradeoff.** None. This is the second contrast failure this build would have
+shipped on eye alone; the first reached production.
+
+## 061 — 2026-09-26 — One accent, one semantic hue, seeded goes neutral
+
+**Reason.** Three hues were competing for meaning. Now: warm amber for
+interaction only, one muted green reserved for `Real recording`, and **seeded
+rendered neutral** — an outlined chip carrying a label. Colour no longer carries
+meaning on its own, which is both an accessibility rule and a clarity one.
+**Tradeoff.** Seeded is less eye-catching. The label does the work, it appears on
+every surface, and there are four seeded meetings against one real — making the
+common case quiet is correct.
+
+## 062 — 2026-09-26 — Compatibility aliases, because renaming tokens fails silently
+
+**Reason.** Deleting the old palette left **~144 references across 9 variable
+names** undefined. CSS does not throw for an undefined custom property — it just
+drops the value. The page still rendered and looked almost right, while the
+"Seeded demo data" chip had quietly lost all styling. Old names are now mapped
+onto the new system and removed in the application step.
+**Tradeoff.** A temporary aliasing layer. Far cheaper than 144 silent breakages,
+and the failure mode is the point: a renamed token is invisible until someone
+looks at the right chip.

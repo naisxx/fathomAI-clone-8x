@@ -5,6 +5,7 @@
   "RangeError: Invalid code point" — which silently killed the entire stylesheet.
 */
 @import "tailwindcss" source(none);
+@import "./tokens.css";
 
 @source "../app";
 @source "../components";
@@ -21,55 +22,13 @@
     "Liberation Mono", monospace;
 }
 
-:root {
-  color-scheme: dark;
+/*
+  Colour, type, spacing and geometry now live in tokens.css.
+  Nothing in this file may declare a colour: one source of truth, or the
+  duplicate silently wins and you spend twenty minutes wondering why the accent
+  is still blue.
+*/
 
-  --bg: #0b0d10;
-  --bg-raised: #14171c;
-  --bg-hover: #1b1f26;
-  --border: #252a33;
-  --border-strong: #333a45;
-
-  --text: #e8eaed;
-  --text-muted: #9aa3af;
-  /* 5.67:1 on --bg, 5.23:1 on --bg-raised. The previous #6b7380 measured
-     4.07:1 and 3.75:1, i.e. below AA, and this token carries most 11-13px text. */
-  --text-faint: #828b9b;
-
-  --accent: #5eb0ef;
-  --accent-strong: #8ac7f5;
-  --accent-dim: rgba(94, 176, 239, 0.14);
-
-  --real: #4ade80;
-  --real-dim: rgba(74, 222, 128, 0.12);
-  --seeded: #fbbf24;
-  --seeded-dim: rgba(251, 191, 36, 0.12);
-
-  --focus: #8ac7f5;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    color-scheme: light;
-    --bg: #fbfbfc;
-    --bg-raised: #ffffff;
-    --bg-hover: #f2f4f7;
-    --border: #e3e6eb;
-    --border-strong: #cfd4dc;
-    --text: #14171c;
-    --text-muted: #5a626e;
-    /* 5.46:1 on --bg. The previous #838b97 measured 3.33:1. */
-    --text-faint: #5f6874;
-    --accent: #1d6fb8;
-    --accent-strong: #15578f;
-    --accent-dim: rgba(29, 111, 184, 0.1);
-    --real: #15803d;
-    --real-dim: rgba(21, 128, 61, 0.1);
-    --seeded: #a16207;
-    --seeded-dim: rgba(161, 98, 7, 0.1);
-    --focus: #1d6fb8;
-  }
-}
 
 html {
   background: var(--bg);
