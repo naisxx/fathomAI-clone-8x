@@ -425,3 +425,19 @@ inside the feature built to be honest. The flag is computed on the server from
 the unredacted meeting, since by the time the view sees it the list is empty
 either way.
 **Tradeoff.** One more prop threaded through the share boundary.
+
+## 045 — 2026-09-25 — A credential in the raw logs is left untouched, by decision
+
+**Reason.** The QA pass found that a meeting join code from the author's test
+call appears in the raw `.agent-logs/` — not in any source file or document, but
+inside an agent response written at the moment the leak was discovered in the
+video. The same code had already been redacted from the screenshots and the
+entire video track discarded over it.
+
+The author was given the choice and chose to leave it. Editing a log entry is
+what the brief forbids most explicitly, and the value of an untampered record
+outweighs the residual risk: the code belongs to an ad-hoc meeting that has
+ended, and a stranger reaching it would find an empty call requiring admission.
+**Tradeoff.** A low-value credential remains in a public repository. Recorded
+here without repeating it or citing a line number, so this entry does not become
+the pointer the decision was meant to avoid.
