@@ -2,6 +2,7 @@ import Link from "next/link";
 import { meetings } from "@/data";
 import { formatDuration, type Meeting } from "@/lib/types";
 import { ProvenanceBadge } from "@/components/ProvenanceBadge";
+import { Container } from "@/components/Container";
 
 export const metadata = { title: "Recap — meetings" };
 
@@ -50,7 +51,7 @@ function MeetingCard({ meeting, newestIso }: { meeting: Meeting; newestIso: stri
       <Link
         href={`/meetings/${meeting.id}`}
         className="group block rounded-xl border p-4 transition-colors"
-        style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
       >
         <div
           className="mb-3 grid aspect-video place-items-center rounded-lg border"
@@ -63,7 +64,7 @@ function MeetingCard({ meeting, newestIso }: { meeting: Meeting; newestIso: stri
           <span
             aria-hidden
             className="grid h-11 w-11 place-items-center rounded-full"
-            style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+            style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
           >
             {hasAudio ? (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -79,19 +80,19 @@ function MeetingCard({ meeting, newestIso }: { meeting: Meeting; newestIso: stri
 
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <ProvenanceBadge meeting={meeting} />
-          <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <span className="t-micro" style={{ color: "var(--faint)" }}>
             {formatDuration(meeting.durationSec)}
           </span>
         </div>
 
         <h3
-          className="text-[15px] font-semibold leading-snug transition-colors group-hover:text-[color:var(--accent-strong)]"
+          className="t-body font-semibold leading-snug transition-colors group-hover:text-[color:var(--accent-strong)]"
           style={{ color: "var(--text)" }}
         >
           {meeting.title}
         </h3>
 
-        <p className="mt-1.5 text-xs" style={{ color: "var(--text-faint)" }}>
+        <p className="mt-1.5 t-meta" style={{ color: "var(--faint)" }}>
           <SpeakerCount meeting={meeting} />
           {meeting.meetingType ? ` · ${meeting.meetingType}` : ""}
         </p>
@@ -106,12 +107,12 @@ export default function MeetingListPage() {
   const realCount = meetings.filter((m) => m.source === "real").length;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <Container className="py-[var(--s-8)]">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight">Meetings</h1>
+        <h1 className="t-display font-semibold tracking-tight">Meetings</h1>
         <p
-          className="mt-2 max-w-2xl text-sm leading-relaxed"
-          style={{ color: "var(--text-muted)" }}
+          className="mt-[var(--s-2)] t-body leading-relaxed"
+          style={{ color: "var(--muted)", maxWidth: "var(--w-reading)" }}
         >
           {meetings.length} meetings. {realCount} uses a real recording with real
           audio; the rest are seeded so the interface can be judged at a scale a
@@ -122,10 +123,10 @@ export default function MeetingListPage() {
       {groups.length === 0 ? (
         <div
           className="rounded-xl border p-10 text-center"
-          style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+          style={{ borderColor: "var(--border)", background: "var(--surface)" }}
         >
-          <p className="text-sm font-medium">No meetings yet</p>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
+          <p className="t-body font-medium">No meetings yet</p>
+          <p className="mt-1 t-body" style={{ color: "var(--faint)" }}>
             Recorded meetings will appear here, newest first.
           </p>
         </div>
@@ -133,8 +134,8 @@ export default function MeetingListPage() {
         groups.map(([day, list]) => (
           <section key={day} className="mb-10">
             <h2
-              className="mb-3 text-xs font-semibold uppercase tracking-[0.08em]"
-              style={{ color: "var(--text-faint)" }}
+              className="mb-3 t-label"
+              style={{ color: "var(--faint)" }}
             >
               {dayLabel(day, newestIso)}
             </h2>
@@ -146,6 +147,6 @@ export default function MeetingListPage() {
           </section>
         ))
       )}
-    </div>
+    </Container>
   );
 }

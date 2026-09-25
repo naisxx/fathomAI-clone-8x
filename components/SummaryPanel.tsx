@@ -8,13 +8,13 @@ export function SummaryPanel({ meeting }: { meeting: Meeting }) {
         <div
           className="rounded-lg border px-4 py-3"
           style={{
-            borderColor: "var(--seeded-dim)",
-            background: "var(--seeded-dim)",
+            borderColor: "var(--border)",
+            background: "var(--elevated)",
           }}
         >
           <p
-            className="flex items-center gap-2 text-sm font-medium"
-            style={{ color: "var(--seeded)" }}
+            className="flex items-center gap-2 t-body font-medium"
+            style={{ color: "var(--muted)" }}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -28,8 +28,8 @@ export function SummaryPanel({ meeting }: { meeting: Meeting }) {
             No summary was generated
           </p>
           <p
-            className="mt-1.5 text-[13px] leading-relaxed"
-            style={{ color: "var(--text-muted)" }}
+            className="mt-1.5 t-meta leading-relaxed"
+            style={{ color: "var(--muted)" }}
           >
             {meeting.summaryAbsentReason ??
               "No summary is available for this meeting."}
@@ -42,18 +42,18 @@ export function SummaryPanel({ meeting }: { meeting: Meeting }) {
   return (
     <div className="p-5">
       <div
-        className="mb-4 flex items-center gap-2 text-[11px]"
-        style={{ color: "var(--text-faint)" }}
+        className="mb-4 flex items-center gap-2 t-micro"
+        style={{ color: "var(--faint)" }}
       >
         <span
           className="rounded px-1.5 py-0.5 font-medium"
-          style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+          style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
         >
           {meeting.summary.templateName}
         </span>
         <span>template</span>
       </div>
-      <div className="prose-summary max-w-none text-[14px]">
+      <div className="prose-summary max-w-none t-body">
         {renderMarkdown(meeting.summary.markdown)}
       </div>
     </div>

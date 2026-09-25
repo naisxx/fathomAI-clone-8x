@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SearchBox } from "./SearchBox";
+import { Container } from "./Container";
+import { PaletteTrigger } from "./PaletteTrigger";
+import { CommandPalette } from "./CommandPalette";
 
 /**
  * The header adapts to who is looking.
@@ -24,7 +26,7 @@ export function SiteHeader() {
         background: "color-mix(in srgb, var(--bg) 88%, transparent)",
       }}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
+      <Container className="flex h-14 items-center gap-[var(--s-4)]">
         {isShared ? (
           <span className="flex items-center gap-2 font-semibold tracking-tight">
             <Wordmark />
@@ -36,28 +38,29 @@ export function SiteHeader() {
         )}
 
         <span
-          className="hidden text-xs lg:inline"
-          style={{ color: "var(--text-faint)" }}
+          className="hidden t-meta lg:inline"
+          style={{ color: "var(--faint)" }}
         >
           meeting review
         </span>
 
         {isShared ? (
           <span
-            className="ml-auto rounded-full border px-2.5 py-1 text-[11px] font-medium"
-            style={{ borderColor: "var(--border-strong)", color: "var(--text-muted)" }}
+            className="ml-auto rounded-full border px-2.5 py-1 t-micro font-medium"
+            style={{ borderColor: "var(--border-strong)", color: "var(--muted)" }}
           >
             Shared link
           </span>
         ) : (
           <>
-            <SearchBox />
+            <PaletteTrigger />
+            <CommandPalette />
             <div className="shrink-0">
               <span
-                className="hidden rounded-full border px-2.5 py-1 text-[11px] font-medium sm:inline-block"
+                className="hidden rounded-full border px-2.5 py-1 t-micro font-medium sm:inline-block"
                 style={{
                   borderColor: "var(--border-strong)",
-                  color: "var(--text-muted)",
+                  color: "var(--muted)",
                 }}
                 title="This is a portfolio build. Meetings are labelled individually as real or seeded."
               >
@@ -66,7 +69,7 @@ export function SiteHeader() {
             </div>
           </>
         )}
-      </div>
+      </Container>
     </header>
   );
 }
@@ -77,7 +80,7 @@ function Wordmark() {
       <span
         aria-hidden
         className="grid h-6 w-6 place-items-center rounded"
-        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+        style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
       >
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden>
           <path

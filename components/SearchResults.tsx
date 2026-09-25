@@ -7,6 +7,7 @@ import { meetings } from "@/data";
 import { search, totalHitCount, type HitKind, type SearchHit } from "@/lib/search";
 import { formatTimestamp, type Meeting } from "@/lib/types";
 import { ProvenanceBadge } from "./ProvenanceBadge";
+import { Moment } from "./Moment";
 
 const KIND_LABEL: Record<HitKind, string> = {
   title: "Title",
@@ -24,7 +25,7 @@ function Highlighted({ hit }: { hit: SearchHit }) {
       {before}
       <mark
         className="rounded-sm px-0.5"
-        style={{ background: "var(--accent-dim)", color: "var(--accent-strong)" }}
+        style={{ background: "var(--accent-tint)", color: "var(--accent-strong)" }}
       >
         {match}
       </mark>
@@ -48,32 +49,32 @@ function HitRow({ meeting, hit }: { meeting: Meeting; hit: SearchHit }) {
       >
         <span className="flex w-16 shrink-0 flex-col items-start gap-1">
           <span
-            className="rounded px-1 py-px text-[10px] uppercase tracking-wide"
-            style={{ background: "var(--bg-hover)", color: "var(--text-faint)" }}
+            className="rounded px-1 py-px t-label"
+            style={{ background: "var(--elevated)", color: "var(--faint)" }}
           >
             {KIND_LABEL[hit.kind]}
           </span>
           {hit.timestampSec !== undefined && (
             <span
-              className="font-mono text-[11px] tabular-nums"
+              className="font-mono t-micro tabular-nums"
               style={{ color: "var(--accent)" }}
             >
-              {formatTimestamp(hit.timestampSec)}
+              <Moment sec={hit.timestampSec} onSeek={() => {}} variant="display" />
             </span>
           )}
         </span>
         <span className="min-w-0 flex-1">
           {hit.speaker && (
             <span
-              className="mb-0.5 block text-[11px] font-medium"
-              style={{ color: "var(--text-faint)" }}
+              className="mb-0.5 block t-micro font-medium"
+              style={{ color: "var(--faint)" }}
             >
               {hit.speaker}
             </span>
           )}
           <span
-            className="block text-[13px] leading-relaxed"
-            style={{ color: "var(--text-muted)" }}
+            className="block t-meta leading-relaxed"
+            style={{ color: "var(--muted)" }}
           >
             <Highlighted hit={hit} />
           </span>
@@ -109,14 +110,8 @@ export function SearchResults() {
   const tooShort = q.trim().length > 0 && q.trim().length < 2;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
-      <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-        Across every meeting — transcripts, summaries, action items and titles.
-        A transcript hit takes you to the moment it was said.
-      </p>
-
-      <div className="relative mt-5">
+    <div>
+      <div className="relative mt-[var(--s-6)]">
         <label htmlFor="search-page-input" className="sr-only">
           Search query
         </label>
@@ -127,7 +122,7 @@ export function SearchResults() {
           viewBox="0 0 24 24"
           fill="none"
           className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
-          style={{ color: "var(--text-faint)" }}
+          style={{ color: "var(--faint)" }}
         >
           <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
           <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -139,19 +134,19 @@ export function SearchResults() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Try “pricing”, “migration”, or “Friday”"
-          className="h-12 w-full rounded-xl border pl-10 pr-3 text-[15px] outline-none"
+          className="h-12 w-full rounded-xl border pl-10 pr-3 t-body outline-none"
           style={{
             borderColor: "var(--border)",
-            background: "var(--bg-raised)",
+            background: "var(--surface)",
             color: "var(--text)",
           }}
         />
       </div>
 
       <p
-        className="mt-3 text-[13px]"
+        className="mt-3 t-meta"
         aria-live="polite"
-        style={{ color: "var(--text-faint)" }}
+        style={{ color: "var(--faint)" }}
       >
         {q.trim().length < 2
           ? tooShort
@@ -166,8 +161,8 @@ export function SearchResults() {
       {q.trim().length < 2 && (
         <div className="mt-8">
           <p
-            className="mb-2 text-xs font-semibold uppercase tracking-[0.08em]"
-            style={{ color: "var(--text-faint)" }}
+            className="mb-2 t-label"
+            style={{ color: "var(--faint)" }}
           >
             Try one of these
           </p>
@@ -177,8 +172,8 @@ export function SearchResults() {
                 key={s}
                 type="button"
                 onClick={() => setQ(s)}
-                className="min-h-8 rounded-full border px-3 py-1.5 text-[13px]"
-                style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}
+                className="min-h-8 rounded-full border px-3 py-1.5 t-meta"
+                style={{ borderColor: "var(--border)", color: "var(--muted)" }}
               >
                 {s}
               </button>
@@ -191,14 +186,14 @@ export function SearchResults() {
       {q.trim().length >= 2 && results.length === 0 && (
         <div
           className="mt-8 rounded-xl border p-10 text-center"
-          style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+          style={{ borderColor: "var(--border)", background: "var(--surface)" }}
         >
-          <p className="text-sm font-medium">
+          <p className="t-body font-medium">
             Nothing matches &ldquo;{q.trim()}&rdquo;
           </p>
           <p
-            className="mx-auto mt-1.5 max-w-sm text-[13px] leading-relaxed"
-            style={{ color: "var(--text-faint)" }}
+            className="mx-auto mt-1.5 max-w-sm t-meta leading-relaxed"
+            style={{ color: "var(--faint)" }}
           >
             Search covers all {meetings.length} meetings — one real recording and{" "}
             {meetings.length - 1} seeded. Try a shorter word, or a term from the Q3
@@ -213,22 +208,24 @@ export function SearchResults() {
           <section
             key={meeting.id}
             className="overflow-hidden rounded-xl border"
-            style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <div
               className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b px-3 py-2.5"
               style={{ borderColor: "var(--border)" }}
             >
-              <Link
-                href={`/meetings/${meeting.id}`}
-                className="text-[14px] font-semibold"
-              >
-                {meeting.title}
-              </Link>
+              {/*
+                Each result group is an h2. Without this the search page had no
+                headings at all, so a screen-reader user had no way to move
+                between meetings in the results.
+              */}
+              <h2 className="t-body font-semibold">
+                <Link href={`/meetings/${meeting.id}`}>{meeting.title}</Link>
+              </h2>
               <ProvenanceBadge meeting={meeting} />
               <span
-                className="ml-auto text-[11px]"
-                style={{ color: "var(--text-faint)" }}
+                className="ml-auto t-micro"
+                style={{ color: "var(--faint)" }}
               >
                 {totalHits} {totalHits === 1 ? "hit" : "hits"}
               </span>
@@ -240,8 +237,8 @@ export function SearchResults() {
             </ul>
             {totalHits > hits.length && (
               <div
-                className="border-t px-3 py-2 text-[12px]"
-                style={{ borderColor: "var(--border)", color: "var(--text-faint)" }}
+                className="border-t px-3 py-2 t-meta"
+                style={{ borderColor: "var(--border)", color: "var(--faint)" }}
               >
                 +{totalHits - hits.length} more in this meeting
               </div>

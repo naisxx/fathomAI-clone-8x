@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { formatTimestamp, type Meeting } from "@/lib/types";
+import type { Meeting } from "@/lib/types";
+import { Moment } from "./Moment";
 
 /**
  * Pre-written Q&A over one meeting.
@@ -28,10 +29,10 @@ export function AskPanel({
   if (meeting.ask.length === 0) {
     return (
       <div className="p-6 text-center">
-        <p className="text-sm font-medium">Nothing prepared for this meeting</p>
+        <p className="t-body font-medium">Nothing prepared for this meeting</p>
         <p
-          className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed"
-          style={{ color: "var(--text-faint)" }}
+          className="mx-auto mt-1 max-w-sm t-meta leading-relaxed"
+          style={{ color: "var(--faint)" }}
         >
           Answers here are written in advance, so a meeting only has them if
           someone wrote them. This one has none rather than a generated guess.
@@ -44,7 +45,7 @@ export function AskPanel({
     <div className="p-4">
       <div
         className="mb-3 flex gap-2 rounded-lg border px-3 py-2.5"
-        style={{ borderColor: "var(--seeded-dim)", background: "var(--seeded-dim)" }}
+        style={{ borderColor: "var(--elevated)", background: "var(--elevated)" }}
       >
         <svg
           width="15"
@@ -53,13 +54,13 @@ export function AskPanel({
           fill="none"
           aria-hidden
           className="mt-px shrink-0"
-          style={{ color: "var(--seeded)" }}
+          style={{ color: "var(--muted)" }}
         >
           <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
           <path d="M12 8h.01M11 12h1v4h1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
-        <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
-          <span className="font-medium" style={{ color: "var(--seeded)" }}>
+        <p className="t-meta leading-relaxed" style={{ color: "var(--muted)" }}>
+          <span className="font-medium" style={{ color: "var(--muted)" }}>
             Pre-written answers.
           </span>{" "}
           There is no live model here — nothing is generated when you click. Each
@@ -83,13 +84,13 @@ export function AskPanel({
                   onClick={() => setOpenIndex(open ? null : i)}
                   aria-expanded={open}
                   aria-controls={`ask-panel-${i}`}
-                  className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-[13px] font-medium"
+                  className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left t-meta font-medium"
                   style={{ color: "var(--text)" }}
                 >
                   <span
                     aria-hidden
-                    className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px]"
-                    style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                    className="grid h-5 w-5 shrink-0 place-items-center rounded-full t-micro"
+                    style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
                   >
                     ?
                   </span>
@@ -102,7 +103,7 @@ export function AskPanel({
                     aria-hidden
                     className="shrink-0 transition-transform"
                     style={{
-                      color: "var(--text-faint)",
+                      color: "var(--faint)",
                       transform: open ? "rotate(180deg)" : "none",
                     }}
                   >
@@ -114,30 +115,21 @@ export function AskPanel({
               {open && (
                 <div id={`ask-panel-${i}`} className="px-3 pb-3 pl-[42px]">
                   <p
-                    className="text-[13px] leading-relaxed"
-                    style={{ color: "var(--text-muted)" }}
+                    className="t-meta leading-relaxed"
+                    style={{ color: "var(--muted)" }}
                   >
                     {entry.answer}
                   </p>
 
                   <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                     <span
-                      className="text-[11px] uppercase tracking-wide"
-                      style={{ color: "var(--text-faint)" }}
+                      className="t-label"
+                      style={{ color: "var(--faint)" }}
                     >
                       From
                     </span>
                     {entry.citations.map((sec) => (
-                      <button
-                        key={sec}
-                        type="button"
-                        onClick={() => onSeek(sec)}
-                        className="inline-flex min-h-6 items-center rounded px-2 py-1 font-mono text-[11px] tabular-nums"
-                        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-                        aria-label={`Jump to ${formatTimestamp(sec)} in the recording`}
-                      >
-                        {formatTimestamp(sec)}
-                      </button>
+                      <Moment key={sec} sec={sec} onSeek={onSeek} context={entry.question} />
                     ))}
                   </div>
                 </div>

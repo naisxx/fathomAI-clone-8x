@@ -5,6 +5,7 @@
   "RangeError: Invalid code point" — which silently killed the entire stylesheet.
 */
 @import "tailwindcss" source(none);
+@import "./tokens.css";
 
 @source "../app";
 @source "../components";
@@ -21,55 +22,13 @@
     "Liberation Mono", monospace;
 }
 
-:root {
-  color-scheme: dark;
+/*
+  Colour, type, spacing and geometry now live in tokens.css.
+  Nothing in this file may declare a colour: one source of truth, or the
+  duplicate silently wins and you spend twenty minutes wondering why the accent
+  is still blue.
+*/
 
-  --bg: #0b0d10;
-  --bg-raised: #14171c;
-  --bg-hover: #1b1f26;
-  --border: #252a33;
-  --border-strong: #333a45;
-
-  --text: #e8eaed;
-  --text-muted: #9aa3af;
-  /* 5.67:1 on --bg, 5.23:1 on --bg-raised. The previous #6b7380 measured
-     4.07:1 and 3.75:1, i.e. below AA, and this token carries most 11-13px text. */
-  --text-faint: #828b9b;
-
-  --accent: #5eb0ef;
-  --accent-strong: #8ac7f5;
-  --accent-dim: rgba(94, 176, 239, 0.14);
-
-  --real: #4ade80;
-  --real-dim: rgba(74, 222, 128, 0.12);
-  --seeded: #fbbf24;
-  --seeded-dim: rgba(251, 191, 36, 0.12);
-
-  --focus: #8ac7f5;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    color-scheme: light;
-    --bg: #fbfbfc;
-    --bg-raised: #ffffff;
-    --bg-hover: #f2f4f7;
-    --border: #e3e6eb;
-    --border-strong: #cfd4dc;
-    --text: #14171c;
-    --text-muted: #5a626e;
-    /* 5.46:1 on --bg. The previous #838b97 measured 3.33:1. */
-    --text-faint: #5f6874;
-    --accent: #1d6fb8;
-    --accent-strong: #15578f;
-    --accent-dim: rgba(29, 111, 184, 0.1);
-    --real: #15803d;
-    --real-dim: rgba(21, 128, 61, 0.1);
-    --seeded: #a16207;
-    --seeded-dim: rgba(161, 98, 7, 0.1);
-    --focus: #1d6fb8;
-  }
-}
 
 html {
   background: var(--bg);
@@ -147,4 +106,89 @@ body {
 .prose-summary strong {
   color: var(--text);
   font-weight: 600;
+}
+
+/* ---- app shell -------------------------------------------------------
+   The rail is a drawer below 900px and permanent above it.
+
+   Written as a plain media query rather than Tailwind's arbitrary variants:
+   `max-[899px]:fixed` generated fine but `max-[899px]:-translate-x-full`
+   silently produced no transform at all, so the drawer changed state without
+   ever moving. Deterministic beats clever here.                            */
+.app-rail {
+  width: 17.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 899px) {
+  .app-rail {
+    position: fixed;
+    top: 3.5rem;
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    /* Offset comes from an inline custom property React sets, so the open
+       state cannot be lost to a specificity fight - and it stays scoped to
+       this breakpoint, unlike an inline transform. */
+    transform: translateX(var(--rail-x, -100%));
+    transition: transform 0.2s ease;
+  }
+}
+
+@media (min-width: 900px) {
+  .app-rail {
+    position: sticky;
+    top: 3.5rem;
+    height: calc(100dvh - 3.5rem);
+  }
+  .app-rail-trigger,
+  .app-rail-close,
+  .app-rail-backdrop {
+    display: none !important;
+  }
+}
+
+/* ---- bare range input -------------------------------------------------
+   The scrubber draws its own track, fill and thumb as positioned spans, so
+   the native control must be fully invisible and act only as the hit target
+   and the keyboard/a11y surface.
+
+   `appearance: none` on the input alone is not enough: WebKit still paints
+   ::-webkit-slider-thumb, which is why a default blue thumb and track were
+   sitting on top of the custom violet ones. Every native part is zeroed
+   explicitly.                                                              */
+.range-bare {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.range-bare::-webkit-slider-runnable-track {
+  background: transparent;
+  border: none;
+}
+.range-bare::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.range-bare::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+.range-bare::-moz-range-progress {
+  background: transparent;
+}
+.range-bare::-moz-range-thumb {
+  width: 1px;
+  height: 1px;
+  border: none;
+  opacity: 0;
+}
+/* Keyboard users still need to see what they are dragging. */
+.range-bare:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: var(--r-pill);
 }

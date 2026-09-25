@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { formatTimestamp, type Meeting } from "@/lib/types";
+import type { Meeting } from "@/lib/types";
+import { Moment } from "./Moment";
 
 /**
  * Completion state lives in localStorage, per browser.
@@ -58,19 +59,19 @@ export function ActionItems({
     return (
       <section>
         <h2
-          className="mb-2 text-xs font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "var(--text-faint)" }}
+          className="mb-2 t-label"
+          style={{ color: "var(--faint)" }}
         >
           Action items
         </h2>
         <div
           className="rounded-lg border p-4"
-          style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+          style={{ borderColor: "var(--border)", background: "var(--surface)" }}
         >
-          <p className="text-[13px] font-medium">None detected</p>
+          <p className="t-meta font-medium">None detected</p>
           <p
-            className="mt-1 text-[13px] leading-relaxed"
-            style={{ color: "var(--text-faint)" }}
+            className="mt-1 t-meta leading-relaxed"
+            style={{ color: "var(--faint)" }}
           >
             {meeting.actionItemsAbsentReason ??
               "No action items were detected in this meeting."}
@@ -86,12 +87,12 @@ export function ActionItems({
     <section>
       <div className="mb-2 flex items-baseline justify-between gap-2">
         <h2
-          className="text-xs font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "var(--text-faint)" }}
+          className="t-label"
+          style={{ color: "var(--faint)" }}
         >
           Action items
         </h2>
-        <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+        <span className="t-micro" style={{ color: "var(--faint)" }}>
           {done}/{meeting.actionItems.length} done
         </span>
       </div>
@@ -105,7 +106,7 @@ export function ActionItems({
               className="rounded-lg border p-2.5"
               style={{
                 borderColor: "var(--border)",
-                background: "var(--bg-raised)",
+                background: "var(--surface)",
               }}
             >
               <div className="flex items-start gap-2.5">
@@ -130,9 +131,9 @@ export function ActionItems({
                 <div className="min-w-0 flex-1">
                   <label
                     htmlFor={`ai-${item.id}`}
-                    className="block cursor-pointer text-[13px] leading-snug"
+                    className="block cursor-pointer t-meta leading-snug"
                     style={{
-                      color: completed ? "var(--text-faint)" : "var(--text)",
+                      color: completed ? "var(--faint)" : "var(--text)",
                       textDecoration: completed ? "line-through" : "none",
                     }}
                   >
@@ -140,25 +141,21 @@ export function ActionItems({
                   </label>
 
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <button
-                      type="button"
-                      onClick={() => onSeek(item.timestampSec)}
-                      className="inline-flex min-h-6 items-center rounded px-2 py-1 font-mono text-[11px] tabular-nums transition-colors"
-                      style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-                      aria-label={`Jump to ${formatTimestamp(item.timestampSec)} in the recording`}
-                    >
-                      @ {formatTimestamp(item.timestampSec)}
-                    </button>
+                    <Moment
+                      sec={item.timestampSec}
+                      onSeek={onSeek}
+                      context={item.description}
+                    />
 
                     {item.assignee && (
-                      <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+                      <span className="t-micro" style={{ color: "var(--faint)" }}>
                         {item.assignee}
                       </span>
                     )}
 
                     <span
-                      className="ml-auto text-[10px] uppercase tracking-wide"
-                      style={{ color: "var(--text-faint)" }}
+                      className="ml-auto t-label"
+                      style={{ color: "var(--faint)" }}
                       title={
                         item.userGenerated
                           ? "Added by a person"
@@ -175,7 +172,7 @@ export function ActionItems({
         })}
       </ul>
 
-      <p className="mt-2 text-[11px]" style={{ color: "var(--text-faint)" }}>
+      <p className="mt-2 t-micro" style={{ color: "var(--faint)" }}>
         Ticks are saved in this browser only — there is no account behind them.
       </p>
     </section>

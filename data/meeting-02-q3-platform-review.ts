@@ -190,7 +190,7 @@ Q3 burned **61% of the error budget**, up from 40%, driven by three incidents â€
 
 ## Cost
 
-Infrastructure is **19% over plan** against a forecast 19% overrun of 12%, almost entirely the duplicate running cost of an unfinished migration. A further three-week slip puts Q4 at roughly **24% over**, which escalates beyond the team. This makes the migration deadline a financial one rather than a technical one.
+Infrastructure is **19% over plan** against a forecast overrun of 12%, almost entirely the duplicate running cost of an unfinished migration. A further three-week slip puts Q4 at roughly **24% over**, which escalates beyond the team. This makes the migration deadline a financial one rather than a technical one.
 
 ## Security
 

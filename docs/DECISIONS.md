@@ -576,3 +576,317 @@ stale chunks (`Cannot find module './58.js'`) because a production build had
 overwritten `.next` underneath it. Third occurrence of this pattern.
 **Tradeoff.** None, but the habit is worth keeping: when a verified fix appears
 not to work, check the server is serving it before rewriting the code.
+
+## 058 — 2026-09-26 — Dev and verification builds get separate output directories
+
+**Reason.** `next dev` and `next build` both write `.next`. Running a production
+build to verify a change, while the dev server was live, replaced the chunks that
+server was mid-flight on, and it then died with
+`Cannot find module './58.js'` — which reads like a code fault and is not one.
+It cost time three times, and the fourth was the author hitting it in their own
+browser.
+
+`distDir` now honours `NEXT_DIST_DIR`, and verification builds run as
+`NEXT_DIST_DIR=.next-verify npm run build:verify`. Vercel sets nothing and keeps
+using `.next`. Proven by running a full production build with the dev server up:
+the build succeeded and the dev server kept serving.
+**Tradeoff.** One env var to remember. Cheap against a failure that masquerades
+as a bug in the app.
+
+## 059 — 2026-09-26 — The share control was findable in theory and not in practice
+
+**Reason.** The author could not find sharing in the UI, and was right not to.
+The control was an outlined button labelled only "Share", collapsed by default,
+sitting in a right rail that stacks *below* the player and transcript on a narrow
+window — three small decisions compounding into something invisible.
+
+It is now a primary accent button reading **"Share or clip"** with a chevron, so
+it reads as the headline action it is and as something that opens.
+**Tradeoff.** More visual weight in the rail. Correct: sharing is one of the two
+things this product is for, and "a user could not find it" is the only usability
+evidence that matters.
+
+## 060 — 2026-09-26 — Palette verified by computation before a line of CSS
+
+**Reason.** The first proposed warm palette had **five pairs below AA** (4.18 to
+4.48) — all of which would have looked fine. A solver found the minimum
+adjustment that cleared every constraint, and the result is checked in as
+`scripts/check-contrast.mjs`: **36 pairs, both themes, all ≥4.5**, runnable
+before any future palette change.
+**Tradeoff.** None. This is the second contrast failure this build would have
+shipped on eye alone; the first reached production.
+
+## 061 — 2026-09-26 — One accent, one semantic hue, seeded goes neutral
+
+**Reason.** Three hues were competing for meaning. Now: warm amber for
+interaction only, one muted green reserved for `Real recording`, and **seeded
+rendered neutral** — an outlined chip carrying a label. Colour no longer carries
+meaning on its own, which is both an accessibility rule and a clarity one.
+**Tradeoff.** Seeded is less eye-catching. The label does the work, it appears on
+every surface, and there are four seeded meetings against one real — making the
+common case quiet is correct.
+
+## 062 — 2026-09-26 — Compatibility aliases, because renaming tokens fails silently
+
+**Reason.** Deleting the old palette left **~144 references across 9 variable
+names** undefined. CSS does not throw for an undefined custom property — it just
+drops the value. The page still rendered and looked almost right, while the
+"Seeded demo data" chip had quietly lost all styling. Old names are now mapped
+onto the new system and removed in the application step.
+**Tradeoff.** A temporary aliasing layer. Far cheaper than 144 silent breakages,
+and the failure mode is the point: a renamed token is invisible until someone
+looks at the right chip.
+
+## 063 — 2026-09-26 — Warmth dialled out; accent moved to violet
+
+**Reason.** The warm ink-on-paper direction read as too warm on screen. The ramp
+is now near-neutral graphite with the faintest cool lean, so the surface stays
+out of the way and the accent carries the personality — which is what a
+long-reading surface should do.
+
+Amber was replaced with a brighter accent. Three candidates were solved against
+WCAG rather than picked by taste:
+
+| | dark | light | verdict |
+|---|---|---|---|
+| **Violet** | `#A78BFA` 5.31 | `#6D28D9` 5.64 | **passes outright** |
+| Cyan | `#3DD9F0` 7.92 | `#0E728D` 4.52 after darkening | passes, kept as the alternate |
+| Lime | `#B6F24C` 9.51 | 4.17 — fails | **dropped** |
+
+Lime was dropped for a second reason beyond contrast: it collides with the green
+reserved for `Real recording`, and the whole point of one-accent-plus-one-semantic
+is that those two never compete.
+
+Violet ships. Cyan is verified in the checker so switching is a two-line change.
+**Tradeoff.** Violet is a more opinionated choice than a neutral blue. That is
+deliberate — the brief invites doing better than the original, and Fathom is blue.
+
+## 064 — 2026-09-26 — R1 complete: the system is applied, not just defined
+
+**Reason.** Tokens are worth nothing until the call sites use them. Applied:
+138 variable references migrated off the old names, every arbitrary `text-[Npx]`
+replaced with a scale step, and one `Container` component replacing three
+hand-rolled widths across four surfaces — the layout no longer re-flows as you
+navigate between pages.
+
+Two defects surfaced while applying it:
+
+- The mechanical rename flattened two borders into their own background
+  (`--seeded-dim` had been used for both), leaving invisible edges on the
+  provenance note and the summary empty state.
+- The search page shipped **two `<h1>`s** — the Suspense fallback and the
+  component each rendered one. The page now owns the heading so it appears once
+  and lives in the static shell.
+
+Verified across all seven surfaces: one `h1` each, zero arbitrary sizes, zero
+legacy variables, honesty labels intact. Rendered font sizes are now 11/13/15/28
+— the scale — where there were six ad-hoc values.
+**Tradeoff.** `t-micro` lost its automatic uppercase, so section labels use an
+explicit `t-label`. Correct: 11px text and a shouting label are different jobs.
+
+## 065 — 2026-09-26 — One command surface, and it is absent from shares
+
+**Reason.** The revamp started because a feature existed and could not be found.
+A palette is the structural answer: one place to look for any capability,
+instead of needing to know which rail it lives in. It also retires the two
+competing search fields — a header box that navigated away to a page, and a
+transcript box that filtered in place.
+
+Moments are first-class in it, not just meetings: typing "error budget" offers
+the 2:11 line and Enter lands on `?t=131&tab=transcript`. That is the product's
+own idea — everything is an annotation on time — expressed in the way you search.
+
+**Not mounted on share views.** A recipient was given one meeting; a palette
+searching every other meeting would quietly widen what the link grants. Verified:
+⌘K on a share does nothing, and there is no search field either.
+**Tradeoff.** A keyboard-first affordance needs advertising, so the header field
+carries a ⌘K hint rather than pretending discovery is free.
+
+## 066 — 2026-09-26 — The shell: meetings persist, so navigation stops costing context
+
+**Reason.** Four unrelated page layouts meant opening a meeting threw the list
+away. Meetings now live in a rail that is part of the root layout, so React
+keeps it mounted across navigation — verified by node identity: the same rail
+element survives a route change, and the active item updates.
+
+Below 900px it becomes a drawer, which closes on navigation, on Escape and on
+backdrop click. Share and specimen routes render bare, for the same reason the
+palette is absent there.
+**Tradeoff.** The "All meetings" link on the review screen is now redundant on
+wide screens. Harmless, and still the only way back on a phone.
+
+## 067 — 2026-09-26 — Tailwind arbitrary variants failed silently; plain CSS did not
+
+**Reason.** `max-[899px]:fixed` and `max-[899px]:z-40` generated fine, but
+`max-[899px]:-translate-x-full` produced **no transform at all** — the drawer
+changed state without moving, with no error anywhere. Rewritten as a plain
+`@media` block with the offset driven by an inline `--rail-x` custom property,
+which is deterministic and inspectable.
+**Tradeoff.** Two places to look for shell styling instead of one. Worth it: a
+utility that silently generates nothing is worse than a slightly less tidy
+stylesheet.
+
+## 068 — 2026-09-26 — Verifying UI in a hidden browser tab needs different rules
+
+**Reason.** Roughly forty minutes went into a drawer bug that did not exist. The
+browser pane reports `document.hidden: true`, and a hidden document does not run
+CSS transitions, defers style recalculation, starves `requestAnimationFrame`
+(measured at 0 fps earlier), and throttles React's scheduler. Every symptom —
+frozen transform, ignored custom property, unchanged `getBoundingClientRect` —
+pointed at broken CSS. Forcing a synchronous reflow and polling for the expected
+state instead of waiting a fixed delay showed the drawer had been correct all
+along.
+
+**The rule for the rest of this build:** when verifying UI in this pane, neutralise
+transitions, force layout with `void el.offsetHeight`, and poll for the state you
+expect rather than sleeping. A fixed `setTimeout` is not a wait in a hidden tab.
+**Tradeoff.** Verification scripts are wordier. Cheaper than debugging phantoms —
+this is the third time the environment has impersonated a bug (stale `.next`
+twice, hidden document once).
+
+## 069 — 2026-09-26 — The scrubber was drawing two thumbs
+
+**Reason.** Spotted by the author: a blue circle and line sat on top of the
+custom violet scrubber. Not two players — the native range input. The control
+draws its own track, fill and thumb as positioned spans, and the input was set
+to `appearance: none` with a transparent background, but that does **not**
+suppress `::-webkit-slider-thumb`. Chrome kept painting its default thumb over
+ours. Every native part is now zeroed explicitly, with a visible focus ring kept
+for keyboard users since the input is still the real control.
+**Tradeoff.** None. Present since the player was built and visible on every
+meeting; I had looked at that component many times without seeing it.
+
+## 070 — 2026-09-26 — The timeline replaces the gradient; speakers read as lightness, unmatched as hatching
+
+**Reason.** A 345px box rendering a play button over a gradient was 36% of the
+fold spent depicting the *absence* of video. It is now a ribbon showing who
+spoke when across the meeting, with action items and highlights on the same
+axis and click-anywhere seeking. On the Q3 meeting that is 85 bands across
+62 minutes and 8 speakers; the summary's decisions now sit above the fold.
+
+Speakers are separated by **lightness**, not hue: the system has one accent and
+one semantic colour, and eight speakers cannot each have one. Unmatched speakers
+are **hatched** rather than tinted — a pattern distinguishes them without
+inventing a ninth colour, and it survives greyscale and colour-blindness. The
+legend names every speaker and marks the unmatched ones in words.
+
+Verified: clicking at 60% of the ribbon seeks to t=2229 against an expected
+2232; the 44-second real meeting degrades to "1 speaker" with a one-entry
+legend; a clip bounds the ribbon to its window and still leaks no out-of-window
+transcript.
+**Tradeoff.** Lightness separates eight speakers less vividly than eight hues
+would. Correct for a system with one accent, and the legend carries the names.
+
+## 071 — 2026-09-26 — One `Moment`, including where it cannot be a button
+
+**Reason.** A timestamp rendered five different ways — chip on action items,
+mono text on transcript lines, tinted pill on Ask citations, coloured span in
+search results, something else on highlights — for one concept, with five sets
+of keyboard behaviour.
+
+Four of those sit **inside** an already-interactive ancestor: a transcript line
+button, a search result link. Wrapping them in a button would nest interactive
+elements, which is invalid HTML and confusing with a screen reader. So `Moment`
+has a `display` variant: same mark, not a second target, parent still seeks.
+**Tradeoff.** One component with three variants rather than one shape. The
+alternative was either nested buttons or keeping five renderers.
+
+## 072 — 2026-09-26 — /specimen deleted; two aria labels it hid were broken
+
+**Reason.** `/specimen` was scaffolding for approving the palette and type scale.
+It had served its purpose and a reviewer finding an undocumented design-system
+page would reasonably ask why it shipped. Route removed, `AppShell`'s bare-layout
+check reduced to `/share` alone, build down from 11 pages to 10.
+
+Reading the app back afterwards caught two defects from the R3 conversion: the
+transcript line button and a highlight marker had a `<Moment .../>` element
+pasted **inside a template string**, so their accessible name read as literal
+JSX source. Nothing visible, which is why it survived a visual check — a screen
+reader would have read `Jump to $<Moment sec={item.startSec} ...`. Both now
+interpolate `formatTimestamp` again, and a repo-wide sweep for JSX inside
+template literals is clean.
+**Tradeoff.** None. The specimen is recoverable from history if the palette is
+ever revisited.
+
+## 073 — 2026-09-26 — Walkthrough rewritten a fourth time, against the built app
+
+**Reason.** The script narrated a gradient player, an amber badge palette and a
+header search box as the cross-meeting surface — none of which still exist. Every
+screen in the new script was read off the running app rather than recalled, and
+the numbers it quotes are now a table at the bottom with where each one appears,
+so a drifted figure is caught before the camera is on rather than during.
+
+Two structural changes. The ribbon gets its own beat, because it is the clearest
+evidence of product judgement in the build: not having video was turned into
+showing the shape of the meeting instead of imitating a player. And the pre-flight
+now starts with **merge `feat/fathom-rebuild` into `develop`** — production
+deploys from `develop`, which was still on the pre-revamp merge, so the live site
+had none of R1–R3 while the branch had all of it.
+
+Also fixed while reading the Q3 summary on camera-equivalent screens: a seeded
+figure read "against a forecast 19% overrun of 12%", an editing slip. The
+transcript and the Ask answer both say 12%; the summary now agrees.
+
+## 074 — 2026-09-26 — The header field becomes a button; one query, one surface
+
+**Reason.** R2 introduced the palette to collapse two competing search boxes, and
+then left one of them in the header. The field submitted to `/search`; ⌘K opened
+the palette; the same word gave different results depending on which you reached
+for. The field even rendered a ⌘K hint it did not honour — the clearest possible
+statement that the two were the same thing, made by a control where they were not.
+
+It keeps the shape of a search field, because that shape is what tells someone
+they can search here, but it is a button. A `<span>` in a header is not
+discoverable as a place to type, and removing the affordance entirely would have
+traded one problem for a worse one.
+
+`/search` is still the escape hatch. The palette caps its list at forty and only
+carries hits that have a timestamp, so a word appearing only in a summary is
+findable there but has no row — the last row is now **Search all meetings for
+“x”**, which hands the query to the full page. Without it the trigger would no
+longer reach `/search` at all and a query with more than forty moments would
+silently lose the rest.
+
+Opening from outside goes through a five-line module (`paletteBus`) rather than a
+context provider for one boolean, or lifting state through the layout. The
+palette stays the owner of its own open state, focus restore and shortcut.
+
+Verified: click opens it and moves focus into the input; Escape closes it and
+returns focus to the trigger; `/` and ⌘K both open it; the action row lands on
+`/search?q=export` showing `16 results in 4 meetings` with the input prefilled;
+at 375px the shortcut hint hides, the dialog is 341px wide and nothing overflows;
+and a share link still has no trigger, no palette and no rail, with ⌘K and `/`
+inert — the recipient was given one meeting, not an account.
+**Tradeoff.** You can no longer type a query without the palette opening first.
+That is one keystroke against two surfaces disagreeing about the same word.
+
+## 075 — 2026-09-26 — The README described a transcript we stopped shipping
+
+**Reason.** Its first table — the "what is real" row, the most load-bearing
+sentence in the repo — still said the shipped transcript "corrects several
+speech-recognition errors, so it is what was **said**, not literally what Fathom
+**emitted**." That was true until decision 049 replaced it with Fathom's raw ASR,
+mistakes included. So the README asserted the opposite of what the app renders
+and of what the app's own provenance note says on screen.
+
+A judge who reads the README and then opens the real meeting sees *Fathom drone*
+and *8x0* and catches the contradiction immediately. On a submission whose whole
+argument is that its labelling can be trusted, that is the most expensive
+possible inconsistency, and it was introduced by fixing something else and not
+re-reading what the fix invalidated.
+
+The same section listed **Highlights** under "Not built" — they have been built
+since P11 — so the README was simultaneously overclaiming on provenance and
+underclaiming on scope. Added a **Built beyond the minimum** section, placed
+before "Not built" rather than after it, covering search, the palette, the
+ribbon, highlights and bounded clips, with the two honest adaptations named.
+
+`ASSIGNMENT.md`'s flow scorecard scored "Share a clip with a non-attendee" as
+**No — never exercised — the single largest evidence gap", but the dialog and the
+logged-out view were observed afterwards. Now **Partly**, and deliberately not
+*Yes*: it happened after the build started, which is the thing the brief asked
+not to do, and no clip was ever shared because the free-plan dialog has no
+time-range control.
+**Tradeoff.** None — these were defects. The lesson is that changing what ships
+means re-reading every document that describes it, which is not something the
+build checks enforce.
