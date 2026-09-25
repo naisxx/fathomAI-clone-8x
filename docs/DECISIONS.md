@@ -355,3 +355,34 @@ widen what the link grants. The header on `/share` is a wordmark and a "Shared
 link" chip — no search, no navigation, and the pages are `noindex, nofollow`.
 **Tradeoff.** A pathname check in a client component rather than a route group,
 which was the smaller change to existing routes.
+
+## 038 — 2026-09-25 — Ask is pre-written, and says so above the answers
+
+**Reason.** Decision 014 ruled out a runtime AI key: cost per view, latency, and
+a live failure mode during a camera-on walkthrough. The honest substitute is to
+write the answers once, ground each in the transcript, and disclose it. The
+disclosure sits at the top of the panel in plain language — "There is no live
+model here; nothing is generated when you click" — not in a footnote.
+**Tradeoff.** No arbitrary questions. A meeting only has answers if someone
+wrote them, and the empty state says exactly that rather than generating a guess
+(the Platform Standup has none, deliberately).
+
+## 039 — 2026-09-25 — Every Ask answer must cite timestamps
+
+**Reason.** An answer you can jump into and check is worth more than one you
+have to trust, and it is the difference between a demo and a claim. Citations
+resolve through the same `at()` helper the action items use, so a timestamp
+cannot drift silently when the transcript is edited. Verified end to end: the
+budget answer's citation lands on "Nineteen percent over plan for Q3…", the line
+that actually supports it.
+**Tradeoff.** Answers must be written against real transcript lines, which is
+slower than free-form prose — and is the point.
+
+## 040 — 2026-09-25 — Ask entries are stripped from shared payloads
+
+**Reason.** The shared view has no Ask tab, so the entries would never render —
+but they would still ship in the hydration payload, and their answers paraphrase
+who committed to what. That is the same content action items were stripped for
+in decision 035. Caught while wiring P8, before it shipped.
+**Tradeoff.** None. It reinforces that `redactForShare` must be revisited
+whenever a field is added to `Meeting`.

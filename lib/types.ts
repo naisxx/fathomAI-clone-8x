@@ -67,6 +67,24 @@ export interface ActionItem {
   userGenerated: boolean;
 }
 
+/**
+ * A pre-written question and answer about one meeting.
+ *
+ * Deliberately not a live model call. A runtime AI key costs money per view,
+ * adds latency, and can fail on camera during a walkthrough — and the honest
+ * substitute is to generate the answers once, ground every one of them in the
+ * transcript, and say plainly that they are pre-written.
+ *
+ * `citations` are seconds into the recording. Every answer must cite at least
+ * one, so a reader can check it against what was actually said rather than
+ * taking it on trust.
+ */
+export interface AskEntry {
+  question: string;
+  answer: string;
+  citations: number[];
+}
+
 export interface Meeting {
   id: string;
   title: string;
@@ -100,6 +118,9 @@ export interface Meeting {
   transcript: TranscriptItem[];
   /** Why there is no transcript, when there isn't one. */
   transcriptAbsentReason?: string;
+
+  /** Pre-written Q&A. Empty is fine — the panel says so rather than inventing. */
+  ask: AskEntry[];
 }
 
 /** Speakers in a transcript that no invitee matched. */
