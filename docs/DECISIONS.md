@@ -322,3 +322,36 @@ rather than the page. Transcript and action-item hits link to
 built in P4. Title and summary hits have no moment, so they link to the meeting.
 **Tradeoff.** Two kinds of result behave differently, which the kind label on
 each row makes visible.
+
+## 035 — 2026-09-25 — Share view redacts on the server, after a real leak was found
+
+**Reason.** The shared view rendered no action items and no attendee emails, and
+looked correct. But it was handed the whole `Meeting`, and Next.js serialises
+props into the HTML for hydration — so every invitee address was sitting in the
+page source of a link meant for outsiders. Sixty-six matches across the seeded
+meetings. **Not rendering something is not the same as not sending it.**
+Redaction now happens server-side in `redactForShare`, which strips invitee
+emails and domains, all action items, and the speaker→invitee email join.
+**Tradeoff.** A second shape of the same type to keep in step, which decision 036
+guards against.
+
+## 036 — 2026-09-25 — The redaction is self-guarding at build time
+
+**Reason.** A silent regression here is a privacy bug, not a cosmetic one, so
+`redactForShare` asserts its own invariant: it scans the redacted payload for
+address-shaped strings and throws if any survive. Verified by deliberately
+reintroducing the leak — the production build **failed** with
+`redactForShare left 5 address(es) in the shared payload for "platform-standup"`.
+Confirmed on the prerendered output: five share pages contain zero emails while
+the owner page still contains 74.
+**Tradeoff.** A regex-based check, so it catches address-shaped data rather than
+all private data. It covers the field that actually leaked.
+
+## 037 — 2026-09-25 — Shared chrome differs from signed-in chrome
+
+**Reason.** A share recipient was given one meeting, not an account. Offering a
+search box across every other meeting, or a link to the full list, would quietly
+widen what the link grants. The header on `/share` is a wordmark and a "Shared
+link" chip — no search, no navigation, and the pages are `noindex, nofollow`.
+**Tradeoff.** A pathname check in a client component rather than a route group,
+which was the smaller change to existing routes.

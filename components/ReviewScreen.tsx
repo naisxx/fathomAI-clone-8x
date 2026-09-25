@@ -9,6 +9,7 @@ import { Player } from "./Player";
 import { TranscriptPanel } from "./TranscriptPanel";
 import { SummaryPanel } from "./SummaryPanel";
 import { ActionItems } from "./ActionItems";
+import { ShareButton } from "./ShareButton";
 
 type Tab = "summary" | "transcript";
 
@@ -183,6 +184,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
 
         {/* Right: meta rail */}
         <aside className="min-w-0 space-y-5">
+          <ShareButton meeting={meeting} />
+
           <ProvenanceNote meeting={meeting} />
 
           <ActionItems meeting={meeting} onSeek={seekAndShow} />
