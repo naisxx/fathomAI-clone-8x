@@ -505,3 +505,35 @@ It was also the cheapest of the three candidate slices.
 scroll to. The filter keeps each line's original index and the scroll effect
 simply does nothing when the active line is filtered out, rather than jumping to
 the wrong one.
+
+## 051 — 2026-09-26 — Highlights are made while reviewing, and say so
+
+**Reason.** Fathom's highlights are created mid-call; we have no live call. Ours
+capture wherever the player currently is, which is a different action, so the
+panel states it in plain words rather than faking an in-call widget. Seeded
+highlights ship on the Q3 meeting so the feature is populated on arrival;
+viewer-created ones persist in `localStorage` with the same "this browser only"
+note the action-item ticks carry.
+**Tradeoff.** Seeded highlights cannot be deleted — only ones you made. That is
+deliberate: a viewer clearing the demo's own content would leave the next visitor
+with an empty rail.
+
+## 052 — 2026-09-26 — Opaque share tokens, and the links still labelled public
+
+**Reason.** The share view presents itself as access-controlled, so `q3plat` and
+`stnd05` were wrong — guessable tokens in a feature about controlled access.
+Fathom uses 32 random characters; ours are now 24, from a 57-character alphabet
+with no semantic content. The share panel also states plainly that there is no
+account system behind them, so in this demo every link is effectively public.
+**Tradeoff.** The walkthrough URLs got longer and had to be updated. Worth it —
+the previous tokens undercut the feature's own story.
+
+## 053 — 2026-09-26 — Highlights stripped from shared payloads
+
+**Reason.** Third instance of the same leak class as P7 (emails) and P8 (Ask
+entries): the shared view has no highlights UI, so nothing would render, but the
+data would still ship in the hydration payload. A viewer's private marks are not
+the recipient's business. Verified on the prerendered output — zero highlight
+data across all five share pages, five labels on the owner page.
+**Tradeoff.** None. It confirms the standing rule: every new field on `Meeting`
+needs a decision in `redactForShare`, and so far every one has needed stripping.

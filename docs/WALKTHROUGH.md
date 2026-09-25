@@ -19,7 +19,7 @@ Camera on throughout. Every URL below is live and was verified on production.
   1. `/`
   2. `/meetings/impromptu-google-meet-meeting`
   3. `/meetings/q3-platform-review`
-  4. `/share/q3plat`
+  4. `/share/wyeuNaLtcntHnjRJmHL6YTmr`
 - [ ] Browser zoom 100%, window ~1280px wide. Close bookmarks bar.
 
 ---
@@ -108,7 +108,7 @@ Point at "16 results in 4 meetings", then **click a transcript hit**.
 
 ### 3:30 – 4:05 · Sharing, and the gap I found in Fathom
 
-**Tab 4 — `/share/q3plat`**
+**Tab 4 — `/share/wyeuNaLtcntHnjRJmHL6YTmr`**
 
 > "A share link. Recording, summary, transcript — no action items, no attendee
 > emails, no search into the rest of the account. And the emails aren't just

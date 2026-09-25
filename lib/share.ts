@@ -55,6 +55,11 @@ function buildRedacted(meeting: Meeting): Meeting {
     // class of leak this module exists to prevent, so it goes too.
     ask: [],
 
+    // A viewer's own marked moments are not the recipient's business, and
+    // seeded ones are noise in a shared view. Stripped for the same reason as
+    // action items and Ask entries.
+    highlights: [],
+
     // The speaker→invitee join is an email address.
     transcript: meeting.transcript.map((t) => ({
       ...t,

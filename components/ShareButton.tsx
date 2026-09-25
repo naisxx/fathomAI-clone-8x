@@ -61,6 +61,10 @@ export function ShareButton({ meeting }: { meeting: Meeting }) {
             Anyone with this link can view the recording, summary and transcript.
             Action items and attendee details are not included.
           </p>
+          <p className="mt-1.5 text-[11px] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+            Tokens are random and unguessable, but there is no account system
+            behind them — in this demo every share link is effectively public.
+          </p>
 
           <div className="mt-2 flex gap-1.5">
             <input

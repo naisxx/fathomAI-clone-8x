@@ -45,7 +45,7 @@ export const meetingOneReal: Meeting = {
   scheduledStart: "2026-09-25T08:38:00.000Z",
   durationSec: 43.62,
   transcriptLanguage: "en",
-  shareToken: "r7k2m9",
+  shareToken: "ZGkdsNfbMnG2hXRXVWZer9PV",
   recordedBy: "Onais Ahmed",
 
   source: "real",
@@ -87,6 +87,8 @@ export const meetingOneReal: Meeting = {
       citations: [3.43, 27.89],
     },
   ],
+
+  highlights: [],
 
   transcript: [
     {

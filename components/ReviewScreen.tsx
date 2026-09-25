@@ -11,6 +11,7 @@ import { SummaryPanel } from "./SummaryPanel";
 import { ActionItems } from "./ActionItems";
 import { ShareButton } from "./ShareButton";
 import { AskPanel } from "./AskPanel";
+import { HighlightsPanel, useHighlights } from "./Highlights";
 
 type Tab = "summary" | "transcript" | "ask";
 
@@ -24,6 +25,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
   const playback = usePlayback(meeting.durationSec, meeting.audioSrc);
   const [tab, setTab] = useState<Tab>(meeting.summary ? "summary" : "transcript");
   const [follow, setFollow] = useState(true);
+  const { all: highlights, add: addHighlight, remove: removeHighlight } =
+    useHighlights(meeting);
 
   const { seek } = playback;
 
@@ -143,7 +146,12 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* Left: player + tabbed pane */}
         <div className="min-w-0">
-          <Player meeting={meeting} playback={playback} />
+          <Player
+            meeting={meeting}
+            playback={playback}
+            highlights={highlights}
+            onSeekHighlight={seekAndShow}
+          />
 
           <div
             className="mt-4 overflow-hidden rounded-xl border"
@@ -213,6 +221,15 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
           <ShareButton meeting={meeting} />
 
           <ProvenanceNote meeting={meeting} />
+
+          <HighlightsPanel
+            meeting={meeting}
+            currentTime={playback.currentTime}
+            onSeek={seekAndShow}
+            highlights={highlights}
+            onAdd={addHighlight}
+            onRemove={removeHighlight}
+          />
 
           <ActionItems meeting={meeting} onSeek={seekAndShow} />
 
