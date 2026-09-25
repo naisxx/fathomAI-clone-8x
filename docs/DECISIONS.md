@@ -303,3 +303,22 @@ the checkbox keeps its 18px visual inside a 24×24 clickable parent, which is th
 WCAG 2.5.8 enclosure exception rather than an oversized box.
 **Tradeoff.** None. Note the first sweep reported 81 failures against a
 zero-width viewport — measurements were only meaningful after setting one.
+
+## 033 — 2026-09-25 — Search is client-side, linear, and unranked beyond hit count
+
+**Reason.** The whole corpus is a few hundred short strings in the bundle. A
+linear case-insensitive scan is instant and has no index to fall out of sync.
+Meetings are ordered by hit count; hits within a meeting are ordered
+title → summary → action → transcript, then chronologically. No relevance
+scoring, because any weighting would be invented rather than measured.
+**Tradeoff.** No fuzzy matching, stemming or typo tolerance — "migrate" does not
+find "migration". Acceptable for a seeded corpus; a real one would need an index.
+
+## 034 — 2026-09-25 — A search hit carries its timestamp
+
+**Reason.** The feature is only worth building if a hit takes you to the moment
+rather than the page. Transcript and action-item hits link to
+`/meetings/<id>?t=<sec>&tab=transcript`, reusing the deep-link path already
+built in P4. Title and summary hits have no moment, so they link to the meeting.
+**Tradeoff.** Two kinds of result behave differently, which the kind label on
+each row makes visible.

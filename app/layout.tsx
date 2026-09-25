@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SearchBox } from "@/components/SearchBox";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -46,15 +47,17 @@ export default function RootLayout({
             </Link>
 
             <span
-              className="hidden text-xs sm:inline"
+              className="hidden text-xs lg:inline"
               style={{ color: "var(--text-faint)" }}
             >
               meeting review
             </span>
 
-            <div className="ml-auto">
+            <SearchBox />
+
+            <div className="shrink-0">
               <span
-                className="rounded-full border px-2.5 py-1 text-[11px] font-medium"
+                className="hidden rounded-full border px-2.5 py-1 text-[11px] font-medium sm:inline-block"
                 style={{
                   borderColor: "var(--border-strong)",
                   color: "var(--text-muted)",
