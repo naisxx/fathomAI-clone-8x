@@ -636,3 +636,27 @@ onto the new system and removed in the application step.
 **Tradeoff.** A temporary aliasing layer. Far cheaper than 144 silent breakages,
 and the failure mode is the point: a renamed token is invisible until someone
 looks at the right chip.
+
+## 063 — 2026-09-26 — Warmth dialled out; accent moved to violet
+
+**Reason.** The warm ink-on-paper direction read as too warm on screen. The ramp
+is now near-neutral graphite with the faintest cool lean, so the surface stays
+out of the way and the accent carries the personality — which is what a
+long-reading surface should do.
+
+Amber was replaced with a brighter accent. Three candidates were solved against
+WCAG rather than picked by taste:
+
+| | dark | light | verdict |
+|---|---|---|---|
+| **Violet** | `#A78BFA` 5.31 | `#6D28D9` 5.64 | **passes outright** |
+| Cyan | `#3DD9F0` 7.92 | `#0E728D` 4.52 after darkening | passes, kept as the alternate |
+| Lime | `#B6F24C` 9.51 | 4.17 — fails | **dropped** |
+
+Lime was dropped for a second reason beyond contrast: it collides with the green
+reserved for `Real recording`, and the whole point of one-accent-plus-one-semantic
+is that those two never compete.
+
+Violet ships. Cyan is verified in the checker so switching is a two-line change.
+**Tradeoff.** Violet is a more opinionated choice than a neutral blue. That is
+deliberate — the brief invites doing better than the original, and Fathom is blue.

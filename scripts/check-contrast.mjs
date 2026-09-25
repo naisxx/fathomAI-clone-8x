@@ -25,14 +25,25 @@ const mix = (fg, bg, a) => {
 
 const THEMES = {
   dark: {
-    bg: "#121110", surface: "#1B1917", elevated: "#232120",
-    text: "#F4F0EA", muted: "#B3AAA0", faint: "#91887D",
-    accent: "#E0A458", real: "#78BE8A", onAccent: "#1A1512",
+    bg: "#0F0F11", surface: "#17171A", elevated: "#1F1F23",
+    text: "#EDEDF0", muted: "#A2A2AC", faint: "#8A8A95",
+    accent: "#A78BFA", real: "#4ADE80", onAccent: "#17131F",
   },
   light: {
-    bg: "#FBF9F5", surface: "#FFFFFF", elevated: "#F5F1EA",
-    text: "#1A1714", muted: "#5B5349", faint: "#6E655A",
-    accent: "#8B5813", real: "#2C774A", onAccent: "#FFFFFF",
+    bg: "#FAFAFA", surface: "#FFFFFF", elevated: "#F3F3F5",
+    text: "#18181B", muted: "#52525B", faint: "#64646E",
+    accent: "#6D28D9", real: "#147839", onAccent: "#FFFFFF",
+  },
+  // The alternate accent, verified so switching to it is a two-line change.
+  "dark (cyan alt)": {
+    bg: "#0F0F11", surface: "#17171A", elevated: "#1F1F23",
+    text: "#EDEDF0", muted: "#A2A2AC", faint: "#8A8A95",
+    accent: "#3DD9F0", real: "#4ADE80", onAccent: "#07191D",
+  },
+  "light (cyan alt)": {
+    bg: "#FAFAFA", surface: "#FFFFFF", elevated: "#F3F3F5",
+    text: "#18181B", muted: "#52525B", faint: "#64646E",
+    accent: "#0E728D", real: "#147839", onAccent: "#FFFFFF",
   },
 };
 

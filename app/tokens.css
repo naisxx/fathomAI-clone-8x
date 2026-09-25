@@ -55,29 +55,31 @@
   --w-content: 75rem;   /* 1200 — layout */
   --w-reading: 42.5rem; /* 680  — prose and transcript */
 
-  /* ---- dark, warm near-black ------------------------------------------
-     #0b0d10 was a cold blue-black that read as a generic dev tool. This is
-     closer to ink on paper, which is what a reading product should feel like. */
+  /* ---- dark, near-neutral ---------------------------------------------
+     Started warm (ink-on-paper) and it read as too warm, so the cast is
+     dialled out to a near-neutral graphite with the faintest cool lean. The
+     accent carries the personality; the surface stays out of the way, which
+     is what a long-reading surface should do.                              */
   color-scheme: dark;
 
-  --bg: #121110;
-  --surface: #1b1917;
-  --elevated: #232120;
-  --border: #2e2b28;
-  --border-strong: #3e3a35;
+  --bg: #0f0f11;
+  --surface: #17171a;
+  --elevated: #1f1f23;
+  --border: #2a2a30;
+  --border-strong: #3a3a43;
 
-  --text: #f4f0ea;      /* 16.61 on bg */
-  --muted: #b3aaa0;     /*  8.24 on bg */
-  --faint: #91887d;     /*  5.41 on bg, 4.60 on elevated */
+  --text: #ededf0;      /* 14.06 worst */
+  --muted: #a2a2ac;     /*  6.49 worst */
+  --faint: #8a8a95;     /*  4.81 worst */
 
   /* The single accent. Interaction only — never decoration. */
-  --accent: #e0a458;    /*  8.64 on bg */
+  --accent: var(--accent-hue, #a78bfa);  /* violet, 5.31 worst */
   --accent-tint: color-mix(in srgb, var(--accent) 14%, var(--surface));
-  --on-accent: #1a1512; /*  8.29 on accent */
+  --on-accent: var(--on-accent-hue, #17131f); /* 6.71 on accent */
 
   /* The one semantic hue, reserved for "Real recording".
      "Seeded" is deliberately neutral: an outlined chip carrying a label. */
-  --real: #78be8a;      /*  8.56 on bg */
+  --real: #4ade80;      /*  7.73 worst */
   --real-tint: color-mix(in srgb, var(--real) 14%, var(--surface));
 
 
@@ -104,7 +106,7 @@
   --real-dim: var(--real-tint);
   --seeded: var(--muted);
   --seeded-dim: var(--elevated);
-  --accent-strong: #eebb7e;
+  --accent-strong: var(--accent-strong-hue, #c4b0fc);
 
   --focus: var(--accent);
 }
@@ -113,21 +115,21 @@
   :root:not([data-theme="dark"]) {
     color-scheme: light;
 
-    --bg: #fbf9f5;      /* warm paper */
+    --bg: #fafafa;
     --surface: #ffffff;
-    --elevated: #f5f1ea;
-    --border: #e7e1d7;
-    --border-strong: #d2cabd;
+    --elevated: #f3f3f5;
+    --border: #e4e4e8;
+    --border-strong: #cdcdd4;
 
-    --text: #1a1714;    /* 16.97 on bg */
-    --muted: #5b5349;   /*  7.19 on bg */
-    --faint: #6e655a;   /*  5.44 on bg */
+    --text: #18181b;    /* 15.99 worst */
+    --muted: #52525b;   /*  6.98 worst */
+    --faint: #64646e;   /*  5.28 worst */
 
-    --accent: #8b5813;  /*  5.70 on bg — amber needs darkening on paper */
-    --on-accent: #ffffff;
+    --accent: var(--accent-hue-light, #6d28d9); /* violet, 5.64 worst */
+    --on-accent: var(--on-accent-hue-light, #ffffff);
 
-    --real: #2c774a;    /*  5.19 on bg */
-    --accent-strong: #6d440e;
+    --real: #147839;    /*  4.56 worst */
+    --accent-strong: var(--accent-strong-hue-light, #5b21b6);
   }
 }
 

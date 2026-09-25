@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AccentSwitcher } from "./AccentSwitcher";
 
 /**
  * TEMPORARY. Delete before submission. (Route is /specimen; Next excludes
@@ -78,6 +79,8 @@ export default function SpecimenPage() {
         </p>
       </header>
 
+      <AccentSwitcher />
+
       <Section title="Type scale — five steps">
         <div
           className="rounded-[var(--r-panel)] border p-[var(--s-6)]"
@@ -107,7 +110,7 @@ export default function SpecimenPage() {
         </div>
       </Section>
 
-      <Section title="Surface — warm near-black, warm paper">
+      <Section title="Surface — near-neutral graphite, neutral paper">
         <div className="grid gap-[var(--s-4)] sm:grid-cols-2 lg:grid-cols-4">
           <Swatch name="Background" varName="--bg" />
           <Swatch name="Surface" varName="--surface" />
@@ -124,7 +127,7 @@ export default function SpecimenPage() {
         </div>
       </Section>
 
-      <Section title="Colour — one accent, one semantic">
+      <Section title="Colour — one accent, one semantic hue">
         <div className="grid gap-[var(--s-4)] sm:grid-cols-2">
           <Swatch name="Accent — interaction only" varName="--accent" note="8.6:1 on bg" />
           <Swatch name="Real recording — the only semantic hue" varName="--real" note="8.6:1 on bg" />
