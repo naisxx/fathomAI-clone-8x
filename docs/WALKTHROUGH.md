@@ -129,10 +129,12 @@ In the Transcript tab, type **`migration`** into the transcript's own search fie
 
 > "Search inside a meeting — eight of seventy-two segments."
 
-Then **⌘K**, type **`export`**:
+Then **click the search box in the header** (or press **⌘K** — same thing, which
+is the point), type **`export`**:
 
-> "And across all of them, from anywhere, with one shortcut. A hit isn't a page —
-> it's a moment."
+> "And across all of them, from anywhere. There's one box and one shortcut, and
+> they open the same thing — I had two for a while and they disagreed. A hit
+> isn't a page, it's a moment."
 
 **Press Enter on a result.** It lands on that line, in that meeting.
 
