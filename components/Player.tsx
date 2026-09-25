@@ -33,7 +33,7 @@ export function Player({
   return (
     <div
       className="overflow-hidden rounded-xl border"
-      style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+      style={{ borderColor: "var(--border)", background: "var(--surface)" }}
     >
       {meeting.audioSrc ? (
         // Native controls are intentionally off: the transport below drives it,
@@ -67,7 +67,7 @@ export function Player({
               </svg>
             )}
           </button>
-          <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <span className="t-micro" style={{ color: "var(--faint)" }}>
             {isClip
               ? `Clip · ${formatTimestamp(lo)}–${formatTimestamp(hi)}`
               : playback.isReal
@@ -83,7 +83,7 @@ export function Player({
           onClick={toggle}
           aria-label={isPlaying ? "Pause" : "Play"}
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full"
-          style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+          style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
         >
           {isPlaying ? (
             <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden>
@@ -98,8 +98,8 @@ export function Player({
         </button>
 
         <span
-          className="shrink-0 font-mono text-xs tabular-nums"
-          style={{ color: "var(--text-muted)" }}
+          className="shrink-0 font-mono t-meta tabular-nums"
+          style={{ color: "var(--muted)" }}
         >
           {formatTimestamp(currentTime)}
         </span>
@@ -141,8 +141,8 @@ export function Player({
         </label>
 
         <span
-          className="shrink-0 font-mono text-xs tabular-nums"
-          style={{ color: "var(--text-faint)" }}
+          className="shrink-0 font-mono t-meta tabular-nums"
+          style={{ color: "var(--faint)" }}
           title={isClip ? "End of this clip" : undefined}
         >
           {formatTimestamp(hi)}
@@ -151,8 +151,8 @@ export function Player({
         <button
           type="button"
           onClick={() => setRate(RATES[(RATES.indexOf(rate) + 1) % RATES.length])}
-          className="min-h-6 min-w-9 shrink-0 rounded px-1.5 py-1 font-mono text-xs"
-          style={{ color: "var(--text-muted)" }}
+          className="min-h-6 min-w-9 shrink-0 rounded px-1.5 py-1 font-mono t-meta"
+          style={{ color: "var(--muted)" }}
           aria-label={`Playback speed ${rate} times. Click to change.`}
         >
           {rate}×

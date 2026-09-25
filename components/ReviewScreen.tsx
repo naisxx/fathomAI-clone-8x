@@ -12,6 +12,7 @@ import { ActionItems } from "./ActionItems";
 import { ShareButton } from "./ShareButton";
 import { AskPanel } from "./AskPanel";
 import { HighlightsPanel, useHighlights } from "./Highlights";
+import { Container } from "./Container";
 
 type Tab = "summary" | "transcript" | "ask";
 
@@ -106,11 +107,11 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6">
+    <Container className="py-[var(--s-6)]">
       <Link
         href="/"
-        className="mb-3 -ml-1 inline-flex min-h-6 items-center gap-1.5 rounded px-1 py-1 text-[13px]"
-        style={{ color: "var(--text-muted)" }}
+        className="mb-3 -ml-1 inline-flex min-h-6 items-center gap-1.5 rounded px-1 py-1 t-meta"
+        style={{ color: "var(--muted)" }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
           <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -125,12 +126,12 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
         would appear below the whole player and transcript.
       */}
       <header className="mb-5">
-        <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
+        <h1 className="t-title font-semibold leading-tight tracking-tight sm:t-display">
           {meeting.title}
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
           <ProvenanceBadge meeting={meeting} size="md" />
-          <span className="text-[13px]" style={{ color: "var(--text-faint)" }}>
+          <span className="t-meta" style={{ color: "var(--faint)" }}>
             {new Date(meeting.scheduledStart).toLocaleDateString("en-GB", {
               day: "numeric",
               month: "long",
@@ -155,7 +156,7 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
 
           <div
             className="mt-4 overflow-hidden rounded-xl border"
-            style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           >
             <div
               role="tablist"
@@ -177,8 +178,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
                     // so Tab moves past the tablist rather than through it.
                     tabIndex={selected ? 0 : -1}
                     onClick={() => setTab(t.id)}
-                    className="relative min-h-11 px-3 py-2.5 text-[13px] font-medium transition-colors"
-                    style={{ color: selected ? "var(--accent)" : "var(--text-muted)" }}
+                    className="relative min-h-11 px-3 py-2.5 t-meta font-medium transition-colors"
+                    style={{ color: selected ? "var(--accent)" : "var(--muted)" }}
                   >
                     {t.label}
                     {selected && (
@@ -235,8 +236,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
 
           <section>
             <h2
-              className="mb-2 text-xs font-semibold uppercase tracking-[0.08em]"
-              style={{ color: "var(--text-faint)" }}
+              className="mb-2 t-label"
+              style={{ color: "var(--faint)" }}
             >
               Participants ({meeting.invitees.length})
             </h2>
@@ -244,22 +245,22 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
               {meeting.invitees.map((p) => (
                 <li
                   key={p.name}
-                  className="flex items-center gap-2 text-[13px]"
-                  style={{ color: "var(--text-muted)" }}
+                  className="flex items-center gap-2 t-meta"
+                  style={{ color: "var(--muted)" }}
                 >
                   <span className="truncate">{p.name}</span>
                   {p.isExternal && (
                     <span
-                      className="shrink-0 rounded px-1 py-px text-[10px] uppercase tracking-wide"
-                      style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                      className="shrink-0 rounded px-1 py-px t-label"
+                      style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
                     >
                       external
                     </span>
                   )}
                   {p.matchedSpeakerDisplayName === null && (
                     <span
-                      className="shrink-0 rounded px-1 py-px text-[10px] uppercase tracking-wide"
-                      style={{ background: "var(--seeded-dim)", color: "var(--seeded)" }}
+                      className="shrink-0 rounded px-1 py-px t-label"
+                      style={{ background: "var(--elevated)", color: "var(--muted)" }}
                       title="This invitee could not be matched to any transcript speaker."
                     >
                       unmatched
@@ -271,8 +272,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
 
             {unmatched.length > 0 && (
               <p
-                className="mt-2 text-[11px] leading-relaxed"
-                style={{ color: "var(--text-faint)" }}
+                className="mt-2 t-micro leading-relaxed"
+                style={{ color: "var(--faint)" }}
               >
                 {unmatched.length} participant{unmatched.length > 1 ? "s" : ""} could not
                 be matched to a transcript speaker. Fathom&rsquo;s own API models this
@@ -282,6 +283,6 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
           </section>
         </aside>
       </div>
-    </div>
+    </Container>
   );
 }

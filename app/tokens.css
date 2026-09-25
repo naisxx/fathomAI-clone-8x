@@ -73,9 +73,9 @@
   --faint: #8a8a95;     /*  4.81 worst */
 
   /* The single accent. Interaction only — never decoration. */
-  --accent: var(--accent-hue, #a78bfa);  /* violet, 5.31 worst */
+  --accent: #a78bfa;    /* violet, 5.31 worst */
   --accent-tint: color-mix(in srgb, var(--accent) 14%, var(--surface));
-  --on-accent: var(--on-accent-hue, #17131f); /* 6.71 on accent */
+  --on-accent: #17131f; /*  6.71 on accent */
 
   /* The one semantic hue, reserved for "Real recording".
      "Seeded" is deliberately neutral: an outlined chip carrying a label. */
@@ -83,30 +83,7 @@
   --real-tint: color-mix(in srgb, var(--real) 14%, var(--surface));
 
 
-/* ---- compatibility aliases -------------------------------------------
-   TEMPORARY. Removed in R1's application step.
-
-   The app has ~144 references to the previous variable names. Renaming the
-   tokens without these would leave every one of them undefined - which does
-   not throw, it just silently drops the colour. That is exactly how the
-   "Seeded demo data" chip lost its styling the moment the old palette was
-   deleted: the page still rendered, and looked almost right.
-
-   So the old names are mapped onto the new system. Call sites migrate in the
-   application step and these go with them.
-
-   Note --seeded maps to a neutral: that is the intended design, not a
-   shortcut. Colour is no longer what tells you a meeting is seeded; the label
-   does.                                                                    */
-  --text-muted: var(--muted);
-  --text-faint: var(--faint);
-  --bg-raised: var(--surface);
-  --bg-hover: var(--elevated);
-  --accent-dim: var(--accent-tint);
-  --real-dim: var(--real-tint);
-  --seeded: var(--muted);
-  --seeded-dim: var(--elevated);
-  --accent-strong: var(--accent-strong-hue, #c4b0fc);
+  --accent-strong: #c4b0fc;
 
   --focus: var(--accent);
 }
@@ -125,11 +102,11 @@
     --muted: #52525b;   /*  6.98 worst */
     --faint: #64646e;   /*  5.28 worst */
 
-    --accent: var(--accent-hue-light, #6d28d9); /* violet, 5.64 worst */
-    --on-accent: var(--on-accent-hue-light, #ffffff);
+    --accent: #6d28d9;  /*  5.64 worst */
+    --on-accent: #ffffff;
 
     --real: #147839;    /*  4.56 worst */
-    --accent-strong: var(--accent-strong-hue-light, #5b21b6);
+    --accent-strong: #5b21b6;
   }
 }
 
@@ -158,6 +135,12 @@
 .t-micro {
   font-size: var(--text-micro);
   line-height: var(--lh-micro);
+}
+/* Section labels. Same size as micro, but shouting on purpose. */
+.t-label {
+  font-size: var(--text-micro);
+  line-height: var(--lh-micro);
   letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
+  font-weight: 600;
 }

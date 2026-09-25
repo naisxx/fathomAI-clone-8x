@@ -22,12 +22,12 @@ export function ProvenanceBadge({
     <span
       className={
         size === "md"
-          ? "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
-          : "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium"
+          ? "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 t-meta font-medium"
+          : "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 t-micro font-medium"
       }
       style={{
-        background: isReal ? "var(--real-dim)" : "var(--seeded-dim)",
-        color: isReal ? "var(--real)" : "var(--seeded)",
+        background: isReal ? "var(--real-tint)" : "var(--elevated)",
+        color: isReal ? "var(--real)" : "var(--muted)",
       }}
       title={meeting.provenanceNote}
     >
@@ -46,16 +46,16 @@ export function ProvenanceNote({ meeting }: { meeting: Meeting }) {
   const isReal = meeting.source === "real";
   return (
     <div
-      className="rounded-lg border px-3.5 py-3 text-[13px] leading-relaxed"
+      className="rounded-lg border px-3.5 py-3 t-meta leading-relaxed"
       style={{
-        borderColor: isReal ? "var(--real-dim)" : "var(--seeded-dim)",
-        background: isReal ? "var(--real-dim)" : "var(--seeded-dim)",
-        color: "var(--text-muted)",
+        borderColor: isReal ? "var(--real-tint)" : "var(--border)",
+        background: isReal ? "var(--real-tint)" : "var(--elevated)",
+        color: "var(--muted)",
       }}
     >
       <span
         className="font-medium"
-        style={{ color: isReal ? "var(--real)" : "var(--seeded)" }}
+        style={{ color: isReal ? "var(--real)" : "var(--muted)" }}
       >
         {isReal ? "Real recording." : "Seeded demo data."}
       </span>{" "}

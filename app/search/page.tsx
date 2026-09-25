@@ -1,26 +1,38 @@
 import { Suspense } from "react";
+import { Container } from "@/components/Container";
 import { SearchResults } from "@/components/SearchResults";
 
 export const metadata = { title: "Search — Recap" };
 
 /**
- * useSearchParams needs a Suspense boundary for this route to prerender, so the
- * shell is static and the query-dependent part hydrates on the client.
+ * The page owns the heading and the container; SearchResults owns only the
+ * interactive part.
+ *
+ * Previously both rendered an <h1>Search</h1> — the Suspense fallback and the
+ * component — so the page shipped two level-one headings. Keeping the heading
+ * out here means it appears exactly once and lives in the static shell.
+ *
+ * useSearchParams needs the Suspense boundary for this route to prerender.
  */
 export default function SearchPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="mx-auto max-w-3xl px-4 py-8">
-          <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
+    <Container width="reading" className="py-[var(--s-8)]">
+      <h1 className="t-display">Search</h1>
+      <p className="mt-[var(--s-2)] t-body" style={{ color: "var(--muted)" }}>
+        Across every meeting — transcripts, summaries, action items and titles.
+        A transcript hit takes you to the moment it was said.
+      </p>
+
+      <Suspense
+        fallback={
           <div
-            className="mt-5 h-12 w-full animate-pulse rounded-xl border"
-            style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+            className="mt-[var(--s-6)] h-12 w-full animate-pulse rounded-[var(--r-panel)] border"
+            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
           />
-        </div>
-      }
-    >
-      <SearchResults />
-    </Suspense>
+        }
+      >
+        <SearchResults />
+      </Suspense>
+    </Container>
   );
 }

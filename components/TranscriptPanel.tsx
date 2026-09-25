@@ -24,7 +24,7 @@ function Avatar({ name, matched }: { name: string; matched: boolean }) {
   return (
     <span
       aria-hidden
-      className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[11px] font-semibold"
+      className="grid h-7 w-7 shrink-0 place-items-center rounded-full t-micro font-semibold"
       style={
         matched
           ? {
@@ -33,7 +33,7 @@ function Avatar({ name, matched }: { name: string; matched: boolean }) {
             }
           : {
               background: "transparent",
-              color: "var(--text-faint)",
+              color: "var(--faint)",
               border: "1px dashed var(--border-strong)",
             }
       }
@@ -61,7 +61,7 @@ function MarkedText({ text, query }: { text: string; query: string }) {
       <mark
         key={n++}
         className="rounded-sm px-0.5"
-        style={{ background: "var(--accent-dim)", color: "var(--accent-strong)" }}
+        style={{ background: "var(--accent-tint)", color: "var(--accent-strong)" }}
       >
         {text.slice(at, at + q.length)}
       </mark>
@@ -92,7 +92,7 @@ function Line({
         data-active={isActive || undefined}
         className="flex w-full gap-3 rounded-lg p-2.5 text-left transition-colors"
         style={{
-          background: isActive ? "var(--accent-dim)" : "transparent",
+          background: isActive ? "var(--accent-tint)" : "transparent",
         }}
         aria-label={`Jump to ${formatTimestamp(item.startSec)}, ${item.speakerDisplayName}`}
       >
@@ -100,30 +100,30 @@ function Line({
         <span className="min-w-0 flex-1">
           <span className="mb-0.5 flex flex-wrap items-baseline gap-2">
             <span
-              className="text-[13px] font-semibold"
-              style={{ color: matched ? "var(--text)" : "var(--text-faint)" }}
+              className="t-meta font-semibold"
+              style={{ color: matched ? "var(--text)" : "var(--faint)" }}
             >
               {item.speakerDisplayName}
             </span>
             {!matched && (
               <span
-                className="rounded px-1 py-px text-[10px] font-medium uppercase tracking-wide"
-                style={{ color: "var(--seeded)", background: "var(--seeded-dim)" }}
+                className="rounded px-1 py-px t-label"
+                style={{ color: "var(--muted)", background: "var(--elevated)" }}
                 title="Diarisation could not match this speaker to a calendar invitee. Fathom's own API models this as null, so we show it rather than guessing."
               >
                 unmatched
               </span>
             )}
             <span
-              className="font-mono text-[11px] tabular-nums"
-              style={{ color: isActive ? "var(--accent)" : "var(--text-faint)" }}
+              className="font-mono t-micro tabular-nums"
+              style={{ color: isActive ? "var(--accent)" : "var(--faint)" }}
             >
               {formatTimestamp(item.startSec)}
             </span>
           </span>
           <span
-            className="block text-[14px] leading-relaxed"
-            style={{ color: isActive ? "var(--text)" : "var(--text-muted)" }}
+            className="block t-body leading-relaxed"
+            style={{ color: isActive ? "var(--text)" : "var(--muted)" }}
           >
             <MarkedText text={item.text} query={query} />
           </span>
@@ -185,8 +185,8 @@ export function TranscriptPanel({
   if (meeting.transcript.length === 0) {
     return (
       <div className="p-6 text-center">
-        <p className="text-sm font-medium">No transcript</p>
-        <p className="mx-auto mt-1 max-w-sm text-sm" style={{ color: "var(--text-faint)" }}>
+        <p className="t-body font-medium">No transcript</p>
+        <p className="mx-auto mt-1 max-w-sm t-body" style={{ color: "var(--faint)" }}>
           {meeting.transcriptAbsentReason ?? "No transcript is available for this meeting."}
         </p>
       </div>
@@ -200,8 +200,8 @@ export function TranscriptPanel({
   return (
     <div className="flex min-h-0 flex-col">
       <div
-        className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-3 py-2 text-[11px]"
-        style={{ borderColor: "var(--border)", color: "var(--text-faint)" }}
+        className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-3 py-2 t-micro"
+        style={{ borderColor: "var(--border)", color: "var(--faint)" }}
       >
         <span aria-live="polite">
           {q
@@ -209,7 +209,7 @@ export function TranscriptPanel({
             : `${meeting.transcript.length} segments`}
         </span>
         {unmatchedCount > 0 && (
-          <span style={{ color: "var(--seeded)" }}>
+          <span style={{ color: "var(--muted)" }}>
             {unmatchedCount} from unmatched speakers
           </span>
         )}
@@ -223,8 +223,8 @@ export function TranscriptPanel({
           onClick={onToggleFollow}
           className="ml-auto min-h-6 rounded px-1.5 py-1"
           style={{
-            color: follow ? "var(--accent)" : "var(--text-faint)",
-            background: follow ? "var(--accent-dim)" : "transparent",
+            color: follow ? "var(--accent)" : "var(--faint)",
+            background: follow ? "var(--accent-tint)" : "transparent",
           }}
           aria-pressed={follow}
         >
@@ -244,7 +244,7 @@ export function TranscriptPanel({
             viewBox="0 0 24 24"
             fill="none"
             className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
-            style={{ color: "var(--text-faint)" }}
+            style={{ color: "var(--faint)" }}
           >
             <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
             <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -255,7 +255,7 @@ export function TranscriptPanel({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search this transcript"
-            className="h-9 w-full rounded-lg border pl-8 pr-3 text-[13px] outline-none"
+            className="h-9 w-full rounded-lg border pl-8 pr-3 t-meta outline-none"
             style={{
               borderColor: "var(--border)",
               background: "var(--bg)",
@@ -267,14 +267,14 @@ export function TranscriptPanel({
 
       {shown.length === 0 ? (
         <div className="p-8 text-center">
-          <p className="text-sm font-medium">
+          <p className="t-body font-medium">
             Nothing in this transcript matches &ldquo;{query.trim()}&rdquo;
           </p>
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="mt-2 min-h-6 rounded px-2 py-1 text-[13px]"
-            style={{ color: "var(--accent)", background: "var(--accent-dim)" }}
+            className="mt-2 min-h-6 rounded px-2 py-1 t-meta"
+            style={{ color: "var(--accent)", background: "var(--accent-tint)" }}
           >
             Clear search
           </button>

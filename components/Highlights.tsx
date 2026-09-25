@@ -117,7 +117,7 @@ export function HighlightMarkers({
           className="absolute top-1/2 h-3.5 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{
             left: `${Math.min(100, Math.max(0, ((h.startSec - rangeFrom) / span) * 100))}%`,
-            background: "var(--seeded)",
+            background: "var(--muted)",
             // Markers can land within a pixel of each other; a hairline keeps
             // two adjacent ones readable as two rather than one fat blob.
             boxShadow: "0 0 0 1px var(--bg)",
@@ -167,13 +167,13 @@ export function HighlightsPanel({
     <section>
       <div className="mb-2 flex items-baseline justify-between gap-2">
         <h2
-          className="text-xs font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "var(--text-faint)" }}
+          className="t-label"
+          style={{ color: "var(--faint)" }}
         >
           Highlights
         </h2>
         {highlights.length > 0 && (
-          <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <span className="t-micro" style={{ color: "var(--faint)" }}>
             {highlights.length}
           </span>
         )}
@@ -182,9 +182,9 @@ export function HighlightsPanel({
       {composing ? (
         <div
           className="rounded-lg border p-2.5"
-          style={{ borderColor: "var(--accent-dim)", background: "var(--bg-raised)" }}
+          style={{ borderColor: "var(--accent-tint)", background: "var(--surface)" }}
         >
-          <p className="mb-1.5 text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <p className="mb-1.5 t-micro" style={{ color: "var(--faint)" }}>
             Marking{" "}
             <span className="font-mono tabular-nums" style={{ color: "var(--accent)" }}>
               {formatTimestamp(capturedAt)}
@@ -200,7 +200,7 @@ export function HighlightsPanel({
             }}
             placeholder="What happened here? (optional)"
             aria-label="Highlight label"
-            className="h-8 w-full rounded border px-2 text-[13px] outline-none"
+            className="h-8 w-full rounded border px-2 t-meta outline-none"
             style={{
               borderColor: "var(--border)",
               background: "var(--bg)",
@@ -211,7 +211,7 @@ export function HighlightsPanel({
             <button
               type="button"
               onClick={commit}
-              className="min-h-7 flex-1 rounded px-2 text-[12px] font-medium"
+              className="min-h-7 flex-1 rounded px-2 t-meta font-medium"
               style={{ background: "var(--accent)", color: "var(--bg)" }}
             >
               Save highlight
@@ -219,8 +219,8 @@ export function HighlightsPanel({
             <button
               type="button"
               onClick={() => setComposing(false)}
-              className="min-h-7 rounded px-2 text-[12px]"
-              style={{ color: "var(--text-muted)" }}
+              className="min-h-7 rounded px-2 t-meta"
+              style={{ color: "var(--muted)" }}
             >
               Cancel
             </button>
@@ -230,10 +230,10 @@ export function HighlightsPanel({
         <button
           type="button"
           onClick={start}
-          className="flex min-h-9 w-full items-center justify-center gap-2 rounded-lg border text-[13px] font-medium"
+          className="flex min-h-9 w-full items-center justify-center gap-2 rounded-lg border t-meta font-medium"
           style={{
             borderColor: "var(--border-strong)",
-            background: "var(--bg-raised)",
+            background: "var(--surface)",
             color: "var(--text)",
           }}
         >
@@ -251,8 +251,8 @@ export function HighlightsPanel({
 
       {highlights.length === 0 ? (
         <p
-          className="mt-2 text-[12px] leading-relaxed"
-          style={{ color: "var(--text-faint)" }}
+          className="mt-2 t-meta leading-relaxed"
+          style={{ color: "var(--faint)" }}
         >
           No highlights yet. Play to a moment worth keeping and mark it — the
           button captures wherever the player currently is.
@@ -267,23 +267,23 @@ export function HighlightsPanel({
                 className="flex min-h-8 flex-1 items-start gap-2 rounded-lg border p-2 text-left"
                 style={{
                   borderColor: "var(--border)",
-                  background: "var(--bg-raised)",
+                  background: "var(--surface)",
                 }}
                 aria-label={`Jump to ${formatTimestamp(h.startSec)}${
                   h.label ? `: ${h.label}` : ""
                 }`}
               >
                 <span
-                  className="mt-px shrink-0 font-mono text-[11px] tabular-nums"
-                  style={{ color: "var(--seeded)" }}
+                  className="mt-px shrink-0 font-mono t-micro tabular-nums"
+                  style={{ color: "var(--muted)" }}
                 >
                   {formatTimestamp(h.startSec)}
                 </span>
                 <span
-                  className="min-w-0 flex-1 text-[12px] leading-snug"
-                  style={{ color: "var(--text-muted)" }}
+                  className="min-w-0 flex-1 t-meta leading-snug"
+                  style={{ color: "var(--muted)" }}
                 >
-                  {h.label ?? <em style={{ color: "var(--text-faint)" }}>Unlabelled</em>}
+                  {h.label ?? <em style={{ color: "var(--faint)" }}>Unlabelled</em>}
                 </span>
               </button>
               {h.userGenerated && (
@@ -291,7 +291,7 @@ export function HighlightsPanel({
                   type="button"
                   onClick={() => onRemove(h.id)}
                   className="grid h-8 w-6 shrink-0 place-items-center rounded"
-                  style={{ color: "var(--text-faint)" }}
+                  style={{ color: "var(--faint)" }}
                   aria-label={`Delete highlight at ${formatTimestamp(h.startSec)}`}
                 >
                   ×
@@ -302,7 +302,7 @@ export function HighlightsPanel({
         </ul>
       )}
 
-      <p className="mt-2 text-[11px] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+      <p className="mt-2 t-micro leading-relaxed" style={{ color: "var(--faint)" }}>
         Fathom makes highlights during a call. There is no live call here, so
         these are made while reviewing. Ones you add are saved in this browser
         only.

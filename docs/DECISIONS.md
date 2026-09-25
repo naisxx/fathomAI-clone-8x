@@ -660,3 +660,26 @@ is that those two never compete.
 Violet ships. Cyan is verified in the checker so switching is a two-line change.
 **Tradeoff.** Violet is a more opinionated choice than a neutral blue. That is
 deliberate — the brief invites doing better than the original, and Fathom is blue.
+
+## 064 — 2026-09-26 — R1 complete: the system is applied, not just defined
+
+**Reason.** Tokens are worth nothing until the call sites use them. Applied:
+138 variable references migrated off the old names, every arbitrary `text-[Npx]`
+replaced with a scale step, and one `Container` component replacing three
+hand-rolled widths across four surfaces — the layout no longer re-flows as you
+navigate between pages.
+
+Two defects surfaced while applying it:
+
+- The mechanical rename flattened two borders into their own background
+  (`--seeded-dim` had been used for both), leaving invisible edges on the
+  provenance note and the summary empty state.
+- The search page shipped **two `<h1>`s** — the Suspense fallback and the
+  component each rendered one. The page now owns the heading so it appears once
+  and lives in the static shell.
+
+Verified across all seven surfaces: one `h1` each, zero arbitrary sizes, zero
+legacy variables, honesty labels intact. Rendered font sizes are now 11/13/15/28
+— the scale — where there were six ad-hoc values.
+**Tradeoff.** `t-micro` lost its automatic uppercase, so section labels use an
+explicit `t-label`. Correct: 11px text and a shouting label are different jobs.

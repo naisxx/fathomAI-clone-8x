@@ -7,6 +7,7 @@ import { usePlayback } from "./usePlayback";
 import { Player } from "./Player";
 import { TranscriptPanel } from "./TranscriptPanel";
 import { SummaryPanel } from "./SummaryPanel";
+import { Container } from "./Container";
 
 type Tab = "summary" | "transcript";
 
@@ -85,12 +86,12 @@ export function SharedMeetingView({
   );
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6">
+    <Container width="reading" className="py-[var(--s-6)]">
       <div
-        className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border px-3.5 py-2.5 text-[13px]"
-        style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+        className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border px-3.5 py-2.5 t-meta"
+        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden style={{ color: "var(--text-faint)" }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden style={{ color: "var(--faint)" }}>
           <path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           <path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
@@ -100,7 +101,7 @@ export function SharedMeetingView({
           real 44-second meeting none were ever produced, and implying otherwise
           would be a small lie inside the feature built to be honest.
         */}
-        <span style={{ color: "var(--text-faint)" }}>
+        <span style={{ color: "var(--faint)" }}>
           {isClip
             ? " — read-only. You are seeing one moment from a longer meeting, not the whole recording."
             : " — read-only. You are seeing the recording, summary and transcript."}
@@ -111,12 +112,12 @@ export function SharedMeetingView({
       </div>
 
       <header className="mb-5">
-        <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
+        <h1 className="t-title font-semibold leading-tight tracking-tight sm:t-display">
           {meeting.title}
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
           <ProvenanceBadge meeting={meeting} size="md" />
-          <span className="text-[13px]" style={{ color: "var(--text-faint)" }}>
+          <span className="t-meta" style={{ color: "var(--faint)" }}>
             {new Date(meeting.scheduledStart).toLocaleDateString("en-GB", {
               day: "numeric",
               month: "long",
@@ -136,7 +137,7 @@ export function SharedMeetingView({
 
       <div
         className="mt-4 overflow-hidden rounded-xl border"
-        style={{ borderColor: "var(--border)", background: "var(--bg-raised)" }}
+        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
       >
         <div
           role="tablist"
@@ -156,8 +157,8 @@ export function SharedMeetingView({
                 aria-controls={`panel-${t.id}`}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setTab(t.id)}
-                className="relative min-h-11 px-3 py-2.5 text-[13px] font-medium transition-colors"
-                style={{ color: selected ? "var(--accent)" : "var(--text-muted)" }}
+                className="relative min-h-11 px-3 py-2.5 t-meta font-medium transition-colors"
+                style={{ color: selected ? "var(--accent)" : "var(--muted)" }}
               >
                 {t.label}
                 {selected && (
@@ -188,12 +189,12 @@ export function SharedMeetingView({
       </div>
 
       <p
-        className="mt-4 text-[12px] leading-relaxed"
-        style={{ color: "var(--text-faint)" }}
+        className="mt-4 t-meta leading-relaxed"
+        style={{ color: "var(--faint)" }}
       >
         Speakers are shown by display name only. Email addresses are not included
         in a shared link.
       </p>
-    </div>
+    </Container>
   );
 }
