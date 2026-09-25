@@ -60,22 +60,36 @@ export function ShareButton({
 
   return (
     <section>
+      {/*
+        Sharing is a headline feature, so it gets a primary button rather than a
+        quiet outlined one, and a chevron so it reads as something that opens.
+        It was previously easy to miss: an outlined button labelled only "Share",
+        collapsed by default, sitting in a rail that drops below the fold on a
+        narrow window.
+      */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border text-[13px] font-medium"
-        style={{
-          borderColor: "var(--border-strong)",
-          background: "var(--bg-raised)",
-          color: "var(--text)",
-        }}
+        className="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg text-[13px] font-semibold"
+        style={{ background: "var(--accent)", color: "var(--bg)" }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
           <path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           <path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
-        Share
+        Share or clip
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden
+          className="transition-transform"
+          style={{ transform: open ? "rotate(180deg)" : "none" }}
+        >
+          <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </button>
 
       {open && (

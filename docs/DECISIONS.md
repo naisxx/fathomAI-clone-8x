@@ -576,3 +576,32 @@ stale chunks (`Cannot find module './58.js'`) because a production build had
 overwritten `.next` underneath it. Third occurrence of this pattern.
 **Tradeoff.** None, but the habit is worth keeping: when a verified fix appears
 not to work, check the server is serving it before rewriting the code.
+
+## 058 — 2026-09-26 — Dev and verification builds get separate output directories
+
+**Reason.** `next dev` and `next build` both write `.next`. Running a production
+build to verify a change, while the dev server was live, replaced the chunks that
+server was mid-flight on, and it then died with
+`Cannot find module './58.js'` — which reads like a code fault and is not one.
+It cost time three times, and the fourth was the author hitting it in their own
+browser.
+
+`distDir` now honours `NEXT_DIST_DIR`, and verification builds run as
+`NEXT_DIST_DIR=.next-verify npm run build:verify`. Vercel sets nothing and keeps
+using `.next`. Proven by running a full production build with the dev server up:
+the build succeeded and the dev server kept serving.
+**Tradeoff.** One env var to remember. Cheap against a failure that masquerades
+as a bug in the app.
+
+## 059 — 2026-09-26 — The share control was findable in theory and not in practice
+
+**Reason.** The author could not find sharing in the UI, and was right not to.
+The control was an outlined button labelled only "Share", collapsed by default,
+sitting in a right rail that stacks *below* the player and transcript on a narrow
+window — three small decisions compounding into something invisible.
+
+It is now a primary accent button reading **"Share or clip"** with a chevron, so
+it reads as the headline action it is and as something that opens.
+**Tradeoff.** More visual weight in the rail. Correct: sharing is one of the two
+things this product is for, and "a user could not find it" is the only usability
+evidence that matters.
