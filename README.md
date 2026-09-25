@@ -13,7 +13,7 @@ This matters more than any feature, so it is the first thing in the README.
 
 | | |
 |---|---|
-| **One meeting is real.** "Impromptu Google Meet Meeting" is a genuine 44-second Fathom recording made by the author. The audio is real. Every word of the transcript is Fathom's own output, copied verbatim. | Badged **Real recording** |
+| **One meeting is real.** "Impromptu Google Meet Meeting" is a genuine 44-second Fathom recording made by the author. The audio is real. The transcript is the author's transcription of that call — comparing it against Fathom's own rendered transcript (observed later, in [`SHARE-FLOW-OBSERVED.md`](docs/research/SHARE-FLOW-OBSERVED.md)) shows the shipped text corrects several speech-recognition errors, so it is what was **said**, not literally what Fathom **emitted**. | Badged **Real recording** |
 | **Everything else is seeded.** The 62-minute eight-speaker "Q3 Platform Review" and three supporting meetings are written, not recorded. There is no audio; a simulated clock drives playback so seeking, transcript sync and timestamp links behave exactly as they do with real media. | Badged **Seeded demo data** |
 
 Specifically **not** claimed:

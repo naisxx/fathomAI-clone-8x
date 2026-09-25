@@ -9,8 +9,16 @@ import type { Meeting } from "@/lib/types";
  * masked. What ships is audio only - verified to contain a single `soun` track
  * and no `vide` track.
  *
- * Transcript: copied verbatim from Fathom's own "Copy Transcript". Not one word
- * has been added, removed or altered. Fathom does not export timestamps, so the
+ * Transcript: supplied by the author for this call. It was described as verbatim
+ * Fathom output, and was shipped on that basis - but a later observation of
+ * Fathom's own rendered transcript (docs/research/SHARE-FLOW-OBSERVED.md) shows
+ * the two differ: Fathom transcribed "Fathom API", "Fathom drone" and "8x0"
+ * where this text reads "Fathom AI", "Fathom clone" and "8x Assignment", and the
+ * closing sentence differs entirely. So this is what was SAID, with ordinary
+ * speech-recognition errors corrected - not a byte-for-byte copy of Fathom's
+ * output. No word was added by the agent.
+ *
+ * Fathom does not export timestamps, so the
  * segment boundaries below were derived from the audio itself using
  * `ffmpeg silencedetect` (noise=-34dB, d=0.30):
  *

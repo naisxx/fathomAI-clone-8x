@@ -441,3 +441,39 @@ ended, and a stranger reaching it would find an empty call requiring admission.
 **Tradeoff.** A low-value credential remains in a public repository. Recorded
 here without repeating it or citing a line number, so this entry does not become
 the pointer the decision was meant to avoid.
+
+## 046 — 2026-09-25 — The "verbatim transcript" claim was not supportable, and is corrected
+
+**Reason.** The author opened a real Fathom share link in incognito. The
+transcript Fathom renders differs materially from the text shipped in
+`data/meeting-01-real.ts`: Fathom produced "Fathom API", "Fathom drone", "8x0"
+and a different closing sentence, where the shipped text reads "Fathom AI",
+"Fathom clone", "8x Assignment". The shipped version is what the speaker meant;
+Fathom's is what its ASR heard.
+
+The README and the data file both claimed every word was Fathom's own output with
+nothing "added, removed or altered". That is not supportable on this evidence, so
+both claims are corrected to say what is actually true: this is the author's
+transcription of the call, with ordinary recognition errors corrected.
+**Tradeoff.** Which text to *ship* is a separate decision and is the author's.
+The claim was corrected immediately because it was live and wrong; the content
+was left alone because changing it is not the agent's call.
+
+## 047 — 2026-09-25 — Observation shows our share view is stricter than Fathom's, deliberately
+
+**Reason.** Fathom's anonymous share view shows the Ask tab, a Share button, Copy
+Transcript and a within-transcript search field. Ours shows none of them. Our
+removal of action items and attendee details **matches** Fathom and was guessed
+correctly before any observation; the other four omissions are ours alone.
+**Tradeoff.** The share view is a deliberate divergence, not a faithful clone,
+and the repo now says so rather than letting the difference read as fidelity.
+
+## 048 — 2026-09-25 — Clip sharing is an improvement, not a clone
+
+**Reason.** The observed Share Recording dialog offers per-person access and a
+two-option link scope, and **no time range whatsoever**. The brief asks for
+sharing a clip, but the free-plan share flow cannot do it. Bounded clip sharing
+therefore extends the product rather than reproducing it, and must be described
+that way in the plan and the walkthrough.
+**Tradeoff.** Loses "this is how Fathom does it" as justification; gains a
+defensible answer to "what did you improve".
