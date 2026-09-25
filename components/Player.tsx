@@ -23,9 +23,12 @@ export function Player({
   highlights?: Highlight[];
   onSeekHighlight?: (sec: number) => void;
 }) {
-  const { currentTime, duration, isPlaying, rate, toggle, seek, setRate, audioRef } =
+  const { currentTime, isPlaying, rate, toggle, seek, setRate, audioRef, lo, hi, isClip } =
     playback;
-  const pct = duration > 0 ? (currentTime / duration) * 100 : 0;
+  // A clip's scrubber spans the clip, not the whole recording - otherwise the
+  // handle sits in a sliver and most of the track is unreachable.
+  const span = Math.max(0.001, hi - lo);
+  const pct = ((currentTime - lo) / span) * 100;
 
   return (
     <div
@@ -65,7 +68,11 @@ export function Player({
             )}
           </button>
           <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
-            {playback.isReal ? "Audio only — no video" : "Simulated timeline — no audio"}
+            {isClip
+              ? `Clip · ${formatTimestamp(lo)}–${formatTimestamp(hi)}`
+              : playback.isReal
+                ? "Audio only — no video"
+                : "Simulated timeline — no audio"}
           </span>
         </div>
       </div>
@@ -101,10 +108,10 @@ export function Player({
           <span className="sr-only">Seek</span>
           <input
             type="range"
-            min={0}
-            max={Math.max(1, duration)}
+            min={lo}
+            max={hi}
             step={0.1}
-            value={Math.min(currentTime, duration)}
+            value={Math.min(Math.max(currentTime, lo), hi)}
             onChange={(e) => seek(Number(e.target.value))}
             className="peer w-full cursor-pointer appearance-none bg-transparent"
             style={{ height: 24 }}
@@ -126,8 +133,9 @@ export function Player({
             style={{ left: `${pct}%`, background: "var(--accent)" }}
           />
           <HighlightMarkers
-            highlights={highlights}
-            durationSec={duration}
+            highlights={highlights.filter((h) => h.startSec >= lo && h.startSec <= hi)}
+            rangeFrom={lo}
+            rangeTo={hi}
             onSeek={onSeekHighlight ?? seek}
           />
         </label>
@@ -135,8 +143,9 @@ export function Player({
         <span
           className="shrink-0 font-mono text-xs tabular-nums"
           style={{ color: "var(--text-faint)" }}
+          title={isClip ? "End of this clip" : undefined}
         >
-          {formatTimestamp(duration)}
+          {formatTimestamp(hi)}
         </span>
 
         <button

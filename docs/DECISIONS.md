@@ -537,3 +537,42 @@ the recipient's business. Verified on the prerendered output — zero highlight
 data across all five share pages, five labels on the owner page.
 **Tradeoff.** None. It confirms the standing rule: every new field on `Meeting`
 needs a decision in `redactForShare`, and so far every one has needed stripping.
+
+## 054 — 2026-09-26 — Clips filter on the server, which makes /share dynamic
+
+**Reason.** A clip that ships the whole transcript is not a clip. Filtering on
+the client would leave every out-of-window segment in the page source — the same
+leak class as P7 (emails), P8 (Ask entries) and P9 (highlights). Server-side
+filtering means reading `searchParams`, which drops `/share/[token]` from static
+prerendering to dynamic rendering.
+**Tradeoff.** Five pages lose static generation. No database and no auth are
+involved, the payload is small, and the guarantee is worth more than the
+prerender. Verified: a 9:14–10:14 clip contains 2 segments and neither the
+meeting's opening nor closing line appears anywhere in its source.
+
+## 055 — 2026-09-26 — A clip withholds the summary
+
+**Reason.** The summary describes the whole meeting. Someone handed one minute of
+it was given a moment, not the meeting, so shipping the summary alongside would
+hand over exactly what the clip was meant to narrow. The panel says why rather
+than showing an unexplained gap.
+**Tradeoff.** A clip is less useful standalone. That is what a clip is.
+
+## 056 — 2026-09-26 — Bad clip parameters fall back to the full meeting
+
+**Reason.** `clampRange` returns null for reversed, negative, non-numeric,
+out-of-range or under-five-second input, and the page then serves the whole
+recording. A malformed link degrades to something useful rather than to an empty
+player or an error. Reversed and negative values are repaired rather than
+rejected, since the intent is unambiguous.
+**Tradeoff.** A typo can silently widen what is shared. Acceptable: the fallback
+is the unbounded share the token already grants, never more.
+
+## 057 — 2026-09-26 — Note on the dev server masking a fix
+
+**Reason.** Bounded audio appeared broken after the fix was applied — starting at
+0 and playing past the clip end. The fix was correct; the dev server was serving
+stale chunks (`Cannot find module './58.js'`) because a production build had
+overwritten `.next` underneath it. Third occurrence of this pattern.
+**Tradeoff.** None, but the habit is worth keeping: when a verified fix appears
+not to work, check the server is serving it before rewriting the code.

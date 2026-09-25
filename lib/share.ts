@@ -1,5 +1,38 @@
 import type { Meeting } from "./types";
 
+/** A bounded window over a recording. Seconds from the start. */
+export interface ClipRange {
+  fromSec: number;
+  toSec: number;
+}
+
+const MIN_CLIP_SEC = 5;
+
+/**
+ * Turn whatever arrived in the URL into a usable range, or nothing.
+ *
+ * Returns null for anything nonsensical — reversed, negative, non-numeric,
+ * out of bounds, or too short to be a clip — and the caller then serves the
+ * whole meeting. A bad link degrades to the full recording rather than to an
+ * empty player or an error.
+ */
+export function clampRange(
+  meeting: Meeting,
+  rawFrom: unknown,
+  rawTo: unknown
+): ClipRange | null {
+  const from = Number(rawFrom);
+  const to = Number(rawTo);
+  if (!Number.isFinite(from) || !Number.isFinite(to)) return null;
+
+  const lo = Math.max(0, Math.min(from, to));
+  const hi = Math.min(meeting.durationSec, Math.max(from, to));
+  if (hi - lo < MIN_CLIP_SEC) return null;
+  if (lo >= meeting.durationSec) return null;
+
+  return { fromSec: lo, toSec: hi };
+}
+
 /**
  * Strip everything a share link should not carry, before the object reaches the
  * client.
@@ -14,8 +47,8 @@ import type { Meeting } from "./types";
  * So the redaction happens here, on the server, and the shared view is given an
  * object that simply does not contain the private fields.
  */
-export function redactForShare(meeting: Meeting): Meeting {
-  const redacted = buildRedacted(meeting);
+export function redactForShare(meeting: Meeting, clip?: ClipRange | null): Meeting {
+  const redacted = buildRedacted(meeting, clip ?? null);
 
   // Guard the invariant at the point it matters. If a future field carries an
   // address into the shared payload, this fails the build during prerender
@@ -31,7 +64,18 @@ export function redactForShare(meeting: Meeting): Meeting {
   return redacted;
 }
 
-function buildRedacted(meeting: Meeting): Meeting {
+function buildRedacted(meeting: Meeting, clip: ClipRange | null): Meeting {
+  /*
+   * A clip that ships the whole transcript is not a clip. Segments outside the
+   * window are dropped HERE, on the server, so they never reach the page source
+   * — the same reasoning that moved email redaction server-side in P7.
+   */
+  const transcript = clip
+    ? meeting.transcript.filter(
+        (t) => t.endSec > clip.fromSec && t.startSec < clip.toSec
+      )
+    : meeting.transcript;
+
   return {
     ...meeting,
 
@@ -61,10 +105,17 @@ function buildRedacted(meeting: Meeting): Meeting {
     highlights: [],
 
     // The speaker→invitee join is an email address.
-    transcript: meeting.transcript.map((t) => ({
+    transcript: transcript.map((t) => ({
       ...t,
       matchedInviteeEmail: null,
     })),
+
+    // A clip's summary describes the whole meeting, so it is not the clip's to
+    // show. The recipient was given a moment, not the meeting.
+    summary: clip ? null : meeting.summary,
+    summaryAbsentReason: clip
+      ? "This is a clip. The summary covers the whole meeting, so it is not included."
+      : meeting.summaryAbsentReason,
   };
 }
 

@@ -1,17 +1,25 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getMeetingByShareToken, meetings } from "@/data";
+import { getMeetingByShareToken } from "@/data";
 import { SharedMeetingView } from "@/components/SharedMeetingView";
-import { redactForShare } from "@/lib/share";
+import { clampRange, redactForShare } from "@/lib/share";
 
-export function generateStaticParams() {
-  return meetings.map((m) => ({ token: m.shareToken }));
-}
+/*
+ * Deliberately NOT statically prerendered.
+ *
+ * A clip is defined by ?from/&to, and the whole point is that segments outside
+ * that window never reach the page. Filtering on the client would leave the
+ * full transcript sitting in the page source - the same leak class fixed in P7,
+ * P8 and P9. Reading searchParams makes this route dynamic, and that is the
+ * price of the guarantee.
+ */
+type Params = Promise<{ token: string }>;
+type Search = Promise<{ from?: string; to?: string }>;
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ token: string }>;
+  params: Params;
 }): Promise<Metadata> {
   const { token } = await params;
   const meeting = getMeetingByShareToken(token);
@@ -19,25 +27,31 @@ export async function generateMetadata({
   return {
     title: `${meeting.title} — shared via Recap`,
     description: meeting.provenanceNote,
-    // A share link is handed to a specific person; it should not accumulate in
-    // search results.
     robots: { index: false, follow: false },
   };
 }
 
 export default async function SharePage({
   params,
+  searchParams,
 }: {
-  params: Promise<{ token: string }>;
+  params: Params;
+  searchParams: Search;
 }) {
   const { token } = await params;
+  const { from, to } = await searchParams;
+
   const meeting = getMeetingByShareToken(token);
   if (!meeting) notFound();
-  // Redact on the server: the client never receives the private fields.
+
+  // Anything nonsensical clamps to null and serves the whole meeting.
+  const clip = clampRange(meeting, from, to);
+
   return (
     <SharedMeetingView
-      meeting={redactForShare(meeting)}
+      meeting={redactForShare(meeting, clip)}
       withheldActionItems={meeting.actionItems.length > 0}
+      clip={clip}
     />
   );
 }
