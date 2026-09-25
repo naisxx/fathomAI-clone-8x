@@ -28,13 +28,24 @@ export interface Playback {
   /** Attach to an <audio> element when `isReal` is true. */
   audioRef: React.RefObject<HTMLAudioElement | null>;
   isReal: boolean;
+  /** Playback window. Equals [0, duration] when unbounded. */
+  lo: number;
+  hi: number;
+  isClip: boolean;
 }
 
-export function usePlayback(durationSec: number, audioSrc?: string): Playback {
+export function usePlayback(
+  durationSec: number,
+  audioSrc?: string,
+  /** When set, playback is confined to this window - used by clip shares. */
+  bounds?: { fromSec: number; toSec: number } | null
+): Playback {
+  const lo = bounds?.fromSec ?? 0;
+  const hi = bounds?.toSec ?? durationSec;
   const isReal = Boolean(audioSrc);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentTime, setCurrentTime] = useState(lo);
   const [isPlaying, setIsPlaying] = useState(false);
   const [rate, setRateState] = useState(1);
 
@@ -65,8 +76,8 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
       const { at, time } = originRef.current;
       const elapsed = (performance.now() - at) / 1000;
       const next = time + elapsed * rate;
-      if (next >= durationSec) {
-        setCurrentTime(durationSec);
+      if (next >= hi) {
+        setCurrentTime(hi);
         setIsPlaying(false);
         stopLoop();
         return;
@@ -75,7 +86,7 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
     };
     step();
     timerRef.current = setInterval(step, 100);
-  }, [durationSec, rate, stopLoop]);
+  }, [hi, rate, stopLoop]);
 
   const play = useCallback(() => {
     if (isReal) {
@@ -83,11 +94,11 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
       return;
     }
     // Restart from the beginning if we're parked at the end.
-    const from = currentTime >= durationSec ? 0 : currentTime;
+    const from = currentTime >= hi ? lo : currentTime;
     originRef.current = { at: performance.now(), time: from };
     setCurrentTime(from);
     setIsPlaying(true);
-  }, [isReal, currentTime, durationSec]);
+  }, [isReal, currentTime, lo, hi]);
 
   const pause = useCallback(() => {
     if (isReal) {
@@ -95,7 +106,7 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
       return;
     }
     setIsPlaying(false);
-  }, [isReal]);
+  }, [isReal, lo, hi, bounds]);
 
   const toggle = useCallback(() => {
     if (isPlaying) pause();
@@ -104,7 +115,7 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
 
   const seek = useCallback(
     (sec: number) => {
-      const clamped = Math.min(Math.max(0, sec), durationSec);
+      const clamped = Math.min(Math.max(lo, sec), hi);
       if (isReal) {
         const el = audioRef.current;
         if (el) el.currentTime = clamped;
@@ -114,7 +125,7 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
       originRef.current = { at: performance.now(), time: clamped };
       setCurrentTime(clamped);
     },
-    [durationSec, isReal]
+    [lo, hi, isReal]
   );
 
   const setRate = useCallback(
@@ -145,22 +156,48 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
     const el = audioRef.current;
     if (!el) return;
 
-    const onTime = () => setCurrentTime(el.currentTime);
+    const onTime = () => {
+      // A clip must stop where it ends, even though the asset runs longer.
+      if (el.currentTime >= hi) {
+        el.pause();
+        el.currentTime = hi;
+        setCurrentTime(hi);
+        return;
+      }
+      if (el.currentTime < lo) el.currentTime = lo;
+      setCurrentTime(el.currentTime);
+    };
     const onPlay = () => setIsPlaying(true);
     const onPause = () => setIsPlaying(false);
     const onEnded = () => setIsPlaying(false);
+
+    /*
+     * Seeking before metadata exists is silently dropped by the element, which
+     * is why a clip opened cold was starting at 0 instead of at its own start.
+     * Do it now if we can, and again on loadedmetadata if we cannot.
+     */
+    const toStart = () => {
+      if (el.currentTime < lo) el.currentTime = lo;
+    };
+    if (bounds) {
+      if (el.readyState > 0) toStart();
+      el.addEventListener("loadedmetadata", toStart);
+    }
 
     el.addEventListener("timeupdate", onTime);
     el.addEventListener("play", onPlay);
     el.addEventListener("pause", onPause);
     el.addEventListener("ended", onEnded);
     return () => {
+      el.removeEventListener("loadedmetadata", toStart);
       el.removeEventListener("timeupdate", onTime);
       el.removeEventListener("play", onPlay);
       el.removeEventListener("pause", onPause);
       el.removeEventListener("ended", onEnded);
     };
-  }, [isReal]);
+    // lo/hi must be in here: without them the listener keeps a stale window and
+    // a clip plays straight past its own end.
+  }, [isReal, lo, hi, bounds]);
 
   return {
     currentTime,
@@ -174,5 +211,8 @@ export function usePlayback(durationSec: number, audioSrc?: string): Playback {
     setRate,
     audioRef,
     isReal,
+    lo,
+    hi,
+    isClip: Boolean(bounds),
   };
 }

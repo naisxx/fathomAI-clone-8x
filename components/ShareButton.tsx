@@ -1,21 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Meeting } from "@/lib/types";
+import { formatDuration, formatTimestamp, type Meeting } from "@/lib/types";
 
 /**
  * Copies the share link to the clipboard and shows the URL, so the link can
  * still be used when the clipboard API is unavailable (insecure origin, denied
  * permission) rather than the button silently doing nothing.
  */
-export function ShareButton({ meeting }: { meeting: Meeting }) {
+const CLIP_LENGTHS = [30, 60, 120];
+
+export function ShareButton({
+  meeting,
+  currentTime = 0,
+}: {
+  meeting: Meeting;
+  /** Where the player is, so a clip can start from the moment you are on. */
+  currentTime?: number;
+}) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [href, setHref] = useState("");
+  const [origin, setOrigin] = useState("");
+  /** null = share the whole meeting. */
+  const [clipSec, setClipSec] = useState<number | null>(null);
+  const [clipFrom, setClipFrom] = useState(0);
 
   useEffect(() => {
-    setHref(`${window.location.origin}/share/${meeting.shareToken}`);
-  }, [meeting.shareToken]);
+    setOrigin(window.location.origin);
+  }, []);
+
+  // Freeze the start when clipping begins, so the link does not drift as the
+  // player keeps moving underneath it.
+  const startClip = (len: number) => {
+    setClipFrom(currentTime);
+    setClipSec(len);
+  };
+
+  const clipTo = Math.min(meeting.durationSec, clipFrom + (clipSec ?? 0));
+  const href = origin
+    ? clipSec === null
+      ? `${origin}/share/${meeting.shareToken}`
+      : `${origin}/share/${meeting.shareToken}?from=${Math.floor(clipFrom)}&to=${Math.ceil(clipTo)}`
+    : "";
 
   useEffect(() => {
     if (!copied) return;
@@ -61,7 +87,52 @@ export function ShareButton({ meeting }: { meeting: Meeting }) {
             Anyone with this link can view the recording, summary and transcript.
             Action items and attendee details are not included.
           </p>
-          <p className="mt-1.5 text-[11px] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+          <div className="mt-2.5">
+            <p
+              className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em]"
+              style={{ color: "var(--text-faint)" }}
+            >
+              What to share
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => setClipSec(null)}
+                aria-pressed={clipSec === null}
+                className="min-h-7 rounded-full border px-2.5 text-[12px]"
+                style={{
+                  borderColor: clipSec === null ? "var(--accent)" : "var(--border)",
+                  color: clipSec === null ? "var(--accent)" : "var(--text-muted)",
+                  background: clipSec === null ? "var(--accent-dim)" : "transparent",
+                }}
+              >
+                Whole meeting
+              </button>
+              {CLIP_LENGTHS.map((len) => (
+                <button
+                  key={len}
+                  type="button"
+                  onClick={() => startClip(len)}
+                  aria-pressed={clipSec === len}
+                  className="min-h-7 rounded-full border px-2.5 text-[12px]"
+                  style={{
+                    borderColor: clipSec === len ? "var(--accent)" : "var(--border)",
+                    color: clipSec === len ? "var(--accent)" : "var(--text-muted)",
+                    background: clipSec === len ? "var(--accent-dim)" : "transparent",
+                  }}
+                >
+                  {len}s clip
+                </button>
+              ))}
+            </div>
+            <p className="mt-1.5 text-[11px]" style={{ color: "var(--text-muted)" }}>
+              {clipSec === null
+                ? `The full ${formatDuration(meeting.durationSec)} recording.`
+                : `A ${formatDuration(clipTo - clipFrom)} clip, from ${formatTimestamp(clipFrom)} to ${formatTimestamp(clipTo)}. Only that part of the transcript is included.`}
+            </p>
+          </div>
+
+          <p className="mt-2.5 text-[11px] leading-relaxed" style={{ color: "var(--text-faint)" }}>
             Tokens are random and unguessable, but there is no account system
             behind them — in this demo every share link is effectively public.
           </p>
@@ -90,13 +161,13 @@ export function ShareButton({ meeting }: { meeting: Meeting }) {
           </div>
 
           <a
-            href={`/share/${meeting.shareToken}`}
+            href={href.replace(origin, "") || `/share/${meeting.shareToken}`}
             target="_blank"
             rel="noreferrer"
             className="mt-2 inline-block text-[12px]"
             style={{ color: "var(--accent)" }}
           >
-            Open the shared view →
+            {clipSec === null ? "Open the shared view →" : "Open the clip →"}
           </a>
         </div>
       )}

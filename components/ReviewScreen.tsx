@@ -218,7 +218,7 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
 
         {/* Right: meta rail */}
         <aside className="min-w-0 space-y-5">
-          <ShareButton meeting={meeting} />
+          <ShareButton meeting={meeting} currentTime={playback.currentTime} />
 
           <ProvenanceNote meeting={meeting} />
 

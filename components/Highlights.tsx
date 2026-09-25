@@ -91,13 +91,17 @@ export function useHighlights(meeting: Meeting) {
 /** Markers along the player scrubber. */
 export function HighlightMarkers({
   highlights,
-  durationSec,
+  rangeFrom,
+  rangeTo,
   onSeek,
 }: {
   highlights: Highlight[];
-  durationSec: number;
+  /** The span the scrubber represents — the clip window, or the whole meeting. */
+  rangeFrom: number;
+  rangeTo: number;
   onSeek: (sec: number) => void;
 }) {
+  const span = Math.max(0.001, rangeTo - rangeFrom);
   if (highlights.length === 0) return null;
   return (
     <>
@@ -112,7 +116,7 @@ export function HighlightMarkers({
           }}
           className="absolute top-1/2 h-3.5 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{
-            left: `${Math.min(100, (h.startSec / durationSec) * 100)}%`,
+            left: `${Math.min(100, Math.max(0, ((h.startSec - rangeFrom) / span) * 100))}%`,
             background: "var(--seeded)",
             // Markers can land within a pixel of each other; a hairline keeps
             // two adjacent ones readable as two rather than one fat blob.

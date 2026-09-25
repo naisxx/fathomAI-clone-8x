@@ -29,16 +29,20 @@ const TABS: { id: Tab; label: string }[] = [
 export function SharedMeetingView({
   meeting,
   withheldActionItems,
+  clip,
 }: {
   meeting: Meeting;
+  /** When set, this is a clip: a bounded window, not the whole meeting. */
+  clip?: { fromSec: number; toSec: number } | null;
   /**
    * Computed from the unredacted meeting on the server, because by the time it
    * reaches here `actionItems` is empty whether or not any existed.
    */
   withheldActionItems: boolean;
 }) {
-  const playback = usePlayback(meeting.durationSec, meeting.audioSrc);
+  const playback = usePlayback(meeting.durationSec, meeting.audioSrc, clip);
   const [tab, setTab] = useState<Tab>(meeting.summary ? "summary" : "transcript");
+  const isClip = Boolean(clip);
   const [follow, setFollow] = useState(true);
 
   const { seek } = playback;
@@ -90,14 +94,16 @@ export function SharedMeetingView({
           <path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           <path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
-        <span className="font-medium">Shared recording</span>
+        <span className="font-medium">{isClip ? "Shared clip" : "Shared recording"}</span>
         {/*
           Only claim to be withholding action items when there are some. On the
           real 44-second meeting none were ever produced, and implying otherwise
           would be a small lie inside the feature built to be honest.
         */}
         <span style={{ color: "var(--text-faint)" }}>
-          — read-only. You are seeing the recording, summary and transcript.
+          {isClip
+            ? " — read-only. You are seeing one moment from a longer meeting, not the whole recording."
+            : " — read-only. You are seeing the recording, summary and transcript."}
           {withheldActionItems
             ? " Action items and attendee details stay with the team."
             : " Attendee details stay with the team."}
