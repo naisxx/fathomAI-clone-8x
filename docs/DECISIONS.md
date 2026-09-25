@@ -701,3 +701,45 @@ searching every other meeting would quietly widen what the link grants. Verified
 ⌘K on a share does nothing, and there is no search field either.
 **Tradeoff.** A keyboard-first affordance needs advertising, so the header field
 carries a ⌘K hint rather than pretending discovery is free.
+
+## 066 — 2026-09-26 — The shell: meetings persist, so navigation stops costing context
+
+**Reason.** Four unrelated page layouts meant opening a meeting threw the list
+away. Meetings now live in a rail that is part of the root layout, so React
+keeps it mounted across navigation — verified by node identity: the same rail
+element survives a route change, and the active item updates.
+
+Below 900px it becomes a drawer, which closes on navigation, on Escape and on
+backdrop click. Share and specimen routes render bare, for the same reason the
+palette is absent there.
+**Tradeoff.** The "All meetings" link on the review screen is now redundant on
+wide screens. Harmless, and still the only way back on a phone.
+
+## 067 — 2026-09-26 — Tailwind arbitrary variants failed silently; plain CSS did not
+
+**Reason.** `max-[899px]:fixed` and `max-[899px]:z-40` generated fine, but
+`max-[899px]:-translate-x-full` produced **no transform at all** — the drawer
+changed state without moving, with no error anywhere. Rewritten as a plain
+`@media` block with the offset driven by an inline `--rail-x` custom property,
+which is deterministic and inspectable.
+**Tradeoff.** Two places to look for shell styling instead of one. Worth it: a
+utility that silently generates nothing is worse than a slightly less tidy
+stylesheet.
+
+## 068 — 2026-09-26 — Verifying UI in a hidden browser tab needs different rules
+
+**Reason.** Roughly forty minutes went into a drawer bug that did not exist. The
+browser pane reports `document.hidden: true`, and a hidden document does not run
+CSS transitions, defers style recalculation, starves `requestAnimationFrame`
+(measured at 0 fps earlier), and throttles React's scheduler. Every symptom —
+frozen transform, ignored custom property, unchanged `getBoundingClientRect` —
+pointed at broken CSS. Forcing a synchronous reflow and polling for the expected
+state instead of waiting a fixed delay showed the drawer had been correct all
+along.
+
+**The rule for the rest of this build:** when verifying UI in this pane, neutralise
+transitions, force layout with `void el.offsetHeight`, and poll for the state you
+expect rather than sleeping. A fixed `setTimeout` is not a wait in a hidden tab.
+**Tradeoff.** Verification scripts are wordier. Cheaper than debugging phantoms —
+this is the third time the environment has impersonated a bug (stale `.next`
+twice, hidden document once).

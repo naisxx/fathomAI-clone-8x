@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/Container";
+import { AppShell } from "@/components/AppShell";
 import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
@@ -27,7 +28,9 @@ export default function RootLayout({
 
         <SiteHeader />
 
-        <main id="main">{children}</main>
+        <AppShell>
+          <main id="main">{children}</main>
+        </AppShell>
 
         <footer
           className="mt-16 border-t py-8"
