@@ -170,3 +170,25 @@ documents. Container metadata is clean (encoder strings only).
 carries no information, the recommendation is to **use the audio track only** and
 render our own player visual — which removes the leak entirely rather than masking
 it, and is the better product anyway.
+
+## 020 — 2026-09-25 — Tier 1 is audio-only and carries no invented content
+
+**Reason.** User decision: use the existing 43.70 s recording as the real-media
+meeting, with no fabricated dialogue or action items. Fathom itself detected no
+action items in it and refused to summarise it, so the real empty states are what
+it shows. The transcript must come from Fathom's own `Copy Transcript`; absent
+that, the transcript panel shows an honest "not available" state rather than
+plausible filler.
+**Tradeoff.** The real meeting demonstrates playback and transcript sync but not
+summaries or action items. Those are demonstrated on tier 2, badged as seeded.
+The two are visibly distinct in the UI.
+
+## 021 — 2026-09-25 — MVP is P0–P4; extras ranked with a pre-declared cut order
+
+**Reason.** User decision: first deployable MVP is the meetings list plus one
+real-media detail view, with the seeded 62-minute eight-speaker meeting for the
+scale case. Search, sharing and Ask are extras. Cut order is declared in advance
+(8 → 7 → 6) so that running short is not a decision made under pressure. The
+UX/UI pass is explicitly not cuttable, because it is a graded axis.
+**Tradeoff.** 15:45 committed against ~22 h remaining. The slack is deliberate;
+deployment testing and the walkthrough are reserved and not negotiable.
