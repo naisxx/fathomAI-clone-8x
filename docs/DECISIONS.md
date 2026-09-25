@@ -477,3 +477,31 @@ therefore extends the product rather than reproducing it, and must be described
 that way in the plan and the walkthrough.
 **Tradeoff.** Loses "this is how Fathom does it" as justification; gains a
 defensible answer to "what did you improve".
+
+## 049 — 2026-09-26 — Ship Fathom's real ASR output, mistakes included
+
+**Reason.** Author's decision, and the evidence backs it. Fathom transcribed
+"Fathom API", "Fathom drone", "8x0" and "I can wait"; the text shipped earlier
+was the author's corrected version. The machine transcript is now what the app
+shows, labelled as machine transcription in the provenance note.
+
+An independent check supports it: against the measured silence boundaries,
+Fathom's text speaks at 2.87 words/s before the paragraph break and 2.80 after —
+**0.07 apart**. The corrected text gave 3.07 and 2.18 — **0.89 apart**. The ASR
+text fits the real audio markedly better, which corroborates both the boundaries
+and the choice.
+**Tradeoff.** The transcript now reads oddly in places. That is the point: a
+transcript you can click into and check against audio is worth more precisely
+because transcripts are wrong sometimes. The corrected version is removed from
+the app entirely and survives only as evidence in the research notes.
+
+## 050 — 2026-09-26 — Within-meeting transcript search, ahead of everything else
+
+**Reason.** Observed in Fathom, visible even to anonymous visitors, and entirely
+absent from our build. On a 72-segment hour-long transcript it is the search
+people actually reach for — cross-meeting search answers a different question.
+It was also the cheapest of the three candidate slices.
+**Tradeoff.** Filtering hides lines, so follow-playback can have no line to
+scroll to. The filter keeps each line's original index and the scroll effect
+simply does nothing when the active line is filtered out, rather than jumping to
+the wrong one.
