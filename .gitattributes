@@ -1,0 +1,5 @@
+* text=auto
+
+# The capture hook appends with LF; keep the logs byte-stable across checkouts.
+.agent-logs/** text eol=lf
+.claude/hooks/*.mjs text eol=lf

@@ -1,0 +1,147 @@
+/*
+  `source(none)` disables Tailwind's automatic source detection, then we name the
+  directories to scan. Without this it walks the whole project including
+  `public/`, and choked on the binary audio file with
+  "RangeError: Invalid code point" — which silently killed the entire stylesheet.
+*/
+@import "tailwindcss" source(none);
+
+@source "../app";
+@source "../components";
+@source "../lib";
+
+/*
+  Design tokens. Dark by default because meeting review is a long-read surface
+  and the transcript is the thing you stare at; light mode follows the system.
+*/
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0b0d10;
+  --bg-raised: #14171c;
+  --bg-hover: #1b1f26;
+  --border: #252a33;
+  --border-strong: #333a45;
+
+  --text: #e8eaed;
+  --text-muted: #9aa3af;
+  --text-faint: #6b7380;
+
+  --accent: #5eb0ef;
+  --accent-strong: #8ac7f5;
+  --accent-dim: rgba(94, 176, 239, 0.14);
+
+  --real: #4ade80;
+  --real-dim: rgba(74, 222, 128, 0.12);
+  --seeded: #fbbf24;
+  --seeded-dim: rgba(251, 191, 36, 0.12);
+
+  --focus: #8ac7f5;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #fbfbfc;
+    --bg-raised: #ffffff;
+    --bg-hover: #f2f4f7;
+    --border: #e3e6eb;
+    --border-strong: #cfd4dc;
+    --text: #14171c;
+    --text-muted: #5a626e;
+    --text-faint: #838b97;
+    --accent: #1d6fb8;
+    --accent-strong: #15578f;
+    --accent-dim: rgba(29, 111, 184, 0.1);
+    --real: #15803d;
+    --real-dim: rgba(21, 128, 61, 0.1);
+    --seeded: #a16207;
+    --seeded-dim: rgba(161, 98, 7, 0.1);
+    --focus: #1d6fb8;
+  }
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* One visible focus treatment everywhere, rather than per-component guesses. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect the setting rather than animating over it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Transcript scroller: visible but unobtrusive. */
+.scroll-subtle {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+.scroll-subtle::-webkit-scrollbar {
+  width: 10px;
+}
+.scroll-subtle::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+  border: 3px solid var(--bg);
+}
+
+/* Markdown rendered from the summary field. */
+.prose-summary {
+  line-height: 1.65;
+}
+.prose-summary h2 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 1.75rem 0 0.625rem;
+}
+.prose-summary h2:first-child {
+  margin-top: 0;
+}
+.prose-summary p {
+  margin: 0.625rem 0;
+  color: var(--text-muted);
+}
+.prose-summary ul {
+  margin: 0.625rem 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+.prose-summary li {
+  margin: 0.4rem 0;
+  color: var(--text-muted);
+}
+.prose-summary strong {
+  color: var(--text);
+  font-weight: 600;
+}
