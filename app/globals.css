@@ -32,7 +32,9 @@
 
   --text: #e8eaed;
   --text-muted: #9aa3af;
-  --text-faint: #6b7380;
+  /* 5.67:1 on --bg, 5.23:1 on --bg-raised. The previous #6b7380 measured
+     4.07:1 and 3.75:1, i.e. below AA, and this token carries most 11-13px text. */
+  --text-faint: #828b9b;
 
   --accent: #5eb0ef;
   --accent-strong: #8ac7f5;
@@ -56,7 +58,8 @@
     --border-strong: #cfd4dc;
     --text: #14171c;
     --text-muted: #5a626e;
-    --text-faint: #838b97;
+    /* 5.46:1 on --bg. The previous #838b97 measured 3.33:1. */
+    --text-faint: #5f6874;
     --accent: #1d6fb8;
     --accent-strong: #15578f;
     --accent-dim: rgba(29, 111, 184, 0.1);

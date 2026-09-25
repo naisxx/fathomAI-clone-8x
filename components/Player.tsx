@@ -101,7 +101,7 @@ export function Player({
             value={Math.min(currentTime, duration)}
             onChange={(e) => seek(Number(e.target.value))}
             className="peer w-full cursor-pointer appearance-none bg-transparent"
-            style={{ height: 18 }}
+            style={{ height: 24 }}
             aria-label="Seek"
           />
           <span
@@ -131,7 +131,7 @@ export function Player({
         <button
           type="button"
           onClick={() => setRate(RATES[(RATES.indexOf(rate) + 1) % RATES.length])}
-          className="shrink-0 rounded px-1.5 py-1 font-mono text-xs"
+          className="min-h-6 min-w-9 shrink-0 rounded px-1.5 py-1 font-mono text-xs"
           style={{ color: "var(--text-muted)" }}
           aria-label={`Playback speed ${rate} times. Click to change.`}
         >

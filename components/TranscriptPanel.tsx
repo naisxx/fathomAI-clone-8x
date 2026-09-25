@@ -165,7 +165,7 @@ export function TranscriptPanel({
         <button
           type="button"
           onClick={onToggleFollow}
-          className="ml-auto rounded px-1.5 py-0.5"
+          className="ml-auto min-h-6 rounded px-1.5 py-1"
           style={{
             color: follow ? "var(--accent)" : "var(--text-faint)",
             background: follow ? "var(--accent-dim)" : "transparent",

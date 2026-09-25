@@ -274,3 +274,32 @@ bytes, exactly one `trak` with handler `soun`, no `vide`, and no `bth-bjtd`
 bytes. The join-code leak is confirmed absent from what is actually served, not
 merely from what was built.
 **Tradeoff.** None. This check should be repeated if the asset is ever rebuilt.
+
+## 030 — 2026-09-25 — Contrast defect found by measurement, not by eye
+
+**Reason.** A computed WCAG audit of every token pair found `--text-faint`
+failing AA in **both** themes: 4.07:1 on `--bg` and 3.75:1 on `--bg-raised` in
+dark, 3.33:1 in light — against a 4.5:1 requirement. That token carries most of
+the 11–13px text in the app (timestamps, counts, captions, participant list), so
+it was the worst possible token to get wrong. Replaced with `#828b9b` (5.67 /
+5.23) and `#5f6874` (5.46).
+**Tradeoff.** Slightly less recessive secondary text. It looked fine by eye,
+which is exactly why it needed measuring.
+
+## 031 — 2026-09-25 — Meeting title moved out of the side rail
+
+**Reason.** The title sat in the right-hand rail, so the page led with a play
+button and, on a phone where the rail stacks underneath, the title appeared below
+the entire player and transcript. It is now a page header above both columns.
+**Tradeoff.** Diverges from Fathom, which keeps the title in the rail. Hierarchy
+beats fidelity here — this is a graded axis.
+
+## 032 — 2026-09-25 — Hit targets raised to the 24px minimum
+
+**Reason.** An automated sweep at a real viewport found undersized targets: the
+seek slider (18px), the rate button, the follow toggle and the action-item
+timestamp buttons (21px), and the checkboxes (16px). Fixed by raising heights;
+the checkbox keeps its 18px visual inside a 24×24 clickable parent, which is the
+WCAG 2.5.8 enclosure exception rather than an oversized box.
+**Tradeoff.** None. Note the first sweep reported 81 failures against a
+zero-width viewport — measurements were only meaningful after setting one.

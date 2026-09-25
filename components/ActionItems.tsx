@@ -109,13 +109,24 @@ export function ActionItems({
               }}
             >
               <div className="flex items-start gap-2.5">
-                <input
-                  id={`ai-${item.id}`}
-                  type="checkbox"
-                  checked={completed}
-                  onChange={() => toggle(item.id)}
-                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[color:var(--accent)]"
-                />
+                {/*
+                  The box is 18px for visual weight, but the label around it is a
+                  24x24 hit area so it clears the WCAG 2.5.8 minimum without the
+                  checkbox itself looking oversized.
+                */}
+                <span
+                  onClick={() => toggle(item.id)}
+                  className="-mt-0.5 -ml-0.5 grid h-6 w-6 shrink-0 cursor-pointer place-items-center"
+                >
+                  <input
+                    id={`ai-${item.id}`}
+                    type="checkbox"
+                    checked={completed}
+                    onChange={() => toggle(item.id)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="h-[18px] w-[18px] cursor-pointer accent-[color:var(--accent)]"
+                  />
+                </span>
                 <div className="min-w-0 flex-1">
                   <label
                     htmlFor={`ai-${item.id}`}
@@ -132,7 +143,7 @@ export function ActionItems({
                     <button
                       type="button"
                       onClick={() => onSeek(item.timestampSec)}
-                      className="rounded px-1.5 py-0.5 font-mono text-[11px] tabular-nums transition-colors"
+                      className="inline-flex min-h-6 items-center rounded px-2 py-1 font-mono text-[11px] tabular-nums transition-colors"
                       style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
                       aria-label={`Jump to ${formatTimestamp(item.timestampSec)} in the recording`}
                     >
