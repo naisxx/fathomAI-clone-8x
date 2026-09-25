@@ -254,3 +254,23 @@ interval, with position always derived from a wall-clock origin, so a throttled
 timer costs smoothness but never accuracy.
 **Tradeoff.** Slightly coarser updates than a frame-synced animation, invisible
 at 10 Hz for a transcript follower.
+
+## 028 — 2026-09-25 — Public URL is the production alias, not the deployment URL
+
+**Reason.** The deployment-specific URL
+(`…-bxq6cptjx-onaisahmeds-projects.vercel.app`) redirects to a Vercel login —
+Deployment Protection covers preview/deployment URLs, so an unsigned visitor
+cannot open it. That breaks a hard requirement. The production alias
+<https://fathom-ai-clone-8x.vercel.app/> serves 200 with no auth redirect and is
+the URL of record.
+**Tradeoff.** Anyone sharing a per-deployment link will hit the login wall. The
+alias must be the one used in the submission and the walkthrough.
+
+## 029 — 2026-09-25 — Production verified by download, not by trusting the build
+
+**Reason.** The live asset was fetched from
+`https://fathom-ai-clone-8x.vercel.app/media/meeting-01.m4a` and parsed: 363,404
+bytes, exactly one `trak` with handler `soun`, no `vide`, and no `bth-bjtd`
+bytes. The join-code leak is confirmed absent from what is actually served, not
+merely from what was built.
+**Tradeoff.** None. This check should be repeated if the asset is ever rebuilt.
