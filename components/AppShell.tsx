@@ -23,7 +23,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const bare = pathname.startsWith("/share") || pathname.startsWith("/specimen");
+  const bare = pathname.startsWith("/share");
 
   // Close the drawer on navigation, or it covers the thing you just opened.
   useEffect(() => {

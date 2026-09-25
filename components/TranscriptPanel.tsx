@@ -95,7 +95,7 @@ function Line({
         style={{
           background: isActive ? "var(--accent-tint)" : "transparent",
         }}
-        aria-label={`Jump to $<Moment sec={item.startSec} onSeek={() => {}} variant="display" />, ${item.speakerDisplayName}`}
+        aria-label={`Jump to ${formatTimestamp(item.startSec)}, ${item.speakerDisplayName}`}
       >
         <Avatar name={item.speakerDisplayName} matched={matched} />
         <span className="min-w-0 flex-1">

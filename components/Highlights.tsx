@@ -123,7 +123,7 @@ export function HighlightMarkers({
             // two adjacent ones readable as two rather than one fat blob.
             boxShadow: "0 0 0 1px var(--bg)",
           }}
-          title={`$<Moment sec={h.startSec} onSeek={() => {}} variant="display" /> — ${h.label ?? "Highlight"}`}
+          title={`${formatTimestamp(h.startSec)} — ${h.label ?? "Highlight"}`}
           aria-label={`Jump to highlight at ${formatTimestamp(h.startSec)}${
             h.label ? `: ${h.label}` : ""
           }`}

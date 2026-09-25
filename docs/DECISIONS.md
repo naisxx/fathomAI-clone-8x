@@ -790,3 +790,39 @@ elements, which is invalid HTML and confusing with a screen reader. So `Moment`
 has a `display` variant: same mark, not a second target, parent still seeks.
 **Tradeoff.** One component with three variants rather than one shape. The
 alternative was either nested buttons or keeping five renderers.
+
+## 072 — 2026-09-26 — /specimen deleted; two aria labels it hid were broken
+
+**Reason.** `/specimen` was scaffolding for approving the palette and type scale.
+It had served its purpose and a reviewer finding an undocumented design-system
+page would reasonably ask why it shipped. Route removed, `AppShell`'s bare-layout
+check reduced to `/share` alone, build down from 11 pages to 10.
+
+Reading the app back afterwards caught two defects from the R3 conversion: the
+transcript line button and a highlight marker had a `<Moment .../>` element
+pasted **inside a template string**, so their accessible name read as literal
+JSX source. Nothing visible, which is why it survived a visual check — a screen
+reader would have read `Jump to $<Moment sec={item.startSec} ...`. Both now
+interpolate `formatTimestamp` again, and a repo-wide sweep for JSX inside
+template literals is clean.
+**Tradeoff.** None. The specimen is recoverable from history if the palette is
+ever revisited.
+
+## 073 — 2026-09-26 — Walkthrough rewritten a fourth time, against the built app
+
+**Reason.** The script narrated a gradient player, an amber badge palette and a
+header search box as the cross-meeting surface — none of which still exist. Every
+screen in the new script was read off the running app rather than recalled, and
+the numbers it quotes are now a table at the bottom with where each one appears,
+so a drifted figure is caught before the camera is on rather than during.
+
+Two structural changes. The ribbon gets its own beat, because it is the clearest
+evidence of product judgement in the build: not having video was turned into
+showing the shape of the meeting instead of imitating a player. And the pre-flight
+now starts with **merge `feat/fathom-rebuild` into `develop`** — production
+deploys from `develop`, which was still on the pre-revamp merge, so the live site
+had none of R1–R3 while the branch had all of it.
+
+Also fixed while reading the Q3 summary on camera-equivalent screens: a seeded
+figure read "against a forecast 19% overrun of 12%", an editing slip. The
+transcript and the Ask answer both say 12%; the summary now agrees.
