@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { formatDuration, type Meeting } from "@/lib/types";
+import { formatDuration, snapToSegmentStart, type Meeting } from "@/lib/types";
 import { ProvenanceBadge, ProvenanceNote } from "./ProvenanceBadge";
 import { usePlayback } from "./usePlayback";
 import { Player } from "./Player";
@@ -26,7 +26,17 @@ const TABS: { id: Tab; label: string }[] = [
  * visitor cannot tell the difference between "this meeting has no action items"
  * and "you are not being shown them".
  */
-export function SharedMeetingView({ meeting }: { meeting: Meeting }) {
+export function SharedMeetingView({
+  meeting,
+  withheldActionItems,
+}: {
+  meeting: Meeting;
+  /**
+   * Computed from the unredacted meeting on the server, because by the time it
+   * reaches here `actionItems` is empty whether or not any existed.
+   */
+  withheldActionItems: boolean;
+}) {
   const playback = usePlayback(meeting.durationSec, meeting.audioSrc);
   const [tab, setTab] = useState<Tab>(meeting.summary ? "summary" : "transcript");
   const [follow, setFollow] = useState(true);
@@ -39,10 +49,10 @@ export function SharedMeetingView({ meeting }: { meeting: Meeting }) {
     const requested = params.get("tab");
     if (requested === "transcript" || requested === "summary") setTab(requested);
     if (Number.isFinite(t) && t > 0) {
-      seek(t);
+      seek(snapToSegmentStart(meeting, t));
       if (!requested) setTab("transcript");
     }
-  }, [seek]);
+  }, [seek, meeting]);
 
   const activeIndex = useMemo(() => {
     const t = playback.currentTime;
@@ -81,9 +91,16 @@ export function SharedMeetingView({ meeting }: { meeting: Meeting }) {
           <path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
         <span className="font-medium">Shared recording</span>
+        {/*
+          Only claim to be withholding action items when there are some. On the
+          real 44-second meeting none were ever produced, and implying otherwise
+          would be a small lie inside the feature built to be honest.
+        */}
         <span style={{ color: "var(--text-faint)" }}>
           — read-only. You are seeing the recording, summary and transcript.
-          Action items and attendee details stay with the team.
+          {withheldActionItems
+            ? " Action items and attendee details stay with the team."
+            : " Attendee details stay with the team."}
         </span>
       </div>
 

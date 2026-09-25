@@ -200,8 +200,9 @@ export function SearchResults() {
             className="mx-auto mt-1.5 max-w-sm text-[13px] leading-relaxed"
             style={{ color: "var(--text-faint)" }}
           >
-            Search covers {meetings.length} seeded meetings. Try a shorter word, or
-            a term from the Q3 Platform Review — that one has the most content.
+            Search covers all {meetings.length} meetings — one real recording and{" "}
+            {meetings.length - 1} seeded. Try a shorter word, or a term from the Q3
+            Platform Review, which has the most content.
           </p>
         </div>
       )}

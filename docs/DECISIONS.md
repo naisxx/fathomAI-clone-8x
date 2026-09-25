@@ -386,3 +386,42 @@ who committed to what. That is the same content action items were stripped for
 in decision 035. Caught while wiring P8, before it shipped.
 **Tradeoff.** None. It reinforces that `redactForShare` must be revisited
 whenever a field is added to `Meeting`.
+
+## 041 — 2026-09-25 — QA run independently, and its findings acted on
+
+**Reason.** The implementer is the worst reviewer of their own work, so the live
+deployment was QA'd by a separate agent against `verify-slice` and the
+`BUILD-PLAN` acceptance criteria. All ten criteria passed; four minor defects
+were found, all verified in the source before being fixed rather than taken on
+trust.
+**Tradeoff.** None. Two of the four (D1, D4) were honesty-copy errors that no
+functional test would have caught.
+
+## 042 — 2026-09-25 — Deep links snap to the segment whose timestamp is displayed
+
+**Reason.** Timestamps render floored, so a line starting at 18.47s displays as
+"0:18". A reader who typed `?t=18` landed in the 0.84s of silence before it and
+saw the *previous* line highlighted. `snapToSegmentStart` resolves a request to
+the segment sharing its displayed second.
+**Tradeoff.** A request genuinely mid-segment is left alone, so this only
+affects the case it was written for.
+
+## 043 — 2026-09-25 — The URL tracks the moment on screen
+
+**Reason.** Deep links are the spine of the product — search results and Ask
+citations are built on `?t=` — but jumping *inside* the app left the address bar
+stale. The one thing you could not share was the moment you were actually
+looking at, and a refresh contradicted the screen. Now kept in step with
+`replaceState`, at most once per second.
+**Tradeoff.** `replaceState`, not `push`, so the back button still means "the
+previous page" rather than stepping back through every seek.
+
+## 044 — 2026-09-25 — The share banner only claims to withhold what exists
+
+**Reason.** The shared view said "Action items and attendee details stay with the
+team" on every meeting, including the real 44-second one, which never had any.
+Implying something is being withheld that was never produced is a small lie
+inside the feature built to be honest. The flag is computed on the server from
+the unredacted meeting, since by the time the view sees it the list is empty
+either way.
+**Tradeoff.** One more prop threaded through the share boundary.

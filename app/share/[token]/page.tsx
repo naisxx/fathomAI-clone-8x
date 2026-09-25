@@ -34,5 +34,10 @@ export default async function SharePage({
   const meeting = getMeetingByShareToken(token);
   if (!meeting) notFound();
   // Redact on the server: the client never receives the private fields.
-  return <SharedMeetingView meeting={redactForShare(meeting)} />;
+  return (
+    <SharedMeetingView
+      meeting={redactForShare(meeting)}
+      withheldActionItems={meeting.actionItems.length > 0}
+    />
+  );
 }

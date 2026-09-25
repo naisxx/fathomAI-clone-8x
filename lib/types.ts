@@ -143,6 +143,24 @@ export function formatDuration(totalSec: number): string {
   return `${Math.round(totalSec / 60)} min`;
 }
 
+/**
+ * Resolve a requested time to the segment a reader meant.
+ *
+ * Timestamps are displayed floored to the second, so a line beginning at 18.47s
+ * shows as "0:18". Someone who reads that and asks for `?t=18` lands in the
+ * 0.84s of silence before it, and the previous line stays highlighted — they
+ * get the line before the one they asked for.
+ *
+ * So: if the request shares a displayed second with a segment start, snap to
+ * that segment. Otherwise leave it alone, because a request landing genuinely
+ * mid-segment is already correct.
+ */
+export function snapToSegmentStart(meeting: Meeting, requested: number): number {
+  const wanted = Math.floor(requested);
+  const hit = meeting.transcript.find((t) => Math.floor(t.startSec) === wanted);
+  return hit ? hit.startSec : requested;
+}
+
 /** Seconds to H:MM:SS, or M:SS when under an hour. */
 export function formatTimestamp(sec: number): string {
   const s = Math.max(0, Math.floor(sec));

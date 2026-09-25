@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { formatDuration, type Meeting } from "@/lib/types";
+import { formatDuration, snapToSegmentStart, type Meeting } from "@/lib/types";
 import { ProvenanceBadge, ProvenanceNote } from "./ProvenanceBadge";
 import { usePlayback } from "./usePlayback";
 import { Player } from "./Player";
@@ -36,10 +36,10 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
     if (requested === "transcript" || requested === "summary" || requested === "ask")
       setTab(requested);
     if (Number.isFinite(t) && t > 0) {
-      seek(t);
+      seek(snapToSegmentStart(meeting, t));
       if (!requested) setTab("transcript");
     }
-  }, [seek]);
+  }, [seek, meeting]);
 
   const activeIndex = useMemo(() => {
     const t = playback.currentTime;
@@ -62,6 +62,27 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
     },
     [seek]
   );
+
+  /**
+   * Keep the address bar in step with what is on screen.
+   *
+   * Deep links are the spine of this product — search results and Ask citations
+   * are built on `?t=`. But jumping *inside* the app left the URL stale, so the
+   * one thing you could not share was the moment you were actually looking at,
+   * and a refresh silently contradicted the screen. replaceState rather than
+   * push, so the back button still means "the previous page".
+   */
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", tab);
+    if (playback.currentTime > 0.5) {
+      url.searchParams.set("t", String(Math.floor(playback.currentTime)));
+    } else {
+      url.searchParams.delete("t");
+    }
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+    // Tracking whole seconds only; this fires at most once per second of playback.
+  }, [tab, Math.floor(playback.currentTime)]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const unmatched = meeting.invitees.filter(
     (i) => i.matchedSpeakerDisplayName === null
