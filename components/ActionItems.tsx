@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { formatTimestamp, type Meeting } from "@/lib/types";
+import type { Meeting } from "@/lib/types";
+import { Moment } from "./Moment";
 
 /**
  * Completion state lives in localStorage, per browser.
@@ -140,15 +141,11 @@ export function ActionItems({
                   </label>
 
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <button
-                      type="button"
-                      onClick={() => onSeek(item.timestampSec)}
-                      className="inline-flex min-h-6 items-center rounded px-2 py-1 font-mono t-micro tabular-nums transition-colors"
-                      style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
-                      aria-label={`Jump to ${formatTimestamp(item.timestampSec)} in the recording`}
-                    >
-                      @ {formatTimestamp(item.timestampSec)}
-                    </button>
+                    <Moment
+                      sec={item.timestampSec}
+                      onSeek={onSeek}
+                      context={item.description}
+                    />
 
                     {item.assignee && (
                       <span className="t-micro" style={{ color: "var(--faint)" }}>

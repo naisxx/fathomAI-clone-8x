@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatTimestamp, type Meeting, type TranscriptItem } from "@/lib/types";
+import { Moment } from "./Moment";
 import type { Playback } from "./usePlayback";
 
 /** Stable colour per speaker, so the eye can track who is talking. */
@@ -94,7 +95,7 @@ function Line({
         style={{
           background: isActive ? "var(--accent-tint)" : "transparent",
         }}
-        aria-label={`Jump to ${formatTimestamp(item.startSec)}, ${item.speakerDisplayName}`}
+        aria-label={`Jump to $<Moment sec={item.startSec} onSeek={() => {}} variant="display" />, ${item.speakerDisplayName}`}
       >
         <Avatar name={item.speakerDisplayName} matched={matched} />
         <span className="min-w-0 flex-1">

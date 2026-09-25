@@ -3,6 +3,7 @@
 import { formatTimestamp, type Meeting } from "@/lib/types";
 import type { Playback } from "./usePlayback";
 import { HighlightMarkers } from "./Highlights";
+import { Timeline } from "./Timeline";
 import type { Highlight } from "@/lib/types";
 
 const RATES = [1, 1.25, 1.5, 2];
@@ -41,43 +42,29 @@ export function Player({
         <audio ref={audioRef} src={meeting.audioSrc} preload="metadata" />
       ) : null}
 
-      <div
-        className="grid aspect-[16/7] place-items-center sm:aspect-[16/6]"
-        style={{
-          background:
-            "radial-gradient(120% 90% at 50% 40%, color-mix(in srgb, var(--accent) 18%, var(--bg)) 0%, var(--bg) 78%)",
-        }}
-      >
-        <div className="flex flex-col items-center gap-3">
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label={isPlaying ? "Pause" : "Play"}
-            className="grid h-14 w-14 place-items-center rounded-full transition-transform hover:scale-105 active:scale-95"
-            style={{ background: "var(--accent)", color: "var(--bg)" }}
-          >
-            {isPlaying ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
-                <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
-                <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
-              </svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
-                <path d="M8 5v14l11-7-11-7Z" fill="currentColor" />
-              </svg>
-            )}
-          </button>
-          <span className="t-micro" style={{ color: "var(--faint)" }}>
-            {isClip
-              ? `Clip · ${formatTimestamp(lo)}–${formatTimestamp(hi)}`
-              : playback.isReal
-                ? "Audio only — no video"
-                : "Simulated timeline — no audio"}
-          </span>
-        </div>
-      </div>
+      <Timeline
+        meeting={meeting}
+        currentTime={currentTime}
+        onSeek={onSeekHighlight ?? seek}
+        highlights={highlights}
+        lo={lo}
+        hi={hi}
+      />
 
-      <div className="flex items-center gap-3 border-t px-3 py-2.5" style={{ borderColor: "var(--border)" }}>
+      {/*
+        The media-kind label is an honesty requirement, not decoration. It used
+        to live inside the gradient block; it moves here rather than
+        disappearing with it.
+      */}
+      <p className="t-micro px-[var(--s-3)] pt-[var(--s-2)]" style={{ color: "var(--faint)" }}>
+        {isClip
+          ? `Clip · ${formatTimestamp(lo)}–${formatTimestamp(hi)}`
+          : playback.isReal
+            ? "Audio only — no video"
+            : "Simulated timeline — no audio"}
+      </p>
+
+      <div className="flex items-center gap-[var(--s-3)] px-[var(--s-3)] py-[var(--s-2)]">
         <button
           type="button"
           onClick={toggle}

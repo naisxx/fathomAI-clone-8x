@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { formatTimestamp, type Meeting } from "@/lib/types";
+import type { Meeting } from "@/lib/types";
+import { Moment } from "./Moment";
 
 /**
  * Pre-written Q&A over one meeting.
@@ -128,16 +129,7 @@ export function AskPanel({
                       From
                     </span>
                     {entry.citations.map((sec) => (
-                      <button
-                        key={sec}
-                        type="button"
-                        onClick={() => onSeek(sec)}
-                        className="inline-flex min-h-6 items-center rounded px-2 py-1 font-mono t-micro tabular-nums"
-                        style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
-                        aria-label={`Jump to ${formatTimestamp(sec)} in the recording`}
-                      >
-                        {formatTimestamp(sec)}
-                      </button>
+                      <Moment key={sec} sec={sec} onSeek={onSeek} context={entry.question} />
                     ))}
                   </div>
                 </div>

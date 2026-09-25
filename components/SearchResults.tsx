@@ -7,6 +7,7 @@ import { meetings } from "@/data";
 import { search, totalHitCount, type HitKind, type SearchHit } from "@/lib/search";
 import { formatTimestamp, type Meeting } from "@/lib/types";
 import { ProvenanceBadge } from "./ProvenanceBadge";
+import { Moment } from "./Moment";
 
 const KIND_LABEL: Record<HitKind, string> = {
   title: "Title",
@@ -58,7 +59,7 @@ function HitRow({ meeting, hit }: { meeting: Meeting; hit: SearchHit }) {
               className="font-mono t-micro tabular-nums"
               style={{ color: "var(--accent)" }}
             >
-              {formatTimestamp(hit.timestampSec)}
+              <Moment sec={hit.timestampSec} onSeek={() => {}} variant="display" />
             </span>
           )}
         </span>

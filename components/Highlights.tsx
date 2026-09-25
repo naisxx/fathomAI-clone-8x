@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { formatTimestamp, type Highlight, type Meeting } from "@/lib/types";
+import { Moment } from "./Moment";
 
 /**
  * Highlights — marked moments on a recording.
@@ -122,7 +123,7 @@ export function HighlightMarkers({
             // two adjacent ones readable as two rather than one fat blob.
             boxShadow: "0 0 0 1px var(--bg)",
           }}
-          title={`${formatTimestamp(h.startSec)} — ${h.label ?? "Highlight"}`}
+          title={`$<Moment sec={h.startSec} onSeek={() => {}} variant="display" /> — ${h.label ?? "Highlight"}`}
           aria-label={`Jump to highlight at ${formatTimestamp(h.startSec)}${
             h.label ? `: ${h.label}` : ""
           }`}

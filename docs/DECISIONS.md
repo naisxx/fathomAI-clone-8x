@@ -755,3 +755,38 @@ ours. Every native part is now zeroed explicitly, with a visible focus ring kept
 for keyboard users since the input is still the real control.
 **Tradeoff.** None. Present since the player was built and visible on every
 meeting; I had looked at that component many times without seeing it.
+
+## 070 — 2026-09-26 — The timeline replaces the gradient; speakers read as lightness, unmatched as hatching
+
+**Reason.** A 345px box rendering a play button over a gradient was 36% of the
+fold spent depicting the *absence* of video. It is now a ribbon showing who
+spoke when across the meeting, with action items and highlights on the same
+axis and click-anywhere seeking. On the Q3 meeting that is 85 bands across
+62 minutes and 8 speakers; the summary's decisions now sit above the fold.
+
+Speakers are separated by **lightness**, not hue: the system has one accent and
+one semantic colour, and eight speakers cannot each have one. Unmatched speakers
+are **hatched** rather than tinted — a pattern distinguishes them without
+inventing a ninth colour, and it survives greyscale and colour-blindness. The
+legend names every speaker and marks the unmatched ones in words.
+
+Verified: clicking at 60% of the ribbon seeks to t=2229 against an expected
+2232; the 44-second real meeting degrades to "1 speaker" with a one-entry
+legend; a clip bounds the ribbon to its window and still leaks no out-of-window
+transcript.
+**Tradeoff.** Lightness separates eight speakers less vividly than eight hues
+would. Correct for a system with one accent, and the legend carries the names.
+
+## 071 — 2026-09-26 — One `Moment`, including where it cannot be a button
+
+**Reason.** A timestamp rendered five different ways — chip on action items,
+mono text on transcript lines, tinted pill on Ask citations, coloured span in
+search results, something else on highlights — for one concept, with five sets
+of keyboard behaviour.
+
+Four of those sit **inside** an already-interactive ancestor: a transcript line
+button, a search result link. Wrapping them in a button would nest interactive
+elements, which is invalid HTML and confusing with a screen reader. So `Moment`
+has a `display` variant: same mark, not a second target, parent still seeks.
+**Tradeoff.** One component with three variants rather than one shape. The
+alternative was either nested buttons or keeping five renderers.
