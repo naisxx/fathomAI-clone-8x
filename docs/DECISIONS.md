@@ -214,3 +214,43 @@ across them.
 **Tradeoff.** Boundaries are accurate to roughly ±1 s; word placement inside a
 segment is proportional, not measured. Surfaced in the UI as
 **"timestamps manually aligned"**. No word was added, removed or altered.
+
+## 024 — 2026-09-25 — node_modules installed outside the worktree and junctioned in
+
+**Reason.** Both npm and pnpm hung repeatedly while extracting
+`@next/swc-win32-x64-msvc` (108 MB) into
+`…\.claude\worktrees\…\node_modules`, idling at 0 s CPU with the registry
+reachable at 3.2 MB/s. Installing the same `package.json` into `C:\rcpdeps` and
+junctioning `node_modules` into the project completed normally. The worktree
+lives under a directory the desktop app watches, and the file watcher appears to
+be the cause.
+**Tradeoff.** `node_modules` is a junction on this machine, which is invisible to
+Git and to Vercel (which installs from `package-lock.json`). Anyone cloning the
+repo runs a plain `npm install`. Cost roughly 45 minutes.
+
+## 025 — 2026-09-25 — Next pinned to 15.5.26
+
+**Reason.** npm flagged `next@15.5.4` as carrying a security vulnerability
+(CVE-2025-66478). This is going on a public URL, so it was upgraded to the
+patched 15.5.26 rather than noted and deferred.
+**Tradeoff.** None found; build and typecheck are clean on the patched version.
+
+## 026 — 2026-09-25 — Tailwind source scanning scoped explicitly
+
+**Reason.** Tailwind v4's automatic source detection walked the whole project
+including `public/`, hit the binary `.m4a`, and threw
+`RangeError: Invalid code point`. The build still reported success while
+emitting **no stylesheet at all** — the app rendered completely unstyled. Fixed
+with `@import "tailwindcss" source(none)` plus explicit `@source` directives.
+**Tradeoff.** New top-level source directories must be added to the list. Worth
+it: this failure was silent in the build log and only visible by loading the page.
+
+## 027 — 2026-09-25 — Simulated clock runs on a timer, not requestAnimationFrame
+
+**Reason.** The first implementation used `requestAnimationFrame`, which is
+starved whenever the page is not compositing — measured at **0 frames per second**
+with `visibilityState: "visible"`. Playback froze. It now runs on a 100 ms
+interval, with position always derived from a wall-clock origin, so a throttled
+timer costs smoothness but never accuracy.
+**Tradeoff.** Slightly coarser updates than a frame-synced animation, invisible
+at 10 Hz for a transcript follower.
