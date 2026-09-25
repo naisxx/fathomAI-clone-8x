@@ -158,3 +158,15 @@ designed empty states, real phone usability, focus, contrast, no jank at scale).
 design preference.
 **Tradeoff.** At worst-case cutoffs the plan now totals 24:15, i.e. the whole
 budget. Phases 7–9 (share view, search, Ask tab) are the declared release valve.
+
+## 019 — 2026-09-25 — The downloaded recording cannot be published as video
+
+**Reason.** Verification of `recon/media/…mp4` (43.70 s, 1280×720, H.264 + AAC)
+found the **Google Meet join code burned into every frame**, top-left, beside the
+clock — the same live credential redacted from the screenshots. Twelve sampled
+frames are otherwise identical: camera off, no screen share, no faces, no shared
+documents. Container metadata is clean (encoder strings only).
+**Tradeoff.** The video track cannot ship as-is. Since it is visually static and
+carries no information, the recommendation is to **use the audio track only** and
+render our own player visual — which removes the leak entirely rather than masking
+it, and is the better product anyway.
