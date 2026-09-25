@@ -213,5 +213,49 @@ Three consecutive quarters of overrun were attributed not to poor estimation but
     { id: "q3-9", description: "Rebuild the Q4 plan at 70% capacity", assignee: "Elena Fischer", timestampSec: at("plan Q4 at seventy percent"), completed: false, userGenerated: true },
   ],
 
+
+  /**
+   * Pre-written, and every answer cites the moment it came from so a reader can
+   * check it against the transcript. Citations are resolved through `at()` for
+   * the same reason the action items are: a timestamp typed by hand would drift
+   * silently the moment the transcript is edited.
+   */
+  ask: [
+    {
+      question: "Is the migration on track?",
+      answer:
+        "No. It is week eleven of a fourteen-week plan and roughly three weeks behind — but the shape of the delay matters more than the number. Services 1–6 are migrated and stable, 7 and 8 are migrated but showing elevated retry rates that are currently an on-call burden rather than a customer-visible one, and 9–12 have not started. Marcus is explicit that the remaining third is harder than the two-thirds already done, so the three weeks should not be read as a linear run-rate.",
+      citations: [at("eleven weeks in"), at("three weeks behind on the easy")],
+    },
+    {
+      question: "What was decided about the roadmap?",
+      answer:
+        "The export rework stays in Q4 and the analytics refresh moves to Q1. The deciding factor was commitment rather than effort: two enterprise accounts have been told export lands in Q4 and it came up in a renewal conversation, whereas analytics has no external commitment attached. Elena owns telling both accounts this week, and the draft goes round before it is sent.",
+      citations: [at("export rework stays in Q4"), at("own telling the two accounts")],
+    },
+    {
+      question: "Why is infrastructure over budget?",
+      answer:
+        "Nineteen percent over plan for Q3, against a forecast overrun of twelve percent. Almost all of the gap is the duplicate cost of running the old and new architectures at once, which is a symptom of the migration being late rather than a cost problem in its own right — finance is explicit that the line corrects itself once the migration finishes. A further three-week slip would put Q4 around twenty-four percent over, which escalates beyond the team.",
+      citations: [at("Nineteen percent over plan"), at("running old and new for longer")],
+    },
+    {
+      question: "How serious is the security finding?",
+      answer:
+        "The CVE itself is a patch-this-sprint item, not a stop-everything one: the vulnerable code path is not reachable from how the library is used. The more consequential finding is how that was established — by hand, because there is no reachability analysis, which costs about a day of investigation per critical CVE. Daniel is bringing a costed proposal for tooling and patching the dependency regardless of the outcome.",
+      citations: [at("vulnerable code path isn't reachable"), at("no reachability analysis")],
+    },
+    {
+      question: "What did we actually commit to?",
+      answer:
+        "Six decisions. The migration finishes and is protected; the six schema changes go into one rehearsed window before service nine starts; analytics moves to Q1 while export stays in Q4; every alert gets a named owner or is deleted; security brings a costed tooling proposal; and Q4 is planned at seventy percent capacity rather than a hundred. The last one is the attempt at a root cause — three quarters of overrun were attributed to planning as though on-call load does not exist.",
+      citations: [
+        at("migration finishes and is protected"),
+        at("six schema changes in one rehearsed window"),
+        at("plan Q4 at seventy percent"),
+      ],
+    },
+  ],
+
   transcript,
 };

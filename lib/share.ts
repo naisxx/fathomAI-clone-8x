@@ -49,6 +49,12 @@ function buildRedacted(meeting: Meeting): Meeting {
     actionItems: [],
     actionItemsAbsentReason: undefined,
 
+    // The shared view has no Ask tab, but the entries would still ship in the
+    // hydration payload — and their answers paraphrase who committed to what,
+    // which is the same content the action items were stripped for. Exactly the
+    // class of leak this module exists to prevent, so it goes too.
+    ask: [],
+
     // The speaker→invitee join is an email address.
     transcript: meeting.transcript.map((t) => ({
       ...t,

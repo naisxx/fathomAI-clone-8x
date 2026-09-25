@@ -10,12 +10,14 @@ import { TranscriptPanel } from "./TranscriptPanel";
 import { SummaryPanel } from "./SummaryPanel";
 import { ActionItems } from "./ActionItems";
 import { ShareButton } from "./ShareButton";
+import { AskPanel } from "./AskPanel";
 
-type Tab = "summary" | "transcript";
+type Tab = "summary" | "transcript" | "ask";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "summary", label: "Summary" },
   { id: "transcript", label: "Transcript" },
+  { id: "ask", label: "Ask" },
 ];
 
 export function ReviewScreen({ meeting }: { meeting: Meeting }) {
@@ -31,7 +33,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
     const params = new URLSearchParams(window.location.search);
     const t = Number(params.get("t"));
     const requested = params.get("tab");
-    if (requested === "transcript" || requested === "summary") setTab(requested);
+    if (requested === "transcript" || requested === "summary" || requested === "ask")
+      setTab(requested);
     if (Number.isFinite(t) && t > 0) {
       seek(t);
       if (!requested) setTab("transcript");
@@ -169,6 +172,8 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
             >
               {tab === "summary" ? (
                 <SummaryPanel meeting={meeting} />
+              ) : tab === "ask" ? (
+                <AskPanel meeting={meeting} onSeek={seekAndShow} />
               ) : (
                 <TranscriptPanel
                   meeting={meeting}

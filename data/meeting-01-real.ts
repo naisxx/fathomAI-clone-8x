@@ -62,6 +62,27 @@ export const meetingOneReal: Meeting = {
   actionItemsAbsentReason:
     "Fathom detected none in this 44-second call. Inventing some would make the one real meeting the dishonest one — see the Q3 Platform Review for action items, which is seeded and labelled as such.",
 
+
+  /**
+   * Two questions only, and both answers admit how little there is to say.
+   * Writing a richer Q&A for a 43-second test call would be inventing content
+   * about a real recording, which is the one place it must not happen.
+   */
+  ask: [
+    {
+      question: "What was this meeting about?",
+      answer:
+        "The speaker states the purpose directly: this is a test recording made to see how Fathom works before building a clone of it for an 8x assignment. He names what he intends to do with what he finds — clone some of it, improvise on some, and leave the rest behind. There is no other subject matter; the call is 44 seconds long and has one participant.",
+      citations: [3.43, 18.47],
+    },
+    {
+      question: "Were any decisions or commitments made?",
+      answer:
+        "No. One decision is mentioned as already taken — to build the clone — but nothing is agreed during the call, and no task is assigned to anyone. Fathom itself detected no action items here, and produced no summary because the recording was too short.",
+      citations: [3.43, 27.89],
+    },
+  ],
+
   transcript: [
     {
       speakerDisplayName: "Onais Ahmed",

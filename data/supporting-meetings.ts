@@ -59,6 +59,20 @@ Whether export respects the viewer's column preferences or always exports the fu
     { id: "ds-1", description: "Prototype column-filtered vs full-schema export and compare with two enterprise datasets", assignee: "Ravi Chandrasekaran", timestampSec: 610, completed: false, userGenerated: false },
     { id: "ds-2", description: "Confirm the background-job queue can absorb export load without affecting checkout", assignee: "Marcus Webb", timestampSec: 900, completed: false, userGenerated: false },
   ],
+  ask: [
+    {
+      question: "What was settled about export scope?",
+      answer:
+        "PDF was cut. CSV and JSON ship in Q4 and PDF becomes its own project if it is scoped properly at all — Ravi's point being that branded PDF export is a different project wearing the same name. The synchronous-versus-background question answered itself: the largest account has around four million rows, which no synchronous request survives whatever timeout is chosen.",
+      citations: [240, 450],
+    },
+    {
+      question: "What is still open?",
+      answer:
+        "Whether export respects the column preferences set in the table view or always exports the full schema. Ravi said he was genuinely unsure and is prototyping both rather than arguing it out. One design decision was made to avoid two code paths: everything runs as a background job, but a fast completion hands the file over directly so small exports still feel synchronous.",
+      citations: [700, 1120],
+    },
+  ],
   transcript: build(
     [
       [15, "Elena Fischer", "The thing I want to settle today is scope, because export has been quietly growing since we wrote the original ticket."],
@@ -116,6 +130,14 @@ Renewal is in February. Export landing in Q4 is not contractual, but it was disc
   actionItems: [
     { id: "cc-1", description: "Send Meridian written confirmation of the Q4 export timeline", assignee: "Priya Raghunathan", timestampSec: 720, completed: false, userGenerated: false },
   ],
+  ask: [
+    {
+      question: "What is the risk on this account?",
+      answer:
+        "Export. Meridian raised it unprompted and are working around it manually — roughly a day a month across the team. They are not blocked and have stopped complaining, which is the risk rather than the reassurance: they stopped because they assumed it was coming. Renewal is in February and export was discussed in the last renewal conversation.",
+      citations: [380, 860],
+    },
+  ],
   transcript: build(
     [
       [20, "Priya Raghunathan", "Thanks for making the time. I want to spend most of this on what isn't working rather than what is."],
@@ -171,6 +193,7 @@ Short status round. Service eight retries are down after yesterday's pool change
   actionItems: [],
   actionItemsAbsentReason:
     "No action items were detected in this meeting, and none were added manually.",
+  ask: [],
   transcript: build(
     [
       [10, "Marcus Webb", "Quick round. Service eight retries dropped about forty percent overnight after the connection pool change, so that's holding."],
