@@ -441,3 +441,99 @@ ended, and a stranger reaching it would find an empty call requiring admission.
 **Tradeoff.** A low-value credential remains in a public repository. Recorded
 here without repeating it or citing a line number, so this entry does not become
 the pointer the decision was meant to avoid.
+
+## 046 — 2026-09-25 — The "verbatim transcript" claim was not supportable, and is corrected
+
+**Reason.** The author opened a real Fathom share link in incognito. The
+transcript Fathom renders differs materially from the text shipped in
+`data/meeting-01-real.ts`: Fathom produced "Fathom API", "Fathom drone", "8x0"
+and a different closing sentence, where the shipped text reads "Fathom AI",
+"Fathom clone", "8x Assignment". The shipped version is what the speaker meant;
+Fathom's is what its ASR heard.
+
+The README and the data file both claimed every word was Fathom's own output with
+nothing "added, removed or altered". That is not supportable on this evidence, so
+both claims are corrected to say what is actually true: this is the author's
+transcription of the call, with ordinary recognition errors corrected.
+**Tradeoff.** Which text to *ship* is a separate decision and is the author's.
+The claim was corrected immediately because it was live and wrong; the content
+was left alone because changing it is not the agent's call.
+
+## 047 — 2026-09-25 — Observation shows our share view is stricter than Fathom's, deliberately
+
+**Reason.** Fathom's anonymous share view shows the Ask tab, a Share button, Copy
+Transcript and a within-transcript search field. Ours shows none of them. Our
+removal of action items and attendee details **matches** Fathom and was guessed
+correctly before any observation; the other four omissions are ours alone.
+**Tradeoff.** The share view is a deliberate divergence, not a faithful clone,
+and the repo now says so rather than letting the difference read as fidelity.
+
+## 048 — 2026-09-25 — Clip sharing is an improvement, not a clone
+
+**Reason.** The observed Share Recording dialog offers per-person access and a
+two-option link scope, and **no time range whatsoever**. The brief asks for
+sharing a clip, but the free-plan share flow cannot do it. Bounded clip sharing
+therefore extends the product rather than reproducing it, and must be described
+that way in the plan and the walkthrough.
+**Tradeoff.** Loses "this is how Fathom does it" as justification; gains a
+defensible answer to "what did you improve".
+
+## 049 — 2026-09-26 — Ship Fathom's real ASR output, mistakes included
+
+**Reason.** Author's decision, and the evidence backs it. Fathom transcribed
+"Fathom API", "Fathom drone", "8x0" and "I can wait"; the text shipped earlier
+was the author's corrected version. The machine transcript is now what the app
+shows, labelled as machine transcription in the provenance note.
+
+An independent check supports it: against the measured silence boundaries,
+Fathom's text speaks at 2.87 words/s before the paragraph break and 2.80 after —
+**0.07 apart**. The corrected text gave 3.07 and 2.18 — **0.89 apart**. The ASR
+text fits the real audio markedly better, which corroborates both the boundaries
+and the choice.
+**Tradeoff.** The transcript now reads oddly in places. That is the point: a
+transcript you can click into and check against audio is worth more precisely
+because transcripts are wrong sometimes. The corrected version is removed from
+the app entirely and survives only as evidence in the research notes.
+
+## 050 — 2026-09-26 — Within-meeting transcript search, ahead of everything else
+
+**Reason.** Observed in Fathom, visible even to anonymous visitors, and entirely
+absent from our build. On a 72-segment hour-long transcript it is the search
+people actually reach for — cross-meeting search answers a different question.
+It was also the cheapest of the three candidate slices.
+**Tradeoff.** Filtering hides lines, so follow-playback can have no line to
+scroll to. The filter keeps each line's original index and the scroll effect
+simply does nothing when the active line is filtered out, rather than jumping to
+the wrong one.
+
+## 051 — 2026-09-26 — Highlights are made while reviewing, and say so
+
+**Reason.** Fathom's highlights are created mid-call; we have no live call. Ours
+capture wherever the player currently is, which is a different action, so the
+panel states it in plain words rather than faking an in-call widget. Seeded
+highlights ship on the Q3 meeting so the feature is populated on arrival;
+viewer-created ones persist in `localStorage` with the same "this browser only"
+note the action-item ticks carry.
+**Tradeoff.** Seeded highlights cannot be deleted — only ones you made. That is
+deliberate: a viewer clearing the demo's own content would leave the next visitor
+with an empty rail.
+
+## 052 — 2026-09-26 — Opaque share tokens, and the links still labelled public
+
+**Reason.** The share view presents itself as access-controlled, so `q3plat` and
+`stnd05` were wrong — guessable tokens in a feature about controlled access.
+Fathom uses 32 random characters; ours are now 24, from a 57-character alphabet
+with no semantic content. The share panel also states plainly that there is no
+account system behind them, so in this demo every link is effectively public.
+**Tradeoff.** The walkthrough URLs got longer and had to be updated. Worth it —
+the previous tokens undercut the feature's own story.
+
+## 053 — 2026-09-26 — Highlights stripped from shared payloads
+
+**Reason.** Third instance of the same leak class as P7 (emails) and P8 (Ask
+entries): the shared view has no highlights UI, so nothing would render, but the
+data would still ship in the hydration payload. A viewer's private marks are not
+the recipient's business. Verified on the prerendered output — zero highlight
+data across all five share pages, five labels on the owner page.
+**Tradeoff.** None. It confirms the standing rule: every new field on `Meeting`
+needs a decision in `redactForShare`, and so far every one has needed stripping.

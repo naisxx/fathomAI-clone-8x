@@ -19,7 +19,7 @@ Camera on throughout. Every URL below is live and was verified on production.
   1. `/`
   2. `/meetings/impromptu-google-meet-meeting`
   3. `/meetings/q3-platform-review`
-  4. `/share/q3plat`
+  4. `/share/wyeuNaLtcntHnjRJmHL6YTmr`
 - [ ] Browser zoom 100%, window ~1280px wide. Close bookmarks bar.
 
 ---
@@ -108,7 +108,7 @@ Point at "16 results in 4 meetings", then **click a transcript hit**.
 
 ### 3:30 – 4:05 · Sharing, and the gap I found in Fathom
 
-**Tab 4 — `/share/q3plat`**
+**Tab 4 — `/share/wyeuNaLtcntHnjRJmHL6YTmr`**
 
 > "A share link. Recording, summary, transcript — no action items, no attendee
 > emails, no search into the rest of the account. And the emails aren't just
@@ -123,8 +123,11 @@ Point at "16 results in 4 meetings", then **click a transcript hit**.
 
 > "What's not here: no recording bot, no database, no login, and the long meeting
 > has a simulated timeline because there's no audio for it — all labelled in the
-> app. Every prompt and response that built this is committed raw in
-> `.agent-logs`, including the wrong turns. Thanks."
+> app. I should also say I didn't get through every Fathom flow before building —
+> a lot of the data model came from their public API schema rather than from
+> using the product, and I never tested an hour-long eight-person call. The
+> repo scores that honestly. Every prompt and response that built this is
+> committed raw in `.agent-logs`, including the wrong turns. Thanks."
 
 ---
 
@@ -144,6 +147,9 @@ the closing limitations.
 ## Things not to say
 
 - ❌ "I recorded an eight-person meeting." You did not. It is seeded.
+- ❌ "I went through all of Fathom first." You did not — three of eleven named
+  flows. Saying so costs 8 seconds and is worth more than the alternative, which
+  is a reviewer who has used Fathom noticing the gap you did not mention.
 - ❌ "The AI generates answers." The Ask answers are pre-written; the panel says so.
 - ❌ "It transcribes your calls." There is no capture bot.
 - ✅ "One real recording, the rest seeded and labelled" — accurate, and stronger.

@@ -1,81 +1,106 @@
 # Assignment
 
-> **Partially filled 2026-09-25.** The *Agent Capture Setup* portion is verbatim
-> in this conversation. The main brief's **deliverables and judging criteria were
-> supplied by the user in summary form** and are recorded below as such. The
-> **full verbatim brief is still pending** — the user will paste it here or send
-> it. Anything still unknown is marked and must not be invented.
+The verbatim brief, received 2026-09-25 (late — the build was carried out against
+a summary of it, which is itself recorded in the agent logs).
 
-## Known deliverables
+---
 
-1. **A working public deployment** of a Fathom-style AI meeting notetaker.
-2. **A public repository** containing raw `.agent-logs/`, committed as work
-   progressed rather than dumped at the end.
-3. **A camera-on walkthrough under five minutes.**
+## The brief, verbatim
 
-## Known hard requirements
+> Rebuild a live product in 24 hours. Better than the original if you want.
+> That window is deliberately generous and we do not expect you to use all of it.
+> The clock is tracked, never enforced.
+>
+> **The product**
+> [fathom.video](https://fathom.video/) — the AI meeting notetaker.
+>
+> Start by using it. Sign up on the free plan and go through the flows properly,
+> every one of them, end to end. Take screenshots as you go. Understand the
+> product fully before you write any code.
+>
+> At minimum that means: connect a calendar, get the notetaker into a real meeting
+> (a two-minute call with yourself on Zoom, Meet or Teams is enough), let it
+> record, then live with what comes out the other side. Watch the playback against
+> the transcript. Read the AI summary, switch templates, pull the action items.
+> Highlight a moment mid-call and see where it lands. Search across meetings.
+> Share a clip with someone who was not on the call. Then look at what happens on
+> an eight-person call that runs an hour, because that is the case that actually
+> matters.
+>
+> You do not have to make the recording bot work. Faking or stubbing the capture
+> layer is a legitimate call — say so in the walkthrough and spend the time on what
+> you decided matters more.
+>
+> **Before you write anything**
+> Run through this so your agent captures its prompts and responses into the
+> repository: 8x agent capture setup. It takes about ten minutes. Do not start
+> building until the capture test passes, and commit the `.agent-logs/` directory
+> as you go rather than in one lump at the end.
+>
+> **What you hand in**
+> - A live link. Deployed and open, not a localhost recording.
+> - A public repository. With `.agent-logs/` committed in it.
+> - A walkthrough. Loom or anything similar, five minutes at most, camera on. Put
+>   it in the walkthrough field.
+>
+> Paste the live link and the repository into the links field, and label each one.
+> Seed it with real data. An empty meetings list tells us nothing about what you
+> built.
+>
+> **How it is judged**
+> - Speed. How much working product you got to in the time.
+> - Product judgement. What you chose to build first, and what you left out.
+> - UX and UI. Whether the thing you shipped is good to use.
+>
+> **Before you send it**
+> - The live link opens for somebody who is not signed in as you.
+> - The repository is public, and `.agent-logs/` is in it.
+> - Your camera is on in the walkthrough, and it is under five minutes.
 
-These are verbatim constraints from the capture brief (`§3 What to capture`) and
-the user's working agreement.
+---
 
-- `.agent-logs/` ships with the repo and is never added to `.gitignore`.
-- Capture is automatic — a hook, not a manual step.
-- Per turn: prompt verbatim and in full, final response in full, UTC timestamp,
-  model name. No thinking, no tool calls, no intermediate steps.
-- Log entries are never edited, tidied, summarised or deleted after the fact.
-  Wrong turns and dead ends stay in.
-- Logs are committed interleaved with the code they produced. Commit order shows
-  the real order of work.
-- `CAPTURE-TEST.md` at repo root, with tool/model, mechanism, config file
-  changed, log path, both canary entries raw, and what failed first.
-- Seeded or simulated behaviour is labelled honestly. The capture bot may be
-  stubbed.
-- No claim of a real eight-person, hour-long call unless one was actually tested.
+## Deliverables — status
 
-## Judging criteria
+| | Status |
+|---|---|
+| Live link, deployed and open | **Done** — <https://fathom-ai-clone-8x.vercel.app/> verified loading unauthenticated |
+| Public repository with `.agent-logs/` | **Done** — `naisxx/fathomAI-clone-8x`, `private: false`, 5 log files visible unauthenticated |
+| Walkthrough, ≤5 min, camera on | **Outstanding** — script at [WALKTHROUGH.md](WALKTHROUGH.md); recording is the author's |
+| Seeded with real data | **Done** — 5 meetings, one real recording + four seeded |
+| Links field, each labelled | **Outstanding** — author's to submit |
 
-Stated by the user, pending the verbatim brief:
+## The research instruction — honest scorecard
 
-1. **Speed** — how fast a working product was delivered.
-2. **Product judgment** — what was built, what was cut, and why.
-3. **UX / UI** — the quality of the interface itself.
+The brief asks for **every flow, end to end, before writing code**. That is the
+requirement this submission met least well. Recorded here rather than glossed,
+because the gap shaped what got built.
 
-Two hard requirements attached to the live app:
+| Flow the brief names | Done? | Note |
+|---|---|---|
+| Connect a calendar | **No** | Never attempted |
+| Notetaker into a real meeting, let it record | **Yes** | 44-second Google Meet call |
+| Watch playback against the transcript | **Partly** | Transcript copied out; never watched in sync inside Fathom |
+| Read the AI summary | **No** | Fathom refused — "Meeting too short to generate a summary" |
+| Switch templates | **No** | Picker observed (16 templates); none applied — all but one appear plan-gated |
+| Pull the action items | **No** | Fathom detected none in 44 seconds |
+| Highlight a moment mid-call | **No** | Never exercised. The brief names it explicitly |
+| Search across meetings | **No** | Search box observed, never used |
+| Share a clip with a non-attendee | **No** | Never exercised — the single largest evidence gap |
+| Eight-person call running an hour | **No** | Never attempted. The brief calls this "the case that actually matters" |
 
-- It **must work for an unsigned visitor**. No login anywhere in the graded path.
-- It **must contain seeded data**, honestly labelled.
+**Why:** the call was cut short for time, and the follow-up checks (a 5–6 minute
+call with spoken commitments, and a share link opened in a private window) were
+planned, scoped, and then skipped under deadline pressure.
 
-### Consequences for the build
+**Consequence:** the build leaned on Fathom's **published OpenAPI schema** and
+help centre instead of on observed behaviour. That turned out to be a strong
+substitute for the *data model* — it is a machine contract, not marketing — but it
+is no substitute for knowing how the product *feels* at eight speakers and an
+hour, which is exactly the case the brief singles out.
 
-- UX/UI is a *graded axis*, not polish. Interface quality earns its own time
-  budget rather than being whatever is left at the end.
-- Speed is graded, so shipping a complete narrow product early beats a broader one
-  that lands late. Deploy early, cut Shoulds without hesitation.
-- No-auth is now a **requirement**, not just a design preference — which the
-  chosen architecture already satisfies.
+## Stubbing the capture layer
 
-## Known judging signal
-
-From the capture brief, verbatim in substance: the reviewers are not checking
-*whether* AI was used — they assume it was. They are checking *how* the work was
-done, and the log is the only evidence of that. `CAPTURE-TEST.md` is the first
-file they open; if capture is not working the rest is not assessable. A messy
-honest log scores better than a clean one.
-
-## Still unknown — needs the verbatim brief
-
-- [ ] Exact deliverable wording and any format requirements
-- [ ] **Weighting** between speed, product judgment and UX/UI
-- [ ] Submission fields and where the submission goes
-- [ ] Deadline (working assumption: 24 hours — see `docs/WORKFLOW.md`)
-- [ ] Any explicit non-goals or mandated feature set
-- [ ] Whether a specific stack, host or account is mandated
-
-**Action:** paste the full brief here; the remaining `[BRIEF]` items in
-`.claude/skills/release-check/SKILL.md` get replaced at the same time.
-
-## Final checks
-
-Tracked as an executable checklist in the `release-check` skill
-(`.claude/skills/release-check/SKILL.md`) so it can be run rather than read.
-It will be incomplete until the unknowns above are filled in.
+The brief permits it: "Faking or stubbing the capture layer is a legitimate call
+— say so in the walkthrough." This build goes further than stubbing: there is **no
+recording bot at all**, and the app says so in the footer, the README and the
+walkthrough script. The time went into the post-meeting review experience.

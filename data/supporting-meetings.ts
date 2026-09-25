@@ -33,7 +33,7 @@ export const designSync: Meeting = {
   scheduledStart: "2026-09-23T13:30:00.000Z",
   durationSec: 1440,
   transcriptLanguage: "en",
-  shareToken: "dsgn24",
+  shareToken: "MCapFEbNqS4LrvyiWTNHXDoQ",
   recordedBy: "Elena Fischer",
   source: "seeded",
   mediaKind: "simulated",
@@ -73,6 +73,7 @@ Whether export respects the viewer's column preferences or always exports the fu
       citations: [700, 1120],
     },
   ],
+  highlights: [],
   transcript: build(
     [
       [15, "Elena Fischer", "The thing I want to settle today is scope, because export has been quietly growing since we wrote the original ticket."],
@@ -106,7 +107,7 @@ export const customerCall: Meeting = {
   scheduledStart: "2026-09-24T15:00:00.000Z",
   durationSec: 1080,
   transcriptLanguage: "en",
-  shareToken: "mrdn18",
+  shareToken: "iAGwHsV9iDbuyy6WxiTFMoQD",
   recordedBy: "Priya Raghunathan",
   source: "seeded",
   mediaKind: "simulated",
@@ -138,6 +139,7 @@ Renewal is in February. Export landing in Q4 is not contractual, but it was disc
       citations: [380, 860],
     },
   ],
+  highlights: [],
   transcript: build(
     [
       [20, "Priya Raghunathan", "Thanks for making the time. I want to spend most of this on what isn't working rather than what is."],
@@ -170,7 +172,7 @@ export const standup: Meeting = {
   scheduledStart: "2026-09-25T09:05:00.000Z",
   durationSec: 240,
   transcriptLanguage: "en",
-  shareToken: "stnd05",
+  shareToken: "zK3rqCvo6zG5dxr7mcuAMENU",
   recordedBy: "Marcus Webb",
   source: "seeded",
   mediaKind: "simulated",
@@ -194,6 +196,7 @@ Short status round. Service eight retries are down after yesterday's pool change
   actionItemsAbsentReason:
     "No action items were detected in this meeting, and none were added manually.",
   ask: [],
+  highlights: [],
   transcript: build(
     [
       [10, "Marcus Webb", "Quick round. Service eight retries dropped about forty percent overnight after the connection pool change, so that's holding."],

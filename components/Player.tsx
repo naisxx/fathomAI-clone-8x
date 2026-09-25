@@ -2,6 +2,8 @@
 
 import { formatTimestamp, type Meeting } from "@/lib/types";
 import type { Playback } from "./usePlayback";
+import { HighlightMarkers } from "./Highlights";
+import type { Highlight } from "@/lib/types";
 
 const RATES = [1, 1.25, 1.5, 2];
 
@@ -13,9 +15,13 @@ const RATES = [1, 1.25, 1.5, 2];
 export function Player({
   meeting,
   playback,
+  highlights = [],
+  onSeekHighlight,
 }: {
   meeting: Meeting;
   playback: Playback;
+  highlights?: Highlight[];
+  onSeekHighlight?: (sec: number) => void;
 }) {
   const { currentTime, duration, isPlaying, rate, toggle, seek, setRate, audioRef } =
     playback;
@@ -118,6 +124,11 @@ export function Player({
             aria-hidden
             className="pointer-events-none absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{ left: `${pct}%`, background: "var(--accent)" }}
+          />
+          <HighlightMarkers
+            highlights={highlights}
+            durationSec={duration}
+            onSeek={onSeekHighlight ?? seek}
           />
         </label>
 

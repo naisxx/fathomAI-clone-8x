@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { formatTimestamp, type Meeting, type TranscriptItem } from "@/lib/types";
 import type { Playback } from "./usePlayback";
 
@@ -43,16 +43,46 @@ function Avatar({ name, matched }: { name: string; matched: boolean }) {
   );
 }
 
+/** Wrap every occurrence of the query so a match is visible in place. */
+function MarkedText({ text, query }: { text: string; query: string }) {
+  if (!query) return <>{text}</>;
+  const q = query.toLowerCase();
+  const out: React.ReactNode[] = [];
+  let i = 0;
+  let n = 0;
+  for (;;) {
+    const at = text.toLowerCase().indexOf(q, i);
+    if (at === -1) {
+      out.push(text.slice(i));
+      break;
+    }
+    if (at > i) out.push(text.slice(i, at));
+    out.push(
+      <mark
+        key={n++}
+        className="rounded-sm px-0.5"
+        style={{ background: "var(--accent-dim)", color: "var(--accent-strong)" }}
+      >
+        {text.slice(at, at + q.length)}
+      </mark>
+    );
+    i = at + q.length;
+  }
+  return <>{out}</>;
+}
+
 function Line({
   item,
   isActive,
   matched,
   onSeek,
+  query,
 }: {
   item: TranscriptItem;
   isActive: boolean;
   matched: boolean;
   onSeek: (sec: number) => void;
+  query: string;
 }) {
   return (
     <li>
@@ -95,7 +125,7 @@ function Line({
             className="block text-[14px] leading-relaxed"
             style={{ color: isActive ? "var(--text)" : "var(--text-muted)" }}
           >
-            {item.text}
+            <MarkedText text={item.text} query={query} />
           </span>
         </span>
       </button>
@@ -117,6 +147,25 @@ export function TranscriptPanel({
   onToggleFollow: () => void;
 }) {
   const listRef = useRef<HTMLUListElement>(null);
+  const [query, setQuery] = useState("");
+  const q = query.trim().toLowerCase();
+
+  /**
+   * Searching within one meeting is a different job from searching across them.
+   * On a 72-segment hour-long transcript this is the one you actually reach for,
+   * and Fathom puts it right here in the transcript tab.
+   *
+   * Filtering keeps the original index so a result still knows which line it is
+   * — follow-playback and click-to-seek both depend on that.
+   */
+  const shown = useMemo(
+    () =>
+      meeting.transcript
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => !q || item.text.toLowerCase().includes(q)),
+    [meeting.transcript, q]
+  );
+
   const matchedNames = new Set(
     meeting.invitees
       .map((i) => i.matchedSpeakerDisplayName)
@@ -126,9 +175,12 @@ export function TranscriptPanel({
   // Keep the active line in view while following, without hijacking the page.
   useEffect(() => {
     if (!follow || activeIndex < 0) return;
-    const el = listRef.current?.children[activeIndex] as HTMLElement | undefined;
+    // While filtering, the active line may not be rendered at all.
+    const pos = shown.findIndex((s) => s.index === activeIndex);
+    if (pos === -1) return;
+    const el = listRef.current?.children[pos] as HTMLElement | undefined;
     el?.scrollIntoView({ block: "center", behavior: "smooth" });
-  }, [activeIndex, follow]);
+  }, [activeIndex, follow, shown]);
 
   if (meeting.transcript.length === 0) {
     return (
@@ -151,7 +203,11 @@ export function TranscriptPanel({
         className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-3 py-2 text-[11px]"
         style={{ borderColor: "var(--border)", color: "var(--text-faint)" }}
       >
-        <span>{meeting.transcript.length} segments</span>
+        <span aria-live="polite">
+          {q
+            ? `${shown.length} of ${meeting.transcript.length} segments`
+            : `${meeting.transcript.length} segments`}
+        </span>
         {unmatchedCount > 0 && (
           <span style={{ color: "var(--seeded)" }}>
             {unmatchedCount} from unmatched speakers
@@ -176,21 +232,71 @@ export function TranscriptPanel({
         </button>
       </div>
 
-      <ul
-        ref={listRef}
-        className="scroll-subtle min-h-0 flex-1 overflow-y-auto p-1.5"
-        style={{ maxHeight: "min(58vh, 640px)" }}
-      >
-        {meeting.transcript.map((item, i) => (
-          <Line
-            key={`${item.startSec}-${i}`}
-            item={item}
-            isActive={i === activeIndex}
-            matched={matchedNames.has(item.speakerDisplayName)}
-            onSeek={playback.seek}
+      <div className="border-b px-3 py-2" style={{ borderColor: "var(--border)" }}>
+        <label htmlFor="transcript-search" className="sr-only">
+          Search within this transcript
+        </label>
+        <div className="relative">
+          <svg
+            aria-hidden
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
+            style={{ color: "var(--text-faint)" }}
+          >
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+            <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <input
+            id="transcript-search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search this transcript"
+            className="h-9 w-full rounded-lg border pl-8 pr-3 text-[13px] outline-none"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--bg)",
+              color: "var(--text)",
+            }}
           />
-        ))}
-      </ul>
+        </div>
+      </div>
+
+      {shown.length === 0 ? (
+        <div className="p-8 text-center">
+          <p className="text-sm font-medium">
+            Nothing in this transcript matches &ldquo;{query.trim()}&rdquo;
+          </p>
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="mt-2 min-h-6 rounded px-2 py-1 text-[13px]"
+            style={{ color: "var(--accent)", background: "var(--accent-dim)" }}
+          >
+            Clear search
+          </button>
+        </div>
+      ) : (
+        <ul
+          ref={listRef}
+          className="scroll-subtle min-h-0 flex-1 overflow-y-auto p-1.5"
+          style={{ maxHeight: "min(58vh, 640px)" }}
+        >
+          {shown.map(({ item, index }) => (
+            <Line
+              key={`${item.startSec}-${index}`}
+              item={item}
+              isActive={index === activeIndex}
+              matched={matchedNames.has(item.speakerDisplayName)}
+              onSeek={playback.seek}
+              query={q}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

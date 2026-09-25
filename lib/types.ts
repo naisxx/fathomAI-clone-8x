@@ -85,6 +85,25 @@ export interface AskEntry {
   citations: number[];
 }
 
+/**
+ * A marked moment on a recording.
+ *
+ * Fathom's highlights are made **mid-call**. We have no live call, so ours are
+ * made while reviewing the recording. That is a genuinely different action and
+ * the UI says so rather than faking an in-call widget.
+ *
+ * Mirrors Fathom's own `Highlight` shape (float seconds plus a label) so the
+ * model stays traceable to their published schema.
+ */
+export interface Highlight {
+  id: string;
+  /** Optional - an unlabelled highlight is still a useful bookmark. */
+  label: string | null;
+  startSec: number;
+  /** True when a viewer made it here, false for seeded ones. */
+  userGenerated: boolean;
+}
+
 export interface Meeting {
   id: string;
   title: string;
@@ -121,6 +140,9 @@ export interface Meeting {
 
   /** Pre-written Q&A. Empty is fine — the panel says so rather than inventing. */
   ask: AskEntry[];
+
+  /** Seeded highlights. Viewer-created ones live in localStorage, not here. */
+  highlights: Highlight[];
 }
 
 /** Speakers in a transcript that no invitee matched. */

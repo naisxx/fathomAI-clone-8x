@@ -150,7 +150,7 @@ export const meetingTwoSeeded: Meeting = {
   scheduledStart: "2026-09-22T09:00:00.000Z",
   durationSec: DURATION_SEC,
   transcriptLanguage: "en",
-  shareToken: "q3plat",
+  shareToken: "wyeuNaLtcntHnjRJmHL6YTmr",
   recordedBy: "Priya Raghunathan",
 
   source: "seeded",
@@ -255,6 +255,13 @@ Three consecutive quarters of overrun were attributed not to poor estimation but
         at("plan Q4 at seventy percent"),
       ],
     },
+  ],
+
+  highlights: [
+    { id: "hl-q3-1", label: "Migration is three weeks behind", startSec: at("three weeks behind on the easy"), userGenerated: false },
+    { id: "hl-q3-2", label: "Decision: migration finishes, analytics moves", startSec: at("export rework stays in Q4"), userGenerated: false },
+    { id: "hl-q3-3", label: "The real deadline is financial, not technical", startSec: at("running old and new for longer"), userGenerated: false },
+    { id: "hl-q3-4", label: "Root cause: planning at 100% capacity", startSec: at("plan Q4 at seventy percent"), userGenerated: false },
   ],
 
   transcript,
