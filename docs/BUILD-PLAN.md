@@ -2,18 +2,19 @@
 
 **Status: PROPOSED — awaiting approval. Nothing scaffolded, no dependencies installed.**
 
-Revision 2, 2026-09-25 14:30 UTC. Supersedes revision 1 (see `DECISIONS.md` 017,
+Revision 3, 2026-09-25 14:45 UTC. Arithmetic corrected (MVP is 9:15, not 7:15). Supersedes revision 1 (see `DECISIONS.md` 017,
 019–021). Evidence: [`FINDINGS.md`](research/FINDINGS.md) ·
 [`SCREENSHOT-RECONCILIATION.md`](research/SCREENSHOT-RECONCILIATION.md).
 
 ## Time remaining
 
-Work began 2026-09-25 ~12:30 UTC. On a 24-hour budget that ends **~12:30 UTC on
-26 Sep**. About **22 hours** remain; this plan commits **15:45** of work and
-leaves the rest as slack, because the estimate that always slips is the last one.
+Work began 2026-09-25 ~12:30 UTC. The brief **tracks** the 24-hour clock but does
+not enforce it as a hard cutoff, so there is no assumed deadline — the rule is
+**ship early, then improve**. Elapsed time is what matters, and it is reported at
+each phase boundary.
 
-> **Correct me if your real deadline is earlier** — it is the one input that
-> changes the cut line, and I have assumed rather than been told it.
+This plan commits **17:45** of work. The MVP (P0–P4) is **9:15** of that, and is
+deliberately the part that stands alone.
 
 **No further Fathom research.** Gate 3 is closed. Research reopens only if a
 specific build decision needs it, and only for that decision.
@@ -60,8 +61,11 @@ Badge: **`Real recording — audio only`**
 
 Badge: **`Seeded demo data — simulated timeline, no audio`**
 
-- 62 min, 8 speakers, ~400 transcript lines, 9 action items, 2 deliberately
-  unmatched speakers.
+- 62 min, 8 speakers, 9 action items, 2 deliberately unmatched speakers.
+- **Content quality over line count.** The bar is that eight-speaker navigation over
+  a long meeting is genuinely demonstrable — distinct voices, a real agenda that
+  moves, decisions that the summary and action items actually point at. Padding the
+  transcript with repetitive filler to hit a line target is explicitly not the goal.
 - Simulated transport: real clock, play/pause, seek, speed, transcript auto-follow,
   click-to-seek, `?t=` deep links. Everything works; there is simply no audio.
 - Exists to prove the interface survives scale — the thing 43 seconds cannot show.
@@ -113,7 +117,7 @@ matching fails; we show it instead of hiding it.
 MVP = **P0–P4**. Everything after is ranked, with cutoffs. Hit a cutoff, ship what
 works, move on.
 
-### MVP — first deployable product (7:15)
+### MVP — first deployable product (9:15)
 
 | P | Slice | Acceptance criteria | Est | Cutoff |
 |---|---|---|---|---|
@@ -121,7 +125,7 @@ works, move on.
 | **1** | Types + seed infrastructure + tier-1 meeting | `data/` typechecks. Audio extracted, **video track absent from the shipped asset** (verified by inspecting the file, not by trusting the pipeline). Tier-1 transcript aligned to real audio, or the honest not-available state. | 2:00 | 2:30 |
 | **2** | Meeting list | Cards grouped by date; duration badge; per-meeting `Real` / `Seeded` badge; demo banner; click → detail; clean at 375px. | 1:15 | 1:30 |
 | **3** | Review screen + transcript + audio player | Two columns, tabbed left pane. Audio plays on the deployed URL. Transcript follows playback. **Click a line → audio seeks.** `?t=` deep-links on load. Speaker + `HH:MM:SS` per line. | 2:30 | 3:00 |
-| **4** | Summary tab + action items + tier-2 meeting | Summary renders markdown with template name. Tier-2 meeting present: 8 speakers, ~400 lines, 9 action items, ≥2 unmatched shown as unmatched. Action item click → seek. `completed` toggles, survives reload, AI vs manual distinguished. Tier-1 shows the real empty action-items state. | 2:45 | 3:15 |
+| **4** | Summary tab + action items + tier-2 meeting | Summary renders markdown with template name. Tier-2 meeting present: 8 speakers over ~62 min with substantive, non-repetitive content, 9 action items, ≥2 unmatched shown as unmatched. Action item click → seek. `completed` toggles, survives reload, AI vs manual distinguished. Tier-1 shows the real empty action-items state. | 2:45 | 3:15 |
 
 **End of P4 = a complete, honest, deployable product.** If everything after this is
 cut, the submission still stands on its own.
@@ -145,7 +149,7 @@ graded.
 | **9** | Deployment testing on the **live URL** | `verify-slice` green on production in a fresh tab, no session. Audio plays from the deployed origin. Mobile checked on a real phone viewport. | 1:30 |
 | **10** | Camera-on walkthrough | Under 5:00, camera on, deployed URL, states what is real and what is seeded. | 1:30 |
 
-**Totals: MVP 7:15 · extras 5:30 · reserved 3:00 = 15:45 committed** against ~22 h.
+**Totals: MVP 9:15 · extras 5:30 · reserved 3:00 = 17:45 committed.**
 
 ## Risks
 
@@ -153,9 +157,9 @@ graded.
 |---|---|
 | **No transcript for tier 1** | The one open dependency. Needs Fathom's `Copy Transcript` output. Without it, tier 1 ships audio + honest empty transcript state — never invented dialogue. |
 | **Audio extraction without ffmpeg** | No ffmpeg, no pyav, no moviepy on this machine. Fallbacks in order: (a) decode + re-encode in-browser via Web Audio, (b) pure-Python AAC→ADTS remux, (c) `pip install imageio-ffmpeg` for a static binary — **I will ask before installing anything.** |
-| **Seeding ~400 transcript lines eats budget** | Generate structurally from a topic outline; hand-author only the passages the summary and action items point at. Cutoff 3:15, then ship fewer lines. |
+| **Seeded transcript eats budget** | Author a real agenda with distinct speaker voices; density only where the summary and action items point. Quality over line count. Cutoff 3:15, then ship a shorter meeting rather than filler. |
 | Vercel build surprises | P0 exists to find them at hour one. |
-| Deadline earlier than assumed | Stated above as an assumption, not a fact. Cut order is pre-declared so the decision is already made. |
+| Time overrun | No hard deadline, but the clock is tracked. Cut order is pre-declared so running short is not a decision made under pressure. |
 
 ## Explicit deferrals
 

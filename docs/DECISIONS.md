@@ -192,3 +192,25 @@ scale case. Search, sharing and Ask are extras. Cut order is declared in advance
 UX/UI pass is explicitly not cuttable, because it is a graded axis.
 **Tradeoff.** 15:45 committed against ~22 h remaining. The slack is deliberate;
 deployment testing and the walkthrough are reserved and not negotiable.
+
+## 022 — 2026-09-25 — Audio extracted with ffmpeg; video track discarded and verified absent
+
+**Reason.** User authorised a media dependency. `imageio-ffmpeg` (ffmpeg 7.1)
+extracted the audio with `-vn`, re-encoded to mono 64 kbps AAC — 43.62 s, 355 KB.
+Verified twice: ffmpeg reports a single audio stream, and an independent MP4 box
+parse finds exactly one `trak` with handler `soun`, no `vide`. The bytes
+`bth-bjtd` do not appear in the output. Source MP4 stays in `recon/`, untracked.
+**Tradeoff.** A build-time dependency on ffmpeg, used once. The shipped asset is
+audio-only by construction, not by masking.
+
+## 023 — 2026-09-25 — Transcript timestamps aligned to detected speech, labelled manual
+
+**Reason.** The user supplied the transcript verbatim but Fathom gives no
+timestamps. Rather than distributing words evenly, alignment used
+`ffmpeg silencedetect` (-34 dB, 0.30 s): speech runs 3.43 s → 36.96 s, and the
+largest internal pause (1.32 s at 26.56 s) coincides with the paragraph break.
+Segment boundaries were snapped to detected pauses, then natural clauses assigned
+across them.
+**Tradeoff.** Boundaries are accurate to roughly ±1 s; word placement inside a
+segment is proportional, not measured. Surfaced in the UI as
+**"timestamps manually aligned"**. No word was added, removed or altered.
