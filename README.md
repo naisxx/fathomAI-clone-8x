@@ -3,7 +3,7 @@
 A meeting-review tool: transcript, AI summary and action items anchored to the
 moment they happened. Built for the 8x Careers assignment.
 
-**Live:** _(deployed link goes here)_
+**Live:** <https://fathom-ai-clone-8x.vercel.app/>
 
 ---
 

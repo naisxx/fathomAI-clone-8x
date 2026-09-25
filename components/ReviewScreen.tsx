@@ -9,6 +9,7 @@ import { Player } from "./Player";
 import { TranscriptPanel } from "./TranscriptPanel";
 import { SummaryPanel } from "./SummaryPanel";
 import { ActionItems } from "./ActionItems";
+import { ShareButton } from "./ShareButton";
 
 type Tab = "summary" | "transcript";
 
@@ -63,11 +64,25 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
     (i) => i.matchedSpeakerDisplayName === null
   );
 
+  /** WAI-ARIA tabs pattern: arrows move, Home/End jump. */
+  const onTabKeyDown = (e: React.KeyboardEvent) => {
+    const i = TABS.findIndex((t) => t.id === tab);
+    let next = i;
+    if (e.key === "ArrowRight") next = (i + 1) % TABS.length;
+    else if (e.key === "ArrowLeft") next = (i - 1 + TABS.length) % TABS.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = TABS.length - 1;
+    else return;
+    e.preventDefault();
+    setTab(TABS[next].id);
+    document.getElementById(`tab-${TABS[next].id}`)?.focus();
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
       <Link
         href="/"
-        className="mb-4 inline-flex items-center gap-1.5 text-[13px]"
+        className="mb-3 -ml-1 inline-flex min-h-6 items-center gap-1.5 rounded px-1 py-1 text-[13px]"
         style={{ color: "var(--text-muted)" }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -75,6 +90,31 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
         </svg>
         All meetings
       </Link>
+
+      {/*
+        The title leads the page rather than sitting in the side rail. You should
+        know which meeting you are looking at before you reach a play button —
+        and on a phone, where the rail stacks underneath, a rail-bound title
+        would appear below the whole player and transcript.
+      */}
+      <header className="mb-5">
+        <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
+          {meeting.title}
+        </h1>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <ProvenanceBadge meeting={meeting} size="md" />
+          <span className="text-[13px]" style={{ color: "var(--text-faint)" }}>
+            {new Date(meeting.scheduledStart).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              timeZone: "UTC",
+            })}{" "}
+            · {formatDuration(meeting.durationSec)}
+            {meeting.meetingType ? ` · ${meeting.meetingType}` : ""}
+          </span>
+        </div>
+      </header>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* Left: player + tabbed pane */}
@@ -88,6 +128,7 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
             <div
               role="tablist"
               aria-label="Meeting content"
+              onKeyDown={onTabKeyDown}
               className="flex gap-1 border-b px-2"
               style={{ borderColor: "var(--border)" }}
             >
@@ -100,8 +141,11 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
                     id={`tab-${t.id}`}
                     aria-selected={selected}
                     aria-controls={`panel-${t.id}`}
+                    // Roving tabindex: only the selected tab is in the tab order,
+                    // so Tab moves past the tablist rather than through it.
+                    tabIndex={selected ? 0 : -1}
                     onClick={() => setTab(t.id)}
-                    className="relative px-3 py-2.5 text-[13px] font-medium transition-colors"
+                    className="relative min-h-11 px-3 py-2.5 text-[13px] font-medium transition-colors"
                     style={{ color: selected ? "var(--accent)" : "var(--text-muted)" }}
                   >
                     {t.label}
@@ -140,23 +184,7 @@ export function ReviewScreen({ meeting }: { meeting: Meeting }) {
 
         {/* Right: meta rail */}
         <aside className="min-w-0 space-y-5">
-          <div>
-            <h1 className="text-xl font-semibold leading-tight tracking-tight">
-              {meeting.title}
-            </h1>
-            <p className="mt-1.5 text-[13px]" style={{ color: "var(--text-faint)" }}>
-              {new Date(meeting.scheduledStart).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                timeZone: "UTC",
-              })}{" "}
-              · {formatDuration(meeting.durationSec)}
-            </p>
-            <div className="mt-2.5">
-              <ProvenanceBadge meeting={meeting} size="md" />
-            </div>
-          </div>
+          <ShareButton meeting={meeting} />
 
           <ProvenanceNote meeting={meeting} />
 

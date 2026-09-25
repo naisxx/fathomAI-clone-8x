@@ -254,3 +254,104 @@ interval, with position always derived from a wall-clock origin, so a throttled
 timer costs smoothness but never accuracy.
 **Tradeoff.** Slightly coarser updates than a frame-synced animation, invisible
 at 10 Hz for a transcript follower.
+
+## 028 — 2026-09-25 — Public URL is the production alias, not the deployment URL
+
+**Reason.** The deployment-specific URL
+(`…-bxq6cptjx-onaisahmeds-projects.vercel.app`) redirects to a Vercel login —
+Deployment Protection covers preview/deployment URLs, so an unsigned visitor
+cannot open it. That breaks a hard requirement. The production alias
+<https://fathom-ai-clone-8x.vercel.app/> serves 200 with no auth redirect and is
+the URL of record.
+**Tradeoff.** Anyone sharing a per-deployment link will hit the login wall. The
+alias must be the one used in the submission and the walkthrough.
+
+## 029 — 2026-09-25 — Production verified by download, not by trusting the build
+
+**Reason.** The live asset was fetched from
+`https://fathom-ai-clone-8x.vercel.app/media/meeting-01.m4a` and parsed: 363,404
+bytes, exactly one `trak` with handler `soun`, no `vide`, and no `bth-bjtd`
+bytes. The join-code leak is confirmed absent from what is actually served, not
+merely from what was built.
+**Tradeoff.** None. This check should be repeated if the asset is ever rebuilt.
+
+## 030 — 2026-09-25 — Contrast defect found by measurement, not by eye
+
+**Reason.** A computed WCAG audit of every token pair found `--text-faint`
+failing AA in **both** themes: 4.07:1 on `--bg` and 3.75:1 on `--bg-raised` in
+dark, 3.33:1 in light — against a 4.5:1 requirement. That token carries most of
+the 11–13px text in the app (timestamps, counts, captions, participant list), so
+it was the worst possible token to get wrong. Replaced with `#828b9b` (5.67 /
+5.23) and `#5f6874` (5.46).
+**Tradeoff.** Slightly less recessive secondary text. It looked fine by eye,
+which is exactly why it needed measuring.
+
+## 031 — 2026-09-25 — Meeting title moved out of the side rail
+
+**Reason.** The title sat in the right-hand rail, so the page led with a play
+button and, on a phone where the rail stacks underneath, the title appeared below
+the entire player and transcript. It is now a page header above both columns.
+**Tradeoff.** Diverges from Fathom, which keeps the title in the rail. Hierarchy
+beats fidelity here — this is a graded axis.
+
+## 032 — 2026-09-25 — Hit targets raised to the 24px minimum
+
+**Reason.** An automated sweep at a real viewport found undersized targets: the
+seek slider (18px), the rate button, the follow toggle and the action-item
+timestamp buttons (21px), and the checkboxes (16px). Fixed by raising heights;
+the checkbox keeps its 18px visual inside a 24×24 clickable parent, which is the
+WCAG 2.5.8 enclosure exception rather than an oversized box.
+**Tradeoff.** None. Note the first sweep reported 81 failures against a
+zero-width viewport — measurements were only meaningful after setting one.
+
+## 033 — 2026-09-25 — Search is client-side, linear, and unranked beyond hit count
+
+**Reason.** The whole corpus is a few hundred short strings in the bundle. A
+linear case-insensitive scan is instant and has no index to fall out of sync.
+Meetings are ordered by hit count; hits within a meeting are ordered
+title → summary → action → transcript, then chronologically. No relevance
+scoring, because any weighting would be invented rather than measured.
+**Tradeoff.** No fuzzy matching, stemming or typo tolerance — "migrate" does not
+find "migration". Acceptable for a seeded corpus; a real one would need an index.
+
+## 034 — 2026-09-25 — A search hit carries its timestamp
+
+**Reason.** The feature is only worth building if a hit takes you to the moment
+rather than the page. Transcript and action-item hits link to
+`/meetings/<id>?t=<sec>&tab=transcript`, reusing the deep-link path already
+built in P4. Title and summary hits have no moment, so they link to the meeting.
+**Tradeoff.** Two kinds of result behave differently, which the kind label on
+each row makes visible.
+
+## 035 — 2026-09-25 — Share view redacts on the server, after a real leak was found
+
+**Reason.** The shared view rendered no action items and no attendee emails, and
+looked correct. But it was handed the whole `Meeting`, and Next.js serialises
+props into the HTML for hydration — so every invitee address was sitting in the
+page source of a link meant for outsiders. Sixty-six matches across the seeded
+meetings. **Not rendering something is not the same as not sending it.**
+Redaction now happens server-side in `redactForShare`, which strips invitee
+emails and domains, all action items, and the speaker→invitee email join.
+**Tradeoff.** A second shape of the same type to keep in step, which decision 036
+guards against.
+
+## 036 — 2026-09-25 — The redaction is self-guarding at build time
+
+**Reason.** A silent regression here is a privacy bug, not a cosmetic one, so
+`redactForShare` asserts its own invariant: it scans the redacted payload for
+address-shaped strings and throws if any survive. Verified by deliberately
+reintroducing the leak — the production build **failed** with
+`redactForShare left 5 address(es) in the shared payload for "platform-standup"`.
+Confirmed on the prerendered output: five share pages contain zero emails while
+the owner page still contains 74.
+**Tradeoff.** A regex-based check, so it catches address-shaped data rather than
+all private data. It covers the field that actually leaked.
+
+## 037 — 2026-09-25 — Shared chrome differs from signed-in chrome
+
+**Reason.** A share recipient was given one meeting, not an account. Offering a
+search box across every other meeting, or a link to the full list, would quietly
+widen what the link grants. The header on `/share` is a wordmark and a "Shared
+link" chip — no search, no navigation, and the pages are `noindex, nofollow`.
+**Tradeoff.** A pathname check in a client component rather than a route group,
+which was the smaller change to existing routes.
