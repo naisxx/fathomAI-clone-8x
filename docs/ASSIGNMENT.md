@@ -1,11 +1,10 @@
 # Assignment
 
-> **Gap flagged 2026-09-25.** Only the *Agent Capture Setup* portion of the 8x
-> brief has been pasted into this project. The main assignment brief — its exact
-> deliverables wording, judging criteria, hard requirements and final checks —
-> **has not been provided**. Everything in *Known* below is sourced from the
-> capture brief or from the user's own instructions. Everything in *Not yet
-> known* is genuinely missing and must not be invented.
+> **Partially filled 2026-09-25.** The *Agent Capture Setup* portion is verbatim
+> in this conversation. The main brief's **deliverables and judging criteria were
+> supplied by the user in summary form** and are recorded below as such. The
+> **full verbatim brief is still pending** — the user will paste it here or send
+> it. Anything still unknown is marked and must not be invented.
 
 ## Known deliverables
 
@@ -33,6 +32,28 @@ the user's working agreement.
   stubbed.
 - No claim of a real eight-person, hour-long call unless one was actually tested.
 
+## Judging criteria
+
+Stated by the user, pending the verbatim brief:
+
+1. **Speed** — how fast a working product was delivered.
+2. **Product judgment** — what was built, what was cut, and why.
+3. **UX / UI** — the quality of the interface itself.
+
+Two hard requirements attached to the live app:
+
+- It **must work for an unsigned visitor**. No login anywhere in the graded path.
+- It **must contain seeded data**, honestly labelled.
+
+### Consequences for the build
+
+- UX/UI is a *graded axis*, not polish. Interface quality earns its own time
+  budget rather than being whatever is left at the end.
+- Speed is graded, so shipping a complete narrow product early beats a broader one
+  that lands late. Deploy early, cut Shoulds without hesitation.
+- No-auth is now a **requirement**, not just a design preference — which the
+  chosen architecture already satisfies.
+
 ## Known judging signal
 
 From the capture brief, verbatim in substance: the reviewers are not checking
@@ -41,18 +62,17 @@ done, and the log is the only evidence of that. `CAPTURE-TEST.md` is the first
 file they open; if capture is not working the rest is not assessable. A messy
 honest log scores better than a clean one.
 
-## Not yet known — needs the original 8x brief
+## Still unknown — needs the verbatim brief
 
 - [ ] Exact deliverable wording and any format requirements
-- [ ] Judging criteria and their weighting
+- [ ] **Weighting** between speed, product judgment and UX/UI
 - [ ] Submission fields and where the submission goes
 - [ ] Deadline (working assumption: 24 hours — see `docs/WORKFLOW.md`)
-- [ ] Any required feature set or explicit non-goals
+- [ ] Any explicit non-goals or mandated feature set
 - [ ] Whether a specific stack, host or account is mandated
 
-**Action:** paste the full 8x brief and this file gets completed before the build
-plan is finalised. `docs/RESEARCH-PLAN.md` does not depend on it and can be
-approved first.
+**Action:** paste the full brief here; the remaining `[BRIEF]` items in
+`.claude/skills/release-check/SKILL.md` get replaced at the same time.
 
 ## Final checks
 

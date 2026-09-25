@@ -126,3 +126,35 @@ var, degrading to canned answers.
 **Reason.** The public URL is the deliverable hardest to recover if it fails late.
 Finding Vercel problems at hour one is worth more than a tidy first deploy.
 **Tradeoff.** A live URL serving an empty shell for the first few hours.
+
+## 016 — 2026-09-25 — Screenshots committed redacted; originals stay local and untouched
+
+**Reason.** User decision D1. Redactions applied to full-resolution copies: solid
+boxes over the Fathom call ID, a browser bookmark title, and the **Google Meet
+join code** `bth-...` visible in the player header of three shots; Gaussian blur
+over third-party faces in Fathom's own in-product onboarding media. The user's
+name and avatar remain, as instructed.
+**Tradeoff.** Slight loss of fidelity in the dashboard's onboarding row. The join
+code was the genuinely material find — it is a live meeting credential, not just
+an identifier.
+
+## 017 — 2026-09-25 — Two tiers of meeting media, visibly distinguished
+
+**Reason.** User decision D2. The featured meeting gets **real playable media with
+a timestamp-aligned transcript**, so the core interaction is genuinely real. The
+62-minute eight-speaker meeting gets a **labelled simulated timeline**, because it
+exists to prove the interface survives scale and an hour of TTS would cost hours
+for no gain. Distinct on-screen badges: `Real recording` vs
+`Simulated timeline — no audio`.
+**Tradeoff.** Two playback code paths behind one interface. Worth it — claiming
+either tier is the other is precisely the dishonesty the evidence rules forbid.
+
+## 018 — 2026-09-25 — UX/UI treated as a graded axis with its own budget
+
+**Reason.** User decision D3: judging is speed, product judgment and UX/UI. The
+UX/UI phase grew from 1:45 to 2:30 and gained explicit criteria (hierarchy,
+designed empty states, real phone usability, focus, contrast, no jank at scale).
+"No login in the graded path" is now recorded as a hard requirement rather than a
+design preference.
+**Tradeoff.** At worst-case cutoffs the plan now totals 24:15, i.e. the whole
+budget. Phases 7–9 (share view, search, Ask tab) are the declared release valve.

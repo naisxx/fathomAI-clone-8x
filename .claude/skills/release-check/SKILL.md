@@ -8,8 +8,10 @@ description: Final 8x submission checklist covering the public deployment, publi
 Check things in the order a reviewer meets them. Open everything cold — fresh tab,
 no session, logged-out view.
 
-> Items marked **[BRIEF]** depend on the full 8x brief, which is not yet in the
-> repo. See `docs/ASSIGNMENT.md`. Complete them once it arrives.
+> Judging is on **speed, product judgment and UX/UI**. Two hard requirements: the
+> live app works for an **unsigned visitor**, and it contains **seeded data**,
+> labelled. Items still marked **[BRIEF]** await the verbatim brief — see
+> `docs/ASSIGNMENT.md`.
 
 ## 1. Capture — the first file they open
 
@@ -29,6 +31,8 @@ no session, logged-out view.
 ## 2. Public deployment
 
 - [ ] URL loads in a fresh tab, no session, no VPN
+- [ ] **No login anywhere in the graded path** — an unsigned visitor reaches every
+      graded screen (hard requirement)
 - [ ] The core flow works there, not only locally
 - [ ] Unsigned-visitor view behaves correctly
 - [ ] No console errors on the main screens
@@ -60,8 +64,20 @@ no session, logged-out view.
 - [ ] Nothing in README or walkthrough overstates what was tested
 - [ ] Known limitations stated somewhere a reviewer will find them
 
-## 6. Submission
+## 6. UX/UI — a graded axis, not polish
 
+- [ ] Visual hierarchy holds on the review screen: the thing that matters is the
+      thing you see first
+- [ ] Empty, loading and error states are designed, not default
+- [ ] 375px phone width is genuinely usable, not merely non-broken
+- [ ] Keyboard reach and visible focus on every interactive element
+- [ ] Contrast meets AA
+- [ ] Nothing janky at long-content scale (hour-long, eight-speaker transcript)
+
+## 7. Submission
+
+- [ ] Public live link, public repo with `.agent-logs/`, camera-on walkthrough
+      under five minutes — all three present
 - [ ] **[BRIEF]** Every required submission field filled
 - [ ] **[BRIEF]** Any required format or naming followed
 - [ ] Deployment URL, repo URL and walkthrough link all resolve from a clean browser

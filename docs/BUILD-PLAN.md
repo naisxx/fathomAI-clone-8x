@@ -118,14 +118,45 @@ the meeting list, and a `README` section stating that no real call was recorded,
 that transcripts are synthetic, and that playback is simulated. The walkthrough
 says it out loud.
 
-### Playback — the one honesty compromise
+### Playback — two tiers, and the difference is stated on screen
 
-We have no recording. The player is a **simulated transport**: real clock,
-play/pause, seek, speed, transcript auto-follow, click-to-seek — driven by a timer
-rather than a media file. Visibly labelled *"Simulated playback — no audio"*.
+Per decision D2 the product has **two kinds of meeting**, and the UI never blurs
+them.
 
-Every timestamp behaviour is genuinely functional; only the audio is absent. **This
-is the one place I would most like your steer** — see decisions below.
+**Tier 1 — Featured meeting: real playable media, real timestamp-aligned transcript.**
+One short meeting (3–6 min) carries an actual audio/video file with a transcript
+whose timestamps line up with it. Play, seek, click-a-line-to-seek and
+`?t=` deep links are all genuinely driven by a media element. This is the meeting
+the walkthrough demonstrates the core interaction on. Badge: **`Real recording`**.
+
+Source, in order of preference:
+
+1. **The user's own Fathom recording**, if it can be downloaded and they are happy
+   to publish it. Fathom's docs confirm a Standard-role viewer "can download the
+   call" ([help 295616](https://help.fathom.video/en/articles/295616)); free-plan
+   owner download is unconfirmed — a 5-second check of the `⋮` menu beside Share
+   settles it. The existing 1-min solo call is too thin to feature; the 5–6 min
+   call with spoken commitments from check D4(a) is the right candidate.
+2. **A short recording we make ourselves** — a few minutes, two voices, scripted
+   so the summary and action items have something real to point at.
+
+Either way the transcript is produced from the actual audio, so alignment is real
+rather than asserted.
+
+**Tier 2 — The 62-minute, eight-speaker meeting: simulated timeline, labelled.**
+No audio. A simulated transport drives a real clock — play/pause, seek, speed,
+transcript auto-follow, click-to-seek, `?t=` — against synthetic transcript
+timings. Badge: **`Simulated timeline — no audio`**, and the README and
+walkthrough say the same.
+
+This exists to prove the product holds up at scale, which is the thing a short
+real recording cannot show. Generating an hour of TTS is explicitly **not** being
+done — the cost is hours and the gain is nil, since nobody listens to an hour of
+synthetic speech in a 4-minute walkthrough.
+
+**Why both.** Tier 1 proves the interaction is real. Tier 2 proves the interface
+survives scale. Claiming either one is the other is the failure mode; two visibly
+different badges is the fix.
 
 ## Phases
 
@@ -139,15 +170,15 @@ Each produces a deployable slice. Each has a cutoff: hit it, ship what works, mo
 | **3** | Review shell + **Transcript tab** | Two columns; tabs switch without losing player; 450 lines scroll smoothly; speakers + `HH:MM:SS`; unmatched shown as *unmatched* | 2:30 | 3:00 |
 | **4** | **Summary tab** | Markdown renders with template name; sections; no placeholder text | 1:15 | 1:30 |
 | **5** | **Action items + deep links** | Each item shows assignee + `@HH:MM:SS`; click → player seeks + transcript scrolls to line; `completed` toggles and survives reload; AI vs manual distinguished | 2:00 | 2:30 |
-| **6** | Simulated player + click-to-seek | Play advances clock, transcript auto-follows, seek works, `?t=645` deep-links on load, label visible | 1:30 | 2:00 |
+| **6** | Player: real media (featured) + simulated transport (long meeting) | Featured meeting plays actual audio; click a transcript line → media seeks; long meeting's simulated clock does the same with no audio; `?t=645` deep-links on load; both badges visible and distinct | 2:00 | 2:30 |
 | **7** | Share view + branded 404 | `/share/<token>` works in a **private window**; reduced view; bad token → branded 404, not a blank page | 1:30 | 1:45 |
 | **8** | Cross-meeting search | Query returns hits across meetings with timestamps; click lands at that moment; empty-query and no-results states | 1:15 | 1:30 |
 | **9** | Ask tab (canned, labelled) | Suggestion chips return grounded answers citing timestamps; clearly marked pre-generated | 1:00 | 1:15 |
-| **10** | States, responsive, a11y polish | Empty / too-short / 404; 375px; keyboard reach; contrast AA; console clean | 1:45 | 2:00 |
+| **10** | UX/UI pass — graded axis | Visual hierarchy; designed empty / too-short / 404 states; 375px genuinely usable; keyboard reach + visible focus; contrast AA; no jank at 450 lines; console clean | 2:30 | 3:00 |
 | **11** | QA pass on the **deployed URL** + fixes | `verify-slice` checklist green on production, fresh tab, no session | 1:30 | 2:00 |
 | **12** | Walkthrough recording | Under 5:00, camera on, deployed URL | 1:00 | 1:15 |
 
-**Total 19:15 estimated, 22:45 at cutoffs.** Phases 0–6 are the Musts (~11:15).
+**Total 20:15 estimated, 24:15 at cutoffs.** Phases 0–6 are the Musts (~11:45).
 Phases 7–9 are Shoulds and are the cut material if we slip.
 
 **Earliest public link: end of Phase 0, ~45 minutes in.** Deploying before there is
@@ -158,6 +189,7 @@ recover if it fails late.
 
 | Risk | Mitigation |
 |---|---|
+| **Featured media unavailable** — Fathom won't export and recording our own slips | Fall back to a 2-minute two-voice recording; tier 1 needs to be *real*, not *long*. If both fail, the featured meeting drops to tier 2 and the walkthrough says so. |
 | **Seeding 450 realistic transcript lines eats the budget** | Biggest real risk. Generate structurally (scripted speaker turns over a topic outline), author only the passages the summary and action items point at. Cutoff 2:30, then ship fewer lines. |
 | Simulated playback reads as fake on camera | Label it, and make every timestamp behaviour genuinely work. Decision D3 below. |
 | Long transcript jank at 450 nodes | Virtualise only if measured slow. Do not pre-optimise. |
