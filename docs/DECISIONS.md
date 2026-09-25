@@ -89,3 +89,40 @@ copyright risk worth avoiding.
 **Tradeoff.** `FINDINGS.md` cites public asset URLs and describes what was seen
 rather than embedding images. The user's option C run supplies the real visual
 evidence, which resolves the gap rather than papering over it.
+
+## 012 — 2026-09-25 — Screenshots read by conversion, originals untouched
+
+**Reason.** The seven files in `recon/screenshots/` are HEIF carrying a `.paint`
+extension. libheif/pillow-heif reject them (uncompressed `unci` variant), so they
+were converted to PNG **read-only** via Windows WIC into the scratchpad and read
+from there. Nothing in `recon/` was renamed, moved or rewritten.
+**Tradeoff.** The originals will not render on GitHub or in most viewers. Whether
+to commit PNG copies is left to the user — they show a real name and avatar and
+this is a public repo.
+
+## 013 — 2026-09-25 — Live test settles the layout conflict against the third-party review
+
+**Reason.** Screenshot 1 shows a two-column layout — video + tabbed pane on the
+left, meta and action items on the right — not the three-column
+`video | summary | transcript` a third-party review described. FINDINGS §7 items 1
+and 4 are closed by direct observation.
+**Tradeoff.** That reviewer's other claims are now less trustworthy, including the
+transcript-scrolling behaviour cited in FINDINGS §4.
+
+## 014 — 2026-09-25 — No database, no auth, no runtime AI API
+
+**Reason.** Every byte served is seeded and read-only. A DB adds env vars, a
+cold-start failure mode during a live walkthrough, and a credential to keep out of
+a public repo, for nothing a typed seed file does not do. Auth is actively harmful
+— a reviewer must never hit a login. A runtime AI key costs money per view and can
+fail on camera. AI content is generated once during the build and committed as
+labelled seed data.
+**Tradeoff.** Nothing persists across browsers; action-item toggles live in
+`localStorage` and say so. A live Ask endpoint is optional Phase 9, behind an env
+var, degrading to canned answers.
+
+## 015 — 2026-09-25 — Deploy at the end of Phase 0, before there is anything to show
+
+**Reason.** The public URL is the deliverable hardest to recover if it fails late.
+Finding Vercel problems at hour one is worth more than a tidy first deploy.
+**Tradeoff.** A live URL serving an empty shell for the first few hours.

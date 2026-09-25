@@ -8,10 +8,10 @@ or revisions from the user.
 | # | Gate | Artifact | Status |
 |---|---|---|---|
 | 0 | Capture verified | `CAPTURE-TEST.md` | **Done** (2026-09-25) |
-| 1 | Project setup | this commit | **Awaiting review** |
-| 2 | Research plan | `docs/RESEARCH-PLAN.md` | **Awaiting approval** |
-| 3 | Research findings | `docs/research/FINDINGS.md` | Blocked by gate 2 |
-| 4 | Product scope | `docs/BUILD-PLAN.md` | Blocked by gate 3 |
+| 1 | Project setup | `817cbed` | **Done** |
+| 2 | Research plan | `docs/RESEARCH-PLAN.md` | **Done** (approved, option B) |
+| 3 | Research findings | `docs/research/FINDINGS.md` + `SCREENSHOT-RECONCILIATION.md` | **Done** (option B + user's option C) |
+| 4 | Product scope | `docs/BUILD-PLAN.md` | **Awaiting approval** |
 | 5 | Per-slice plans | one plan per slice | Blocked by gate 4 |
 | 6 | Release | `release-check` skill | Blocked by gate 5 |
 
