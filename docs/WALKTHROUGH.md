@@ -123,8 +123,11 @@ Point at "16 results in 4 meetings", then **click a transcript hit**.
 
 > "What's not here: no recording bot, no database, no login, and the long meeting
 > has a simulated timeline because there's no audio for it — all labelled in the
-> app. Every prompt and response that built this is committed raw in
-> `.agent-logs`, including the wrong turns. Thanks."
+> app. I should also say I didn't get through every Fathom flow before building —
+> a lot of the data model came from their public API schema rather than from
+> using the product, and I never tested an hour-long eight-person call. The
+> repo scores that honestly. Every prompt and response that built this is
+> committed raw in `.agent-logs`, including the wrong turns. Thanks."
 
 ---
 
@@ -144,6 +147,9 @@ the closing limitations.
 ## Things not to say
 
 - ❌ "I recorded an eight-person meeting." You did not. It is seeded.
+- ❌ "I went through all of Fathom first." You did not — three of eleven named
+  flows. Saying so costs 8 seconds and is worth more than the alternative, which
+  is a reviewer who has used Fathom noticing the gap you did not mention.
 - ❌ "The AI generates answers." The Ask answers are pre-written; the panel says so.
 - ❌ "It transcribes your calls." There is no capture bot.
 - ✅ "One real recording, the rest seeded and labelled" — accurate, and stronger.

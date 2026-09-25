@@ -22,6 +22,13 @@ Specifically **not** claimed:
   is seeded, and says so on every screen it appears on.
 - **There is no recording bot.** Nothing here joins a meeting. Capture is out of
   scope and is not stubbed to look otherwise.
+- **Fathom was not fully explored before coding began.** The brief asks for every
+  flow end to end, first. Three of the eleven named flows were completed; the
+  rest — highlights, clip sharing, template switching, cross-meeting search,
+  calendar connection, and an hour-long eight-person call — were not exercised.
+  Much of the product research is drawn from Fathom's **published OpenAPI schema
+  and help centre**, and some of it happened *after* the build had started.
+  [`docs/ASSIGNMENT.md`](docs/ASSIGNMENT.md) scores this flow by flow.
 - **The real meeting has no summary and no action items**, because Fathom
   produced neither — it reported "Meeting too short to generate a summary" and
   detected no action items. Those real empty states are shown as they were
