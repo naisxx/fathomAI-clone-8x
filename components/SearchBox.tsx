@@ -55,6 +55,13 @@ export function SearchBox({ initialQuery = "" }: { initialQuery?: string }) {
         <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
         <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
+      <kbd
+        aria-hidden
+        className="t-micro pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 rounded px-1.5 py-0.5 sm:block"
+        style={{ background: "var(--elevated)", color: "var(--faint)" }}
+      >
+        ⌘K
+      </kbd>
       <input
         id="site-search"
         ref={inputRef}
@@ -62,7 +69,8 @@ export function SearchBox({ initialQuery = "" }: { initialQuery?: string }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Search meetings"
-        className="h-9 w-full rounded-lg border pl-8 pr-3 t-meta outline-none"
+        onFocus={(e) => e.currentTarget.select()}
+        className="h-9 w-full rounded-[var(--r-control)] border pl-8 pr-11 t-meta outline-none"
         style={{
           borderColor: "var(--border)",
           background: "var(--surface)",

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "./Container";
 import { SearchBox } from "./SearchBox";
+import { CommandPalette } from "./CommandPalette";
 
 /**
  * The header adapts to who is looking.
@@ -53,6 +54,7 @@ export function SiteHeader() {
         ) : (
           <>
             <SearchBox />
+            <CommandPalette />
             <div className="shrink-0">
               <span
                 className="hidden rounded-full border px-2.5 py-1 t-micro font-medium sm:inline-block"

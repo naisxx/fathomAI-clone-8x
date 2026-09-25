@@ -683,3 +683,21 @@ legacy variables, honesty labels intact. Rendered font sizes are now 11/13/15/28
 — the scale — where there were six ad-hoc values.
 **Tradeoff.** `t-micro` lost its automatic uppercase, so section labels use an
 explicit `t-label`. Correct: 11px text and a shouting label are different jobs.
+
+## 065 — 2026-09-26 — One command surface, and it is absent from shares
+
+**Reason.** The revamp started because a feature existed and could not be found.
+A palette is the structural answer: one place to look for any capability,
+instead of needing to know which rail it lives in. It also retires the two
+competing search fields — a header box that navigated away to a page, and a
+transcript box that filtered in place.
+
+Moments are first-class in it, not just meetings: typing "error budget" offers
+the 2:11 line and Enter lands on `?t=131&tab=transcript`. That is the product's
+own idea — everything is an annotation on time — expressed in the way you search.
+
+**Not mounted on share views.** A recipient was given one meeting; a palette
+searching every other meeting would quietly widen what the link grants. Verified:
+⌘K on a share does nothing, and there is no search field either.
+**Tradeoff.** A keyboard-first affordance needs advertising, so the header field
+carries a ⌘K hint rather than pretending discovery is free.
