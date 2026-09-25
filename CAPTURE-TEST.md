@@ -171,3 +171,50 @@ The full text of that first prompt is the assignment brief itself.
 - **No double-counting.** `Stop` can fire more than once per prompt; the script
   writes a RESPONSE only when one is genuinely outstanding.
 - **`.agent-logs/` is not gitignored** and ships with the repo.
+
+## Defect found during QA, and repaired — 2026-09-25
+
+A QA pass over the committed logs found **23 PROMPT entries against 15 RESPONSE
+entries** and, at first glance, eight missing responses. That would have been a
+serious problem, so it was traced rather than assumed.
+
+**Nothing was missing.** Classifying every entry by its body showed:
+
+| | count |
+|---|---|
+| Real user prompts | 16 |
+| Harness `<task-notification>` events logged *as* prompts | 7 |
+| Responses | 15 (the 16th was the in-flight turn) |
+
+Every genuine user prompt had its response. The mechanism was not dropping
+anything — it was **mislabelling**. `UserPromptSubmit` fires for harness-generated
+events as well as typed input, and those were being written as `PROMPT`. Two
+consequences, both real:
+
+1. The prompt count was inflated by 7.
+2. Because responses were numbered `previousResponses + 1` while prompts counted
+   system events too, the two sequences drifted apart — `RESPONSE 6` did not
+   answer `PROMPT 6`. A number that points at the wrong prompt is worse than no
+   number.
+
+**Repair** (`CLAUDE.md` permits fixing the mechanism when it is broken, and
+requires saying so):
+
+- Harness events are now written as `type=SYSTEM_EVENT` with their own counter.
+  They are still recorded in full — hiding what the model received would be its
+  own dishonesty — they are simply not counted as prompts.
+- A response is numbered after **the prompt it answers**, not after the previous
+  response, so the two can no longer drift.
+
+Verified on a synthetic session with an event interleaved between two real
+turns: `PROMPT 1 → RESPONSE 1 → SYSTEM_EVENT 1 → PROMPT 2 → RESPONSE 2`, with
+`total_exchanges: 2`.
+
+**No existing log entry was edited, renumbered or removed.** Entries written
+before this repair keep their original numbering, so logs from earlier in the
+build still show the drift described above. That is what actually happened, and
+correcting it retroactively would be exactly the tampering the brief forbids.
+
+Two other things ruled out while tracing this, so they are not the cause: the
+hook is not timing out (202 ms against a 9 MB transcript, limit 15 s), and no
+errors were ever written to `.agent-logs/.capture-errors.log`.

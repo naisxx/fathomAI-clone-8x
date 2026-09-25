@@ -223,6 +223,26 @@ const countOf = (s, type) =>
   (s.match(new RegExp("\\[LOG_ENTRY type=" + type + " ", "g")) || []).length;
 
 /**
+ * Is this submission something the user actually typed?
+ *
+ * `UserPromptSubmit` also fires for harness-generated events — background task
+ * completions arrive as `<task-notification>` blocks. Logging those as PROMPT
+ * entries inflated the prompt count and, worse, pushed RESPONSE numbering out of
+ * step so that RESPONSE n no longer answered PROMPT n.
+ *
+ * They are still recorded, as SYSTEM_EVENT, because hiding what the model
+ * received would be its own dishonesty. They just are not counted as prompts.
+ */
+function isSystemEvent(prompt) {
+  const t = prompt.trimStart();
+  return (
+    t.startsWith("<task-notification>") ||
+    t.startsWith("<ci-monitor-event>") ||
+    /^\[SYSTEM NOTIFICATION - NOT USER INPUT\]/.test(t)
+  );
+}
+
+/**
  * On the first prompt of a session nothing has told us the model yet: the
  * UserPromptSubmit payload carries no `model` field and the transcript has no
  * assistant line to read one off. We write "unknown" and fill it in once the
@@ -277,20 +297,28 @@ function main() {
     if (typeof prompt !== "string" || !prompt.length) return;
     const model = payload.model || latestModel(entries) || "unknown";
     const file = sessionFile(root, sessionId, now, model, project);
-    const num = countOf(fs.readFileSync(file, "utf8"), "PROMPT") + 1;
+    const current = fs.readFileSync(file, "utf8");
+
+    // Harness events are recorded but never counted as prompts, so RESPONSE
+    // numbering stays aligned with the prompt it answers.
+    const kind = isSystemEvent(prompt) ? "SYSTEM_EVENT" : "PROMPT";
+    const num = countOf(current, kind) + 1;
 
     fs.appendFileSync(
       file,
-      "\n[LOG_ENTRY type=PROMPT num=" + num + " session=" + sessionId.slice(0, 8) + "]\n" +
+      "\n[LOG_ENTRY type=" + kind + " num=" + num + " session=" + sessionId.slice(0, 8) + "]\n" +
         "timestamp: " + iso + "\n" +
         "model: " + model + "\n\n" +
         prompt + "\n\n"
     );
-    touchFrontmatter(file, {
-      exchanges: num,
-      lastPromptTime: iso,
-      model: model !== "unknown" ? model : null,
-    });
+
+    if (kind === "PROMPT") {
+      touchFrontmatter(file, {
+        exchanges: num,
+        lastPromptTime: iso,
+        model: model !== "unknown" ? model : null,
+      });
+    }
     return;
   }
 
@@ -305,6 +333,11 @@ function main() {
     const responses = countOf(s, "RESPONSE");
     if (responses >= prompts) return;
 
+    // Number the response after the prompt it answers, not after the previous
+    // response. These diverge the moment a Stop is missed, and a RESPONSE whose
+    // number points at the wrong PROMPT is worse than no number at all.
+    const answersPrompt = prompts;
+
     const fr = finalResponse(entries);
     const model = fr.model || latestModel(entries) || payload.model || "unknown";
     // Prefer the transcript walk (it joins a turn split across several text
@@ -314,16 +347,15 @@ function main() {
       (typeof payload.last_assistant_message === "string" ? payload.last_assistant_message.trim() : "") ||
       "(no final text response - turn ended without assistant text)";
 
-    const num = responses + 1;
     fs.appendFileSync(
       file,
-      "\n[LOG_ENTRY type=RESPONSE num=" + num + " session=" + sessionId.slice(0, 8) + "]\n" +
+      "\n[LOG_ENTRY type=RESPONSE num=" + answersPrompt + " session=" + sessionId.slice(0, 8) + "]\n" +
         "timestamp: " + iso + "\n" +
         "model: " + model + "\n\n" +
         text + "\n\n"
     );
     if (model !== "unknown") {
-      backfillPromptModel(file, num, model);
+      backfillPromptModel(file, answersPrompt, model);
       touchFrontmatter(file, { model: model });
     }
   }
