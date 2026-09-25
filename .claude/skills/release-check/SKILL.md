@@ -8,10 +8,10 @@ description: Final 8x submission checklist covering the public deployment, publi
 Check things in the order a reviewer meets them. Open everything cold — fresh tab,
 no session, logged-out view.
 
-> Judging is on **speed, product judgment and UX/UI**. Two hard requirements: the
-> live app works for an **unsigned visitor**, and it contains **seeded data**,
-> labelled. Items still marked **[BRIEF]** await the verbatim brief — see
-> `docs/ASSIGNMENT.md`.
+> Judging is on **speed, product judgement and UX/UI**. The brief's own final
+> gate is three lines: the live link opens for somebody not signed in, the repo is
+> public with `.agent-logs/` in it, and the walkthrough is camera-on and under five
+> minutes. Verbatim brief in `docs/ASSIGNMENT.md`.
 
 ## 1. Capture — the first file they open
 
@@ -78,8 +78,9 @@ no session, logged-out view.
 
 - [ ] Public live link, public repo with `.agent-logs/`, camera-on walkthrough
       under five minutes — all three present
-- [ ] **[BRIEF]** Every required submission field filled
-- [ ] **[BRIEF]** Any required format or naming followed
+- [ ] Live link and repository pasted into the **links field**, each one labelled
+- [ ] Walkthrough pasted into the **walkthrough field**
+- [ ] Meetings list is seeded — "an empty meetings list tells us nothing"
 - [ ] Deployment URL, repo URL and walkthrough link all resolve from a clean browser
 
 ## Verdict
