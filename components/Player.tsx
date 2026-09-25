@@ -113,7 +113,7 @@ export function Player({
             step={0.1}
             value={Math.min(Math.max(currentTime, lo), hi)}
             onChange={(e) => seek(Number(e.target.value))}
-            className="peer w-full cursor-pointer appearance-none bg-transparent"
+            className="range-bare peer relative z-10 w-full cursor-pointer"
             style={{ height: 24 }}
             aria-label="Seek"
           />

@@ -743,3 +743,15 @@ expect rather than sleeping. A fixed `setTimeout` is not a wait in a hidden tab.
 **Tradeoff.** Verification scripts are wordier. Cheaper than debugging phantoms —
 this is the third time the environment has impersonated a bug (stale `.next`
 twice, hidden document once).
+
+## 069 — 2026-09-26 — The scrubber was drawing two thumbs
+
+**Reason.** Spotted by the author: a blue circle and line sat on top of the
+custom violet scrubber. Not two players — the native range input. The control
+draws its own track, fill and thumb as positioned spans, and the input was set
+to `appearance: none` with a transparent background, but that does **not**
+suppress `::-webkit-slider-thumb`. Chrome kept painting its default thumb over
+ours. Every native part is now zeroed explicitly, with a visible focus ring kept
+for keyboard users since the input is still the real control.
+**Tradeoff.** None. Present since the player was built and visible on every
+meeting; I had looked at that component many times without seeing it.

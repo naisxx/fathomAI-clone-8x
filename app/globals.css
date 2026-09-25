@@ -147,3 +147,48 @@ body {
     display: none !important;
   }
 }
+
+/* ---- bare range input -------------------------------------------------
+   The scrubber draws its own track, fill and thumb as positioned spans, so
+   the native control must be fully invisible and act only as the hit target
+   and the keyboard/a11y surface.
+
+   `appearance: none` on the input alone is not enough: WebKit still paints
+   ::-webkit-slider-thumb, which is why a default blue thumb and track were
+   sitting on top of the custom violet ones. Every native part is zeroed
+   explicitly.                                                              */
+.range-bare {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.range-bare::-webkit-slider-runnable-track {
+  background: transparent;
+  border: none;
+}
+.range-bare::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.range-bare::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+.range-bare::-moz-range-progress {
+  background: transparent;
+}
+.range-bare::-moz-range-thumb {
+  width: 1px;
+  height: 1px;
+  border: none;
+  opacity: 0;
+}
+/* Keyboard users still need to see what they are dragging. */
+.range-bare:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: var(--r-pill);
+}
